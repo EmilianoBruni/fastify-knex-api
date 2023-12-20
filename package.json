@@ -1,0 +1,44 @@
+{
+  "name": "fastify-knex-api",
+  "version": "0.1.0",
+  "description": "Fastify plugin to expose API for Knex Query Builder",
+  "main": "index.js",
+  "scripts": {
+    "test": " tap -j=1 ./test/*.test.js",
+    "lint": "eslint \"index.js\"",
+    "lint:fix": "npm run lint -- --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EmilianoBruni/fastify-knex-api.git"
+  },
+  "keywords": [
+    "nodejs",
+    "fastify",
+    "knex",
+    "knexjs",
+    "crud",
+    "api"
+  ],
+  "author": "Emiliano Bruni <info@ebruni.it>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/EmilianoBruni/fastify-knex-api/issues"
+  },
+  "homepage": "https://github.com/EmilianoBruni/fastify-knex-api#readme",
+  "type": "module",
+  "devDependencies": {
+    "eslint": "^8.0.1",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-n": "^15.0.0 || ^16.0.0 ",
+    "eslint-plugin-prettier": "^5.1.0",
+    "eslint-plugin-promise": "^6.0.0",
+    "prettier": "^3.1.1"
+  },
+  "dependencies": {
+    "fastify": "^4.25.1",
+    "fastify-plugin": "^4.5.1"
+  }
+}
