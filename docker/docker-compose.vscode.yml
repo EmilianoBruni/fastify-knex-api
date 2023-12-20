@@ -22,6 +22,17 @@ services:
             resources:
                 limits:
                     cpus: 2
+    mariadb:
+        image: mariadb:10.4
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: test
+            MYSQL_DATABASE: test
+        ports:
+            - 5100:3306
+        hostname: mariadb
+        volumes:
+            - ../test/seed/maria.sql:/docker-entrypoint-initdb.d/seed.sql
 
 volumes:
     fastify-knex-api-lib-modules:
