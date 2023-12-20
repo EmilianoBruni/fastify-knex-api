@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+    lib:
+        image: fastify-knex-api-lib
+        build: 
+            context: ../
+            dockerfile: docker/lib/Dockerfile
+            args:
+                - IDIR=fastify-knex-api
+                - BMODE=dev
+        volumes:
+            - ../:/ws/fastify-knex-api:cached
+            # node_modules in un volume temporaneo che non mi sovraccarica il prj reale in debug
+            - fastify-knex-api-lib-modules:/ws/fastify-knex-api/node_modules 
+            # pnpm-store
+            - pnpm-store:/home/node/pnpm/store
+
+    # Overrides default command so things don't shut down after the process ends.
+        command: sleep infinity
+        deploy:
+            resources:
+                limits:
+                    cpus: 2
+
+volumes:
+    fastify-knex-api-lib-modules:
+    pnpm-store:
+
+networks:
+    default:
+        name: docker_default
+        external: true
