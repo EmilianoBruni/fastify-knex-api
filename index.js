@@ -1,11 +1,34 @@
+import API from './src/API.js';
 import fp from 'fastify-plugin';
+import knex from 'knex';
 
-function initPlugin(fastify, opts, next) {
+async function initPlugin(fastify, opts, next) {
     opts = opts || {};
     opts.fastify = fastify;
 
-    const api = {}; // TODO: implement api
+    const knexHandler = knex(opts.knexConfig);
+    delete opts.knexConfig;
+
+    opts.knex = knexHandler;
+
+    const api = new API(opts);
+    await api.isInizialized;
+
+
     fastify.decorate('knexAPI', api);
+    fastify.decorate('knex', knexHandler);
+
+    fastify.addHook('onClose', (instance, done) => {
+        if (instance.knex === knexHandler) {
+            instance.knex.destroy(done);
+            delete instance.knex;
+        }
+        if (instance.knexAPI === api) {
+            delete instance.knexAPI;
+        }
+        done();
+    });
+
     next();
 }
 
