@@ -2,7 +2,7 @@ import API from './src/API.js';
 import fp from 'fastify-plugin';
 import knex from 'knex';
 
-async function initPlugin(fastify, opts, next) {
+async function initPlugin(fastify, opts) {
     opts = opts || {};
     opts.fastify = fastify;
 
@@ -13,7 +13,6 @@ async function initPlugin(fastify, opts, next) {
 
     const api = new API(opts);
     await api.isInizialized;
-
 
     fastify.decorate('knexAPI', api);
     fastify.decorate('knex', knexHandler);
@@ -28,12 +27,10 @@ async function initPlugin(fastify, opts, next) {
         }
         done();
     });
-
-    next();
 }
 
 const plugin = fp(initPlugin, {
-    fastify: '>=1.0.0',
+    fastify: '>=2.0.0',
     name: 'fastify-knex-api'
 });
 
