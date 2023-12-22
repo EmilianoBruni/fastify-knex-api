@@ -7,7 +7,9 @@ class DefaultController {
     async list(req, reply) {
         await this._fillPkIfUndefined(req);
         const total = await this._count(req.server.knex(this.table));
-        const items = await req.server.knex(this.table).select('*');
+        const query = req.server.knex(this.table).select('*');
+        this._applyFilters(query, req.query);
+        const items = await query;
         return this._formatManyResult(total, items);
     }
 
@@ -76,6 +78,25 @@ class DefaultController {
             this.pk = await req.server.knexAPI.schemaInspector.primary(
                 this.table
             );
+        }
+    }
+
+    _applyFilters(query, filters) {
+        /// pagination filters
+        if (filters.limit) {
+            query.limit(filters.limit);
+        }
+        // skip is an alias for offset
+        if (filters.skip) filters.offset = filters.skip;
+
+        if (filters.offset) {
+            query.offset(filters.offset);
+        }
+        // window is an alias for page
+        if (filters.window) filters.page = filters.window;
+        // offset = (page - 1) * limit
+        if (filters.page) {
+            query.offset((filters.page - 1) * filters.limit);
         }
     }
 }
