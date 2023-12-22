@@ -3,8 +3,12 @@ import fp from 'fastify-plugin';
 import knex from 'knex';
 
 async function initPlugin(fastify, opts) {
-    opts = opts || {};
     opts.fastify = fastify;
+
+    // opts.knexConfig is required and must be an object 
+    if (!opts.knexConfig || typeof opts.knexConfig !== 'object') {
+        throw new Error('knexConfig is required');
+    }
 
     const knexHandler = knex(opts.knexConfig);
     delete opts.knexConfig;
