@@ -10,11 +10,12 @@ class API {
         this._knex = params.knex;
         this._tables = params.tables;
 
+        this._prefix = params.prefix || '/api';
+
         this.schemaInspector = SchemaInspector(this._knex);
 
         if (!this._tables) {
             this.isInizialized = this._getDBTables().then(tables => {
-                console.log(tables);
                 this._tables = tables;
                 this.initialize();
             });
@@ -28,7 +29,7 @@ class API {
         // register routes for each table
         for (const table of this._tables) {
             this._fastify.register(crudGen, {
-                prefix: `/api/${table}`,
+                prefix: `${this._prefix}/${table}`,
                 controller: new DefaultController(table)
             });
         }
