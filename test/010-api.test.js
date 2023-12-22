@@ -1,7 +1,5 @@
-import knexAPI from '../index.js';
-import fastify from 'fastify';
 import t from 'tap';
-import plugin from '../index.js';
+import { createServer } from './helpers.js';
 
 const firstRecordAuthors = {
     id: 1,
@@ -30,28 +28,9 @@ const newRecordAuthors = {
 
 let lastId = 0;
 
-function createServer(t, pluginConfig = {}) {
-    const app = fastify();
-    if (!pluginConfig.knexConfig) {
-        pluginConfig.knexConfig = {
-            client: 'mysql2',
-            connection: 'mysql://root:test@mariadb:3306/test',
-        }
-    };
-    app.register(knexAPI, pluginConfig);
-    t.after(app.close.bind(app));
-    return app;
-}
-
 t.test('Autodiscovery tables info', async t => {
-    const app = createServer(t);
-    app.ready(err => {
-        if (err) throw err;
-        // print the routes
-        console.log(app.printRoutes());
-    });
-    await app.ready();
-// 
+    const app = await createServer(t);
+
     t.test('plugin is loaded', async t => {
         // test if the plugin is loaded
         t.ok(app.knexAPI);
@@ -171,7 +150,7 @@ t.test('Autodiscovery tables info', async t => {
         t.equal(res.json().message, 'Not found');
     });
 
-    t.test('Try to update a record with wrong payload', async t => {    
+    t.test('Try to update a record with wrong payload', async t => {
         const res = await app.inject({
             method: 'PATCH',
             url: `/api/authors/${lastId}`,
@@ -205,14 +184,8 @@ t.test('Autodiscovery tables info', async t => {
 });
 
 t.test('Select only some tables as array (autodiscover pk)', async t => {
-    const app = createServer(t, {tables: ['authors']});
-    app.ready(err => {
-        if (err) throw err;
-        // print the routes
-        console.log(app.printRoutes());
-    });
-    await app.ready();
-// 
+    const app = await createServer(t, { tables: ['authors'] });
+
     t.test('the plugin is loaded', async t => {
         // test if the plugin is loaded
         t.ok(app.knexAPI);
@@ -236,7 +209,7 @@ t.test('Select only some tables as array (autodiscover pk)', async t => {
         const res_list = await app.inject({ url: '/api/posts/' });
         t.equal(res_list.statusCode, 404);
     });
-    
+
 })
 
 t.end();
