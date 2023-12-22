@@ -5,7 +5,7 @@ import knex from 'knex';
 async function initPlugin(fastify, opts) {
     opts.fastify = fastify;
 
-    // opts.knexConfig is required and must be an object 
+    // opts.knexConfig is required and must be an object
     if (!opts.knexConfig || typeof opts.knexConfig !== 'object') {
         throw new Error('knexConfig is required');
     }
