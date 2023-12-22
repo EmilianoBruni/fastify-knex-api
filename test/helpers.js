@@ -6,9 +6,9 @@ export async function createServer(t, pluginConfig = {}) {
     if (!pluginConfig.knexConfig) {
         pluginConfig.knexConfig = {
             client: 'mysql2',
-            connection: 'mysql://root:test@mariadb:3306/test',
-        }
-    };
+            connection: 'mysql://root:test@mariadb:3306/test'
+        };
+    }
     app.register(knexAPI, pluginConfig);
     t.after(app.close.bind(app));
     await app.ready();

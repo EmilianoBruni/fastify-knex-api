@@ -1,5 +1,5 @@
-import t from 'tap';
 import { createServer } from './helpers.js';
+import t from 'tap';
 
 const firstRecordAuthors = {
     id: 1,
@@ -123,19 +123,21 @@ t.test('Autodiscovery tables info', async t => {
             payload: {
                 first_name: 'Massimiliano'
             }
-        }).then(res => {
-            t.equal(res.statusCode, 200);
-            t.equal(res.json().affected, 1);
-            // get updated record
-            return app.inject({
-                method: 'GET',
-                url: `/api/authors/${lastId}`
+        })
+            .then(res => {
+                t.equal(res.statusCode, 200);
+                t.equal(res.json().affected, 1);
+                // get updated record
+                return app.inject({
+                    method: 'GET',
+                    url: `/api/authors/${lastId}`
+                });
             })
-        }).then(res => {
-            t.equal(res.statusCode, 200);
-            t.equal(res.json().first_name, 'Massimiliano');
-            t.end();
-        });
+            .then(res => {
+                t.equal(res.statusCode, 200);
+                t.equal(res.json().first_name, 'Massimiliano');
+                t.end();
+            });
     });
 
     t.test('Try to update a record with wrong id', async t => {
@@ -165,7 +167,7 @@ t.test('Autodiscovery tables info', async t => {
     t.test('delete last record', t => {
         app.inject({
             method: 'DELETE',
-            url: `/api/authors/${lastId}`,
+            url: `/api/authors/${lastId}`
         }).then(res => {
             t.equal(res.statusCode, 200);
             t.equal(res.json().affected, 1);
@@ -176,7 +178,7 @@ t.test('Autodiscovery tables info', async t => {
     t.test('Try to delete a record with wrong id', async t => {
         const res = await app.inject({
             method: 'DELETE',
-            url: `/api/authors/${lastId}`,
+            url: `/api/authors/${lastId}`
         });
         t.equal(res.statusCode, 404);
         t.equal(res.json().message, 'Not found');
@@ -209,7 +211,6 @@ t.test('Select only some tables as array (autodiscover pk)', async t => {
         const res_list = await app.inject({ url: '/api/posts/' });
         t.equal(res_list.statusCode, 404);
     });
-
-})
+});
 
 t.end();
