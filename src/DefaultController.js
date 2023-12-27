@@ -117,6 +117,11 @@ class DefaultController {
             }
             query.orderBy(filters.sort);
         }
+
+        /// filtering filters
+        if (filters.filter) {
+            query.whereRaw(filters.filter);
+        }
     }
 }
 
