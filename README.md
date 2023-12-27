@@ -122,6 +122,34 @@ Multiple sorting are permitted separated by ','. So `-first_name,last_name` for 
 | ------- | ----------- | ------------- |
 | Sort    | sort        | null          |
 
+### Filtering
+
+Raw filtering is available via filter query option. 
+
+```javascript
+/api/posts?filter=author_id%3D1
+```
+
+will return all posts for `author_id` with id equals to 1. 
+
+Filter must be obviously url encoded and so `%3D` here is urlencoded '=' symbol, so actual option value is `author_id=1`.
+
+We can use some http(s) library to simplify URL encoding. For [axios](https://www.npmjs.com/package//axios), at an example, we can write
+
+```javascript
+const res = await axios.get('/api/posts', { 
+    params: { 
+        filter: 'author_id=1'
+    } 
+});
+```
+
+|         | Option Name | Default Value |
+| ------- | ----------- | ------------- |
+| Filter  | filter      | null          |
+
+The filter parameter has passed as is to knex [`whereRaw`](https://knexjs.org/guide/query-builder.html#whereraw)
+
 ## License
 
 Licensed under [APACHE 2.0](./LICENSE)
