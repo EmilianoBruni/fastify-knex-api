@@ -98,6 +98,25 @@ class DefaultController {
         if (filters.page) {
             query.offset((filters.page - 1) * filters.limit);
         }
+
+        /// sorting filters
+        if (filters.sort) {
+            // normalize sorting as an array of {column, order}
+            if (typeof filters.sort === 'string') {
+                filters.sort = filters.sort.split(',');
+            }
+            // normalize sorting as an array of {column, order}
+            if (Array.isArray(filters.sort)) {
+                filters.sort = filters.sort.map(sort => {
+                    if (sort.startsWith('-')) {
+                        return { column: sort.substr(1), order: 'desc' };
+                    } else {
+                        return { column: sort, order: 'asc' };
+                    }
+                });
+            }
+            query.orderBy(filters.sort);
+        }
     }
 }
 
