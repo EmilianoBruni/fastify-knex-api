@@ -108,6 +108,20 @@ Options to limit and eventually skip some records
 * offset and skip are aliases
 * window and page are aliases
 
+### Sorting
+
+Pass sort option string. A '-' at the beginning for descending order. `name` for sorting by name field or `-name` for descending sort by it.
+
+Multiple sorting are permitted separated by ','. So `-first_name,last_name` for sorting by `first_name` in descending order and then for `last_name` in ascending.
+
+```javascript
+/api/authors?sort=-first_name,last_name
+```
+
+|         | Option Name | Default Value |
+| ------- | ----------- | ------------- |
+| Sort    | sort        | null          |
+
 ## License
 
 Licensed under [APACHE 2.0](./LICENSE)
