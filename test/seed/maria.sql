@@ -9,6 +9,7 @@ CREATE TABLE `authors` (
   `first_name` varchar(50) NOT NULL,
   `last_name` varchar(50) NOT NULL,
   `email` varchar(100) NOT NULL,
+  `active` tinyint(1) NOT NULL DEFAULT 1,
   `added` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
@@ -22,8 +23,8 @@ INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `added`) VALUES
 INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `added`) VALUES (6, 'Loredana', 'De Santis', 'Angelo.cesidia@example.net', '1988-09-19 00:20:43');
 INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `added`) VALUES (7, 'Nunzia', 'Galli', 'pcarbone@example.org', '1981-08-30 03:46:33');
 INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `added`) VALUES (8, 'Gabriele', 'Longo', 'leone.bibiana@example.org', '1972-09-20 05:16:22');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `added`) VALUES (9, 'Ludovico', 'Vitale', 'eriberto19@example.net', '2004-02-19 04:16:27');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `added`) VALUES (10, 'Mariagiulia', 'Martini', 'pmarini@example.net', '2020-03-29 09:25:06');
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (9, 'Ludovico', 'Vitale', 'eriberto19@example.net', 0, '2004-02-19 04:16:27');
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (10, 'Mariagiulia', 'Martini', 'pmarini@example.net', 0, '2020-03-29 09:25:06');
 
 #
 # TABLE STRUCTURE FOR: posts
