@@ -26,13 +26,31 @@ class API {
     }
 
     initialize() {
+        // normalize tables
+        this._tables = this._normalizeTables(this._tables);
+        console.log('Tables:', this._tables);
         // register routes for each table
         for (const table of this._tables) {
             this._fastify.register(crudGen, {
-                prefix: `${this._prefix}/${table}`,
-                controller: new DefaultController(table)
+                prefix: `${this._prefix}/${table.name}`,
+                controller: new DefaultController(table.name, table.pk)
             });
         }
+    }
+
+    _normalizeTables(tables) {
+        // return array of objects {name, pk}
+        if (Array.isArray(tables)) {
+            return tables.map(table => {
+                if (typeof table === 'string') {
+                    return { name: table, pk: undefined };
+                }
+                // if not exists, set pk to undefined
+                if (!table.pk) table.pk = undefined;
+                return table;
+            });
+        }
+        return tables;
     }
 
     async _getDBTables() {

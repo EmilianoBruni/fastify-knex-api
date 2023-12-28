@@ -76,12 +76,16 @@ Path prefix. Default is `/api/`.
 An array of tables to expose or an object of tables to expose with their primary key
 
 ```javascript
+[ 'authors', 'posts']
+
+// or
+
 [  
-    {table: 'authors', pk: 'id' },
-    {table: 'posts', pk: 'post_id' }
+    {name: 'authors', pk: 'id' },
+    {name: 'posts',   pk: 'post_id' }
 ]
 ```
-Default is to autodiscover and expose all tables and to autodiscover their primary keys.
+Default is to autodiscover and expose all tables and, on request, to autodiscover their primary keys if not manually set.
 
 ## API schema
 

@@ -51,7 +51,7 @@ t.test('Autodiscovery tables info', async t => {
         t.ok(typeof res_list.json().total === 'number');
         t.ok(Array.isArray(res_list.json().items));
         // check total = items.length
-        t.equal(res_list.json().total, res_list.json().items.length);
+        t.equal(res_list.json().total, 70);
         t.same(res_list.json().items[0], firstRecordAuthors);
 
         const res_view = await app.inject({ url: '/api/authors/1' });
@@ -210,6 +210,30 @@ t.test('Select only some tables as array (autodiscover pk)', async t => {
     t.test('api for the table "posts" doesn\'t exist', async t => {
         // test if exists the api for the table "users"
         const res_list = await app.inject({ url: '/api/posts/' });
+        t.equal(res_list.statusCode, 404);
+    });
+});
+
+t.test('Select only some tables as object', async t => {
+    const app = await createServer(t, {
+        tables: [{ name: 'posts', pk: 'post_id' }]
+    });
+
+    t.test('the plugin is loaded', async t => {
+        // test if the plugin is loaded
+        t.ok(app.knexAPI);
+        t.ok(app.knex);
+    });
+
+    t.test('exists the api for the table "posts"', async t => {
+        // test if exists the api for the table "posts"
+        const res_list = await app.inject({ url: '/api/posts/' });
+        t.equal(res_list.statusCode, 200);
+    });
+
+    t.test('api for the table "authors" doesn\'t exist', async t => {
+        // test if exists the api for the table "users"
+        const res_list = await app.inject({ url: '/api/authors/' });
         t.equal(res_list.statusCode, 404);
     });
 });
