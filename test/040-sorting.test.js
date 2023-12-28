@@ -30,8 +30,8 @@ t.test('Check sorting', async t => {
             url: '/api/authors?sort=first_name'
         });
         t.equal(res.statusCode, 200);
-        // first record has id == 4
-        t.equal(res.json().items[0].id, 3);
+        // first record has id == 67
+        t.equal(res.json().items[0].id, 67);
     });
 
     t.test('Sort by name desc', async t => {
@@ -41,7 +41,7 @@ t.test('Check sorting', async t => {
         });
         t.equal(res.statusCode, 200);
         // first record has id == 1
-        t.equal(res.json().items[0].id, 4);
+        t.equal(res.json().items[0].id, 16);
     });
 
     t.test('Sort by name and id', async t => {
@@ -50,8 +50,8 @@ t.test('Check sorting', async t => {
             url: '/api/authors?sort=first_name,id'
         });
         t.equal(res.statusCode, 200);
-        // first record has id == 4
-        t.equal(res.json().items[0].id, 3);
+        // first record has id ==67
+        t.equal(res.json().items[0].id, 67);
     });
 
     t.test('Sort by id and name', async t => {

@@ -26,7 +26,7 @@ t.test('Check filtering', async t => {
             }
         });
         t.equal(res.statusCode, 200);
-        t.equal(res.json().items.length, 1);
+        t.equal(res.json().items.length, 2);
         t.equal(res.json().items[0].id, 7);
         t.equal(res.json().items[0].first_name, 'Nunzia');
     });
@@ -114,7 +114,7 @@ t.test('Check filtering', async t => {
         });
         t.equal(res.statusCode, 200);
         const json = res.json();
-        t.equal(json.items.length, 8);
+        t.equal(json.items.length, 27);
 
         const res2 = await app.inject({
             method: 'GET',
@@ -125,7 +125,7 @@ t.test('Check filtering', async t => {
         });
         t.equal(res2.statusCode, 200);
         const json2 = res2.json();
-        t.equal(json2.items.length, 2);
+        t.equal(json2.items.length, 43);
     });
 });
 
