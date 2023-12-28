@@ -23,10 +23,10 @@ class DefaultController {
     async view(req, reply) {
         const id = req.params.id;
         await this._fillPkIfUndefined(req);
-        const data = await req.server
-            .knex(this.table)
-            .select('*')
-            .where(this.pk, id);
+        const query = req.server.knex(this.table).where(this.pk, id);
+        // apply projection to the query
+        await this._applyProjection(query, req.query);
+        const data = await query;
         if (data.length === 0) {
             reply.code(404).send({ message: 'Not found' });
         }
