@@ -198,6 +198,20 @@ const res = await axios.get('/api/posts', {
 
 The filter parameter has passed as is to knex [`whereRaw`](https://knexjs.org/guide/query-builder.html#whereraw)
 
+### Projection
+
+Return only fields that matches the parameter. If first character is `-` 
+will return everything except fields in the parameter.
+
+```javascript
+/api/authors?fields=first_name,last_name // only return first_name and last_name
+/api/authors?fields=-id,first_name // return everything except id and first_name
+```
+
+|          | Option Name | Default Value |
+| -------- | ----------- | ------------- |
+|Projection| fields      | *             |
+
 ## License
 
 Licensed under [APACHE 2.0](./LICENSE)
