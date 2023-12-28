@@ -1,7 +1,7 @@
 import { createServer } from './helpers.js';
 import t from 'tap';
 
-t.test('Check pagination', async t => {
+t.test('Check pagination without filters', async t => {
     const app = await createServer(t);
 
     t.test('Limit the number of items', async t => {
@@ -68,6 +68,83 @@ t.test('Check pagination', async t => {
                 t.equal(res.json().items[0].id, 3);
             }
         );
+    });
+});
+
+
+t.test('Check pagination with filters', async t => {
+
+    const app = await createServer(t);
+
+    t.test('Limit the number of items', async t => {
+        const res = await app.inject({
+            method: 'GET',
+            url: '/api/authors',
+            query: {
+                filter: "id <= 5",
+                limit: 2
+            }
+        });
+
+        t.equal(res.statusCode, 200);
+        const json = res.json();
+        t.equal(json.total, 5);
+        t.equal(json.items.length, 2);
+        t.equal(res.json().items.at(-1).id, 2);
+    });
+
+    t.test('Limit the number of items and skip some', async t => {
+        const res = await app.inject({
+            method: 'GET',
+            url: '/api/authors',
+            query: {
+                filter: "id <= 5",
+                limit: 2,
+                offset: 2
+            }
+        });
+
+        t.equal(res.statusCode, 200);
+        const json = res.json();
+        t.equal(json.total, 5);
+        t.equal(json.items.length, 2);
+        t.equal(json.items[0].id, 3);
+    });
+
+    t.test('Limit the number of items and get first page', async t => {
+        const res = await app.inject({
+            method: 'GET',
+            url: '/api/authors',
+            query: {
+                filter: "id <= 5",
+                limit: 2,
+                page: 1
+            }
+        });
+
+        t.equal(res.statusCode, 200);
+        const json = res.json();
+        t.equal(json.total, 5);
+        t.equal(json.items.length, 2);
+        t.equal(json.items[0].id, 1);
+    });
+
+    t.test('Limit the number of items and get second page', async t => {
+        const res = await app.inject({
+            method: 'GET',
+            url: '/api/authors',
+            query: {
+                filter: "id <= 5",
+                limit: 2,
+                page: 2
+            }
+        });
+
+        t.equal(res.statusCode, 200);
+        const json = res.json();
+        t.equal(json.total, 5);
+        t.equal(json.items.length, 2);
+        t.equal(json.items[0].id, 3);
     });
 });
 
