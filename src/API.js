@@ -28,7 +28,6 @@ class API {
     initialize() {
         // normalize tables
         this._tables = this._normalizeTables(this._tables);
-        console.log('Tables:', this._tables);
         // register routes for each table
         for (const table of this._tables) {
             this._fastify.register(crudGen, {
