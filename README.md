@@ -83,6 +83,46 @@ An array of tables to expose or an object of tables to expose with their primary
 ```
 Default is to autodiscover and expose all tables and to autodiscover their primary keys.
 
+## API schema
+
+### List
+
+```javascript
+GET /api/authors
+```
+
+List records in authors table. Return a structure like this
+
+```javascript
+{
+  total: 10,
+  items: [
+    {
+      id: 1,
+      first_name: 'Michael',
+      last_name: 'Messina',
+      email: 'monia89@example.org',
+      active: 1,
+      added: '2011-10-09T08:34:11.000Z'
+    },
+    {
+      id: 2,
+      first_name: 'Joannes',
+      last_name: 'Russo',
+      email: 'sorrentino.akira@example.net',
+      active: 1,
+      added: '1982-02-11T19:39:12.000Z'
+    },
+    ...
+  ]
+}
+```
+
+where
+
+* `total` is the count of record in the table based on [filters](#filtering) (where)
+* `items` are records based on filters (where) and [pagination](#pagination) (skip, page, limit, ...)
+
 ## Options for list method
 
 In list method (`GET /api/authors`) we can use URL options to paginating, sorting, filter items and a mix of them.
