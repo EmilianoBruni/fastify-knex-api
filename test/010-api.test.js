@@ -6,6 +6,7 @@ const firstRecordAuthors = {
     first_name: 'Michael',
     last_name: 'Messina',
     email: 'monia89@example.org',
+    active: true,
     added: '2011-10-09T08:34:11.000Z'
 };
 
