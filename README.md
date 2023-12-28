@@ -95,7 +95,7 @@ List records in authors table. Return a structure like this
 
 ```javascript
 {
-  total: 10,
+  total: 70,
   items: [
     {
       id: 1,
@@ -132,7 +132,7 @@ In list method (`GET /api/authors`) we can use URL options to paginating, sortin
 Options to limit and eventually skip some records
 
 ```javascript
-/api/authors                // retrurn first 50 items
+/api/authors                // return first 50 items
 /api/authors?limit=-1       // return all items in table
 /api/authors?limit=5        // return first 5 items
 /api/authors?limit=5&skip=6 // skip first 6 items and return next 5
@@ -154,9 +154,9 @@ To get all records force limit=-1
 
 ### Sorting
 
-Pass sort option string. A '-' at the beginning for descending order. `name` for sorting by name field or `-name` for descending sort by it.
+Pass sort option string. A `-` at the beginning for descending order. `name` for sorting by name field or `-name` for descending sort by it.
 
-Multiple sorting are permitted separated by ','. So `-first_name,last_name` for sorting by `first_name` in descending order and then for `last_name` in ascending.
+Separate fields by `,` to allow multiple sorting. So `-first_name,last_name` for sorting by `first_name` in descending order and then for `last_name` in ascending.
 
 ```javascript
 /api/authors?sort=-first_name,last_name
