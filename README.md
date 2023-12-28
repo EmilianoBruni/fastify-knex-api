@@ -127,6 +127,41 @@ where
 * `total` is the count of record in the table based on [filters](#filtering) (where)
 * `items` are records based on filters (where) and [pagination](#pagination) (skip, page, limit, ...)
 
+### View
+
+```javascript
+GET /api/authors/1
+```
+
+Return a single record with the primary key as parameter.
+
+
+```javascript
+{
+  id: 1,
+  first_name: 'Michael',
+  last_name: 'Messina',
+  email: 'monia89@example.org',
+  active: 1,
+  added: '2011-10-09T08:34:11.000Z'
+}
+```
+
+Supports [projection](#projection) as parameter.
+
+```javascript
+GET /api/authors/1?fields=id,first_name
+```
+
+return
+
+```javascript
+{
+  id: 1,
+  first_name: 'Michael',
+}
+```
+
 ## Options for list method
 
 In list method (`GET /api/authors`) we can use URL options to paginating, sorting, filter items and a mix of them.
