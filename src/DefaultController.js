@@ -6,13 +6,15 @@ class DefaultController {
 
     async list(req, reply) {
         await this._fillPkIfUndefined(req);
-        const query = req.server.knex(this.table).select('*');
+        const query = req.server.knex(this.table);
         // apply where filters to the query
         this._applyFilters(query, req.query);
         // got total count for filters
         const total = await this._count(query);
         // apply pagination, sorting and other staments to the query
         this._applyOtherStatments(query, req.query);
+        // apply projection to the query
+        await this._applyProjection(query, req.query);
         // got items for filters
         const items = await query;
         return this._formatManyResult(total, items);
@@ -125,6 +127,28 @@ class DefaultController {
             query.orderBy(filters.sort);
         }
     }
+
+    async _applyProjection(query, filters) {
+        /// projection filters
+        let filterFields = '*';
+        if (filters.fields) {
+            if (!filters.fields.startsWith('-')) {
+                // include mode
+                filterFields = filters.fields.split(',');
+            } else {
+                // first character is a minus, remove it and set the mode as exclude
+                filters.fields = filters.fields.substr(1).split(',');
+                filterFields = Object.keys(await query.clone().columnInfo());
+
+                // take filter.fields and remove from filterFields
+                filterFields = filterFields.filter(
+                    field => !filters.fields.includes(field)
+                );
+            }
+        }
+        query.select(filterFields);
+    }
+
     _applyFilters(query, filters) {
         /// filtering filters
         if (filters.filter) {
