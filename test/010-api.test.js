@@ -29,6 +29,13 @@ const newRecordAuthors = {
 
 let lastId = 0;
 
+t.test('Unitialized Knex config', async t => {
+    t.rejects(
+        createServer(t, { knexConfig: 'error' }),
+        'knexConfig is required'
+    );
+});
+
 t.test('Autodiscovery tables info', async t => {
     const app = await createServer(t);
 
@@ -212,6 +219,13 @@ t.test('Select only some tables as array (autodiscover pk)', async t => {
         const res_list = await app.inject({ url: '/api/posts/' });
         t.equal(res_list.statusCode, 404);
     });
+});
+
+t.test('Forgot to use tables name in config', async t => {
+    t.rejects(
+        createServer(t, { tables: [{ pk: 'post_id' }] }),
+        'Table name not specified'
+    );
 });
 
 t.test('Select only some tables as object', async t => {
