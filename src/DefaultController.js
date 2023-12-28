@@ -89,7 +89,8 @@ class DefaultController {
 
     _applyOtherStatments(query, filters) {
         /// pagination filters
-        if (filters.limit) {
+        if (filters.limit != -1) {
+            if (filters.limit === undefined) filters.limit = 50;
             query.limit(filters.limit);
         }
         // skip is an alias for offset

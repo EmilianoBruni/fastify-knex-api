@@ -132,6 +132,8 @@ In list method (`GET /api/authors`) we can use URL options to paginating, sortin
 Options to limit and eventually skip some records
 
 ```javascript
+/api/authors                // retrurn first 50 items
+/api/authors?limit=-1       // return all items in table
 /api/authors?limit=5        // return first 5 items
 /api/authors?limit=5&skip=6 // skip first 6 items and return next 5
 /api/authors?limit=5&page=2 // page of 5 items. We get page 2 (6 to 10)
@@ -141,12 +143,14 @@ Options to limit and eventually skip some records
 | ------- | ----------- | ------------- |
 | Offset  | offset      | 0             |
 | Offset  | skip        | 0             |
-| Limit   | limit       | infinity      |
+| Limit   | limit       | 50            |
 | Page    | page        | 1             |
 | Page    | window      | 1             |    
 
 * offset and skip are aliases
 * window and page are aliases
+
+To get all records force limit=-1
 
 ### Sorting
 
