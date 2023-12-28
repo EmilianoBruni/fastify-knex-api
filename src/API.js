@@ -44,12 +44,15 @@ class API {
                 if (typeof table === 'string') {
                     return { name: table, pk: undefined };
                 }
+                // throw error if not exists name
+                if (!table.name) {
+                    throw new Error('Table name not specified');
+                }
                 // if not exists, set pk to undefined
                 if (!table.pk) table.pk = undefined;
                 return table;
             });
         }
-        return tables;
     }
 
     async _getDBTables() {
