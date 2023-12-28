@@ -6,9 +6,14 @@ class DefaultController {
 
     async list(req, reply) {
         await this._fillPkIfUndefined(req);
-        const total = await this._count(req.server.knex(this.table));
         const query = req.server.knex(this.table).select('*');
+        // apply where filters to the query
         this._applyFilters(query, req.query);
+        // got total count for filters
+        const total = await this._count(query);
+        // apply pagination, sorting and other staments to the query
+        this._applyOtherStatments(query, req.query);
+        // got items for filters
         const items = await query;
         return this._formatManyResult(total, items);
     }
@@ -65,6 +70,7 @@ class DefaultController {
     }
 
     async _count(knex) {
+        knex = knex.clone();
         const count = await knex.count(`${this.pk} as count`);
         return count[0].count;
     }
@@ -81,7 +87,7 @@ class DefaultController {
         }
     }
 
-    _applyFilters(query, filters) {
+    _applyOtherStatments(query, filters) {
         /// pagination filters
         if (filters.limit) {
             query.limit(filters.limit);
@@ -117,7 +123,8 @@ class DefaultController {
             }
             query.orderBy(filters.sort);
         }
-
+    }
+    _applyFilters(query, filters) {
         /// filtering filters
         if (filters.filter) {
             query.whereRaw(filters.filter);
