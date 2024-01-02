@@ -148,7 +148,6 @@ t.test('Projection single record', async t => {
         t.equal(res.statusCode, 200, 'Status code is 200');
 
         const json = res.json();
-        console.log(json);
 
         t.hasOwnPropsOnly(
             json,
