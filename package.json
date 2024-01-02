@@ -28,6 +28,8 @@
   "homepage": "https://github.com/EmilianoBruni/fastify-knex-api#readme",
   "type": "module",
   "devDependencies": {
+    "@fastify/swagger": "^8.13.0",
+    "@fastify/swagger-ui": "^2.0.1",
     "eslint": "^8.0.1",
     "eslint-config-prettier": "^9.1.0",
     "eslint-config-standard": "^17.1.0",
