@@ -2,6 +2,12 @@ import knexAPI from '../index.js';
 import fastify from 'fastify';
 
 export async function createServer(t, pluginConfig = {}) {
+    const app = initServer(t, pluginConfig);
+    await app.ready();
+    return app;
+}
+
+export function initServer(t, pluginConfig = {}) {
     const app = fastify();
     if (!pluginConfig.knexConfig) {
         pluginConfig.knexConfig = {
@@ -11,6 +17,5 @@ export async function createServer(t, pluginConfig = {}) {
     }
     app.register(knexAPI, pluginConfig);
     t.after(app.close.bind(app));
-    await app.ready();
     return app;
 }
