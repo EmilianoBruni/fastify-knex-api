@@ -2,13 +2,19 @@ import knexAPI from '../index.js';
 import fastify from 'fastify';
 
 export async function createServer(t, pluginConfig = {}) {
-    const app = initServer(t, pluginConfig);
+    const app = initServer(t);
+    registerKnexAPI(app, pluginConfig);
     await app.ready();
     return app;
 }
 
-export function initServer(t, pluginConfig = {}) {
+export function initServer(t) {
     const app = fastify();
+    t.after(app.close.bind(app));
+    return app;
+}
+
+export function registerKnexAPI(app, pluginConfig = {}) {
     if (!pluginConfig.knexConfig) {
         pluginConfig.knexConfig = {
             client: 'mysql2',
@@ -16,6 +22,4 @@ export function initServer(t, pluginConfig = {}) {
         };
     }
     app.register(knexAPI, pluginConfig);
-    t.after(app.close.bind(app));
-    return app;
 }
