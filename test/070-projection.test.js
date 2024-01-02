@@ -105,7 +105,7 @@ t.test('Projection list', async t => {
     });
 });
 
-t.test("Projection single record", async t => {
+t.test('Projection single record', async t => {
     const server = await createServer(t);
 
     t.test('Show a single field', async t => {
@@ -188,6 +188,6 @@ t.test("Projection single record", async t => {
             'Only the requested fields are returned'
         );
     });
-})
+});
 
 t.end();
