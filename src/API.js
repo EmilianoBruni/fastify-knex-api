@@ -62,15 +62,8 @@ class API {
     }
 
     _generateSchemas(tableName) {
-        const query = this._knex(tableName);
-
-        let columnInfos;
         return this._knex(tableName)
             .columnInfo()
-            .then(columns => {
-                columnInfos = columns;
-                return columns;
-            })
             .then(columnInfos => {
                 const retColumnInfo = defaultSchemas(tableName);
                 const retSchema = retColumnInfo.view.schema;
@@ -163,7 +156,6 @@ class API {
             case 'enum':
             case 'char':
             case 'varchar':
-            case 'text':
             case 'tinytext':
             case 'json':
                 prop.type = 'string';
