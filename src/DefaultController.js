@@ -1,6 +1,8 @@
 class DefaultController {
-    constructor(tableName, pk = undefined) {
+    constructor(tableName, columsInfo, pk = undefined) {
         this.table = tableName;
+        this._columnsInfo = columsInfo;
+        this._returningClient = ['pg', 'mssql', 'oracledb'];
         this.pk = pk;
     }
 
@@ -34,11 +36,23 @@ class DefaultController {
     }
 
     async create(req, reply) {
+        const knex = req.server.knex;
+        const client = knex.client.config.client;
         let data;
         try {
-            data = await req.server.knex(this.table).insert(req.body);
+            const query = knex(this.table).insert(req.body);
+            if (this._returningClient.includes(client)) {
+                query.returning(this.pk);
+            }
+            data = await query;
         } catch (err) {
-            reply.code(500).send({ message: 'Error', err: err });
+            return reply.code(500).send({ message: 'Error', err: err });
+        }
+        // client is mysql or mysql2
+        if (!this._returningClient.includes(client)) {
+            // doesn't support returning but return last id in data[0]
+            // query DB to get the last inserted record
+            data = await knex(this.table).where(this.pk, data[0]);
         }
         return data[0];
     }
@@ -46,19 +60,27 @@ class DefaultController {
     async update(req, reply) {
         const id = req.params.id;
         await this._fillPkIfUndefined(req);
+        const knex = req.server.knex;
+        const client = knex.client.config.client;
         let data;
         try {
-            data = await req.server
-                .knex(this.table)
-                .update(req.body)
-                .where(this.pk, id);
+            const query = knex(this.table).where(this.pk, id).update(req.body);
+            if (this._returningClient.includes(client)) {
+                query.returning(Object.keys(this._columnsInfo));
+            }
+            data = await query;
         } catch (err) {
-            reply.code(500).send({ message: 'Error', err: err });
+            return reply.code(500).send({ message: 'Error', err: err });
         }
         if (data === 0) {
-            reply.code(404).send({ message: 'Not found' });
+            return reply.code(404).send({ message: 'Not found' });
         }
-        return { affected: data };
+        if (!this._returningClient.includes(client)) {
+            // doesn't support returning but return last id in data[0]
+            // query DB to get the last inserted record
+            data = await knex(this.table).where(this.pk, id);
+        }
+        return data[0];
     }
 
     async delete(req, reply) {
