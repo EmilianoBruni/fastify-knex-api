@@ -7,7 +7,7 @@ const firstRecordAuthors = {
     last_name: 'Messina',
     email: 'monia89@example.org',
     active: true,
-    added: '2011-10-09T08:34:11.000Z'
+    added: '2011-10-09T06:34:11.000Z'
 };
 
 const firstRecordPosts = {
@@ -107,7 +107,7 @@ t.test('Autodiscovery tables info', async t => {
             payload: newRecordAuthors
         }).then(res => {
             t.equal(res.statusCode, 200);
-            lastId = res.json();
+            lastId = res.json().id;
             // check lastId is a number
             t.ok(typeof lastId === 'number');
             t.end();
@@ -134,7 +134,7 @@ t.test('Autodiscovery tables info', async t => {
         })
             .then(res => {
                 t.equal(res.statusCode, 200);
-                t.equal(res.json().affected, 1);
+                t.equal(res.json().first_name, 'Massimiliano');
                 // get updated record
                 return app.inject({
                     method: 'GET',
@@ -203,19 +203,13 @@ t.test('Select only some tables as array (autodiscover pk)', async t => {
     });
 
     t.test('exists the api for the table "authors"', async t => {
-        // test if exists the api for the table "users"
-        const res_list = await app.inject({ url: '/api/authors/' });
-        t.equal(res_list.statusCode, 200);
-    });
-
-    t.test('exists the api for the table "authors"', async t => {
-        // test if exists the api for the table "users"
+        // test if exists the api for the table "authors"
         const res_list = await app.inject({ url: '/api/authors/' });
         t.equal(res_list.statusCode, 200);
     });
 
     t.test('api for the table "posts" doesn\'t exist', async t => {
-        // test if exists the api for the table "users"
+        // test if exists the api for the table "posts"
         const res_list = await app.inject({ url: '/api/posts/' });
         t.equal(res_list.statusCode, 404);
     });
