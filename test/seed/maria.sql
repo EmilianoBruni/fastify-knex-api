@@ -1,3 +1,5 @@
+SET @@time_zone := '+00:00';
+
 #
 # TABLE STRUCTURE FOR: authors
 #
@@ -15,77 +17,76 @@ CREATE TABLE `authors` (
   UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=71 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `added`) VALUES (1, 'Michael', 'Messina', 'monia89@example.org', '2011-10-09 10:34:11');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `added`) VALUES (2, 'Joannes', 'Russo', 'sorrentino.akira@example.net', '1982-02-11 20:39:12');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `added`) VALUES (3, 'Deborah', 'Vitale', 'ibattaglia@example.net', '1976-05-31 13:35:36');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `added`) VALUES (4, 'Quasimodo', 'Galli', 'marcella.vitali@example.net', '1975-09-26 12:12:17');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `added`) VALUES (5, 'Giulio', 'Gallo', 'rorlando@example.com', '1985-08-15 09:50:17');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `added`) VALUES (6, 'Loredana', 'De Santis', 'Angelo.cesidia@example.net', '1988-09-19 00:20:43');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `added`) VALUES (7, 'Nunzia', 'Galli', 'pcarbone@example.org', '1981-08-30 03:46:33');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `added`) VALUES (8, 'Gabriele', 'Longo', 'leone.bibiana@example.org', '1972-09-20 05:16:22');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (9, 'Ludovico', 'Vitale', 'eriberto19@example.net', 0, '2004-02-19 04:16:27');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (10, 'Mariagiulia', 'Martini', 'pmarini@example.net', 0, '2020-03-29 09:25:06');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (11, 'Quasimodo', 'De Angelis', 'jole.ferraro@example.com', 1, '1993-11-17 08:27:01');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (12, 'Claudia', 'Guerra', 'smontanari@example.net', 0, '0000-00-00 00:00:00');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (13, 'Ninfa', 'Conte', 'marino.carmela@example.org', 1, '2022-03-11 19:14:54');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (14, 'Fortunata', 'Vitale', 'rosalba70@example.com', 0, '0000-00-00 00:00:00');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (15, 'Lucrezia', 'Gatti', 'dcaruso@example.com', 0, '2015-03-23 12:16:43');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (16, 'Umberto', 'Mariani', 'rosita65@example.net', 0, '2013-09-06 03:29:13');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (17, 'Silvano', 'Pellegrino', 'jmontanari@example.net', 0, '1974-08-27 23:09:25');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (18, 'Nicoletta', 'Negri', 'bsartori@example.com', 1, '2023-04-13 05:22:19');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (19, 'Raoul', 'Gallo', 'marini.max@example.net', 0, '0000-00-00 00:00:00');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (20, 'Ciro', 'Villa', 'tcattaneo@example.net', 0, '0000-00-00 00:00:00');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (21, 'Audenico', 'Colombo', 'mguerra@example.org', 0, '2018-03-22 15:43:56');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (22, 'Mirko', 'Monti', 'negri.deborah@example.org', 0, '0000-00-00 00:00:00');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (23, 'Nicoletta', 'Moretti', 'vania.ricci@example.com', 0, '1982-03-27 20:12:08');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (24, 'Eufemia', 'Fabbri', 'nabil.caruso@example.com', 1, '1974-12-19 12:16:59');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (25, 'Lauro', 'Rizzi', 'hector31@example.com', 1, '0000-00-00 00:00:00');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (26, 'Clodovea', 'Riva', 'loretta.morelli@example.org', 0, '1993-06-23 06:10:05');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (27, 'Antimo', 'Grassi', 'desantis.guendalina@example.net', 1, '0000-00-00 00:00:00');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (28, 'Ariel', 'Riva', 'xavier.damico@example.net', 0, '0000-00-00 00:00:00');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (29, 'Carmela', 'Martino', 'marino02@example.net', 1, '0000-00-00 00:00:00');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (30, 'Pierfrancesco', 'Conte', 'fdonati@example.org', 0, '1975-04-29 23:13:01');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (31, 'Giorgio', 'Morelli', 'cristyn.amico@example.com', 1, '0000-00-00 00:00:00');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (32, 'Gavino', 'Barbieri', 'hgiuliani@example.org', 1, '1977-06-09 11:35:10');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (33, 'Giovanna', 'Giordano', 'alessio33@example.org', 1, '1986-12-07 03:23:29');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (34, 'Odone', 'Bianchi', 'jelena43@example.net', 0, '1997-03-17 16:45:16');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (35, 'Cesidia', 'Parisi', 'soriana12@example.org', 0, '1976-11-03 19:29:10');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (36, 'Gastone', 'Costantini', 'leonardo.fiore@example.net', 0, '1977-01-01 18:28:17');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (37, 'Maria', 'Gatti', 'karim.barone@example.org', 0, '0000-00-00 00:00:00');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (38, 'Rebecca', 'Russo', 'fernando.farina@example.com', 1, '0000-00-00 00:00:00');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (39, 'Irene', 'Monti', 'donati.erminio@example.org', 0, '0000-00-00 00:00:00');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (40, 'Genziana', 'Ferrari', 'mariagiulia81@example.com', 0, '0000-00-00 00:00:00');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (41, 'Fabio', 'Ferraro', 'damico.doriana@example.org', 0, '1995-01-31 19:48:41');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (42, 'Ione', 'Vitale', 'derosa.domingo@example.org', 0, '1987-05-21 10:23:47');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (43, 'Ettore', 'Rizzi', 'damico.caligola@example.org', 1, '0000-00-00 00:00:00');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (44, 'Genziana', 'Marchetti', 'cpalumbo@example.org', 1, '1998-10-31 03:22:06');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (45, 'Fiorenzo', 'De luca', 'ruggiero.damiana@example.org', 0, '0000-00-00 00:00:00');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (46, 'Laura', 'Pellegrino', 'carbone.fatima@example.com', 0, '0000-00-00 00:00:00');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (47, 'Carmelo', 'Serra', 'cattaneo.sirio@example.com', 0, '0000-00-00 00:00:00');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (48, 'Gavino', 'Santoro', 'longo.emanuel@example.net', 0, '0000-00-00 00:00:00');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (49, 'Doriana', 'Sartori', 'renato58@example.org', 0, '1976-03-19 00:32:25');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (50, 'Thea', 'Sanna', 'nabil.bruno@example.org', 0, '0000-00-00 00:00:00');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (51, 'Ileana', 'Neri', 'bortolo.vitali@example.net', 0, '1980-04-23 13:04:41');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (52, 'Gaetano', 'Palumbo', 'gallo.eufemia@example.com', 1, '2012-08-11 20:45:54');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (53, 'Loredana', 'Ferrara', 'damico.amerigo@example.net', 0, '0000-00-00 00:00:00');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (54, 'Manuele', 'Coppola', 'doriana35@example.net', 0, '0000-00-00 00:00:00');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (55, 'Nunzia', 'Silvestri', 'riva.armando@example.org', 0, '1995-08-02 19:27:10');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (56, 'Emidio', 'Costantini', 'genziana.fabbri@example.net', 0, '0000-00-00 00:00:00');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (57, 'Deborah', 'Giordano', 'ruggiero.prisca@example.net', 0, '1973-02-12 23:03:54');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (58, 'Ingrid', 'Pellegrini', 'igallo@example.org', 0, '1987-01-13 16:10:10');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (59, 'Emilia', 'Pellegrini', 'emilia62@example.net', 0, '2018-10-04 12:07:13');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (60, 'Jole', 'Marini', 'montanari.samira@example.net', 0, '0000-00-00 00:00:00');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (61, 'Romeo', 'Mariani', 'lucrezia97@example.net', 1, '0000-00-00 00:00:00');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (62, 'Raoul', 'Lombardo', 'gferrari@example.net', 1, '1986-11-26 17:16:59');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (63, 'Marina', 'Mazza', 'vmartini@example.org', 0, '0000-00-00 00:00:00');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (64, 'Battista', 'Pagano', 'yferretti@example.net', 0, '0000-00-00 00:00:00');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (65, 'Fiorenzo', 'Gatti', 'orlando.vera@example.com', 0, '0000-00-00 00:00:00');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (66, 'Carmela', 'Testa', 'neri84@example.org', 0, '0000-00-00 00:00:00');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (67, 'Alessio', 'Russo', 'sasha94@example.com', 0, '0000-00-00 00:00:00');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (68, 'Diamante', 'Amico', 'milani.prisca@example.net', 1, '2010-05-08 15:22:07');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (69, 'Damiano', 'Esposito', 'giacinta.milani@example.org', 1, '0000-00-00 00:00:00');
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`, `added`) VALUES (70, 'Fortunata', 'Farina', 'augusto74@example.com', 1, '0000-00-00 00:00:00');
-
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `added`) VALUES (1, 'Michael', 'Messina', 'monia89@example.org', '2011-10-09 08:34:11') ;
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`) VALUES (2, 'Joannes', 'Russo', 'sorrentino.akira@example.net');
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`) VALUES (3, 'Deborah', 'Vitale', 'ibattaglia@example.net');
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`) VALUES (4, 'Quasimodo', 'Galli', 'marcella.vitali@example.net');
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`) VALUES (5, 'Giulio', 'Gallo', 'rorlando@example.com');
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`) VALUES (6, 'Loredana', 'De Santis', 'Angelo.cesidia@example.net');
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`) VALUES (7, 'Nunzia', 'Galli', 'pcarbone@example.org');
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`) VALUES (8, 'Gabriele', 'Longo', 'leone.bibiana@example.org');
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (9, 'Ludovico', 'Vitale', 'eriberto19@example.net', 0);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (10, 'Mariagiulia', 'Martini', 'pmarini@example.net', 0);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (11, 'Quasimodo', 'De Angelis', 'jole.ferraro@example.com', 1);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (12, 'Claudia', 'Guerra', 'smontanari@example.net', 0);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (13, 'Ninfa', 'Conte', 'marino.carmela@example.org', 1);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (14, 'Fortunata', 'Vitale', 'rosalba70@example.com', 0);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (15, 'Lucrezia', 'Gatti', 'dcaruso@example.com', 0);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (16, 'Umberto', 'Mariani', 'rosita65@example.net', 0);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (17, 'Silvano', 'Pellegrino', 'jmontanari@example.net', 0);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (18, 'Nicoletta', 'Negri', 'bsartori@example.com', 1);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (19, 'Raoul', 'Gallo', 'marini.max@example.net', 0);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (20, 'Ciro', 'Villa', 'tcattaneo@example.net', 0);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (21, 'Audenico', 'Colombo', 'mguerra@example.org', 0);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (22, 'Mirko', 'Monti', 'negri.deborah@example.org', 0);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (23, 'Nicoletta', 'Moretti', 'vania.ricci@example.com', 0);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (24, 'Eufemia', 'Fabbri', 'nabil.caruso@example.com', 1);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (25, 'Lauro', 'Rizzi', 'hector31@example.com', 1);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (26, 'Clodovea', 'Riva', 'loretta.morelli@example.org', 0);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (27, 'Antimo', 'Grassi', 'desantis.guendalina@example.net', 1);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (28, 'Ariel', 'Riva', 'xavier.damico@example.net', 0);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (29, 'Carmela', 'Martino', 'marino02@example.net', 1);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (30, 'Pierfrancesco', 'Conte', 'fdonati@example.org', 0);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (31, 'Giorgio', 'Morelli', 'cristyn.amico@example.com', 1);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (32, 'Gavino', 'Barbieri', 'hgiuliani@example.org', 1);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (33, 'Giovanna', 'Giordano', 'alessio33@example.org', 1);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (34, 'Odone', 'Bianchi', 'jelena43@example.net', 0);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (35, 'Cesidia', 'Parisi', 'soriana12@example.org', 0);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (36, 'Gastone', 'Costantini', 'leonardo.fiore@example.net', 0);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (37, 'Maria', 'Gatti', 'karim.barone@example.org', 0);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (38, 'Rebecca', 'Russo', 'fernando.farina@example.com', 1);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (39, 'Irene', 'Monti', 'donati.erminio@example.org', 0);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (40, 'Genziana', 'Ferrari', 'mariagiulia81@example.com', 0);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (41, 'Fabio', 'Ferraro', 'damico.doriana@example.org', 0);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (42, 'Ione', 'Vitale', 'derosa.domingo@example.org', 0);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (43, 'Ettore', 'Rizzi', 'damico.caligola@example.org', 1);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (44, 'Genziana', 'Marchetti', 'cpalumbo@example.org', 1);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (45, 'Fiorenzo', 'De luca', 'ruggiero.damiana@example.org', 0);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (46, 'Laura', 'Pellegrino', 'carbone.fatima@example.com', 0);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (47, 'Carmelo', 'Serra', 'cattaneo.sirio@example.com', 0);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (48, 'Gavino', 'Santoro', 'longo.emanuel@example.net', 0);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (49, 'Doriana', 'Sartori', 'renato58@example.org', 0);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (50, 'Thea', 'Sanna', 'nabil.bruno@example.org', 0);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (51, 'Ileana', 'Neri', 'bortolo.vitali@example.net', 0);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (52, 'Gaetano', 'Palumbo', 'gallo.eufemia@example.com', 1);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (53, 'Loredana', 'Ferrara', 'damico.amerigo@example.net', 0);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (54, 'Manuele', 'Coppola', 'doriana35@example.net', 0);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (55, 'Nunzia', 'Silvestri', 'riva.armando@example.org', 0);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (56, 'Emidio', 'Costantini', 'genziana.fabbri@example.net', 0);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (57, 'Deborah', 'Giordano', 'ruggiero.prisca@example.net', 0);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (58, 'Ingrid', 'Pellegrini', 'igallo@example.org', 0);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (59, 'Emilia', 'Pellegrini', 'emilia62@example.net', 0);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (60, 'Jole', 'Marini', 'montanari.samira@example.net', 0);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (61, 'Romeo', 'Mariani', 'lucrezia97@example.net', 1);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (62, 'Raoul', 'Lombardo', 'gferrari@example.net', 1);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (63, 'Marina', 'Mazza', 'vmartini@example.org', 0);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (64, 'Battista', 'Pagano', 'yferretti@example.net', 0);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (65, 'Fiorenzo', 'Gatti', 'orlando.vera@example.com', 0);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (66, 'Carmela', 'Testa', 'neri84@example.org', 0);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (67, 'Alessio', 'Russo', 'sasha94@example.com', 0);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (68, 'Diamante', 'Amico', 'milani.prisca@example.net', 1);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (69, 'Damiano', 'Esposito', 'giacinta.milani@example.org', 1);
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `active`) VALUES (70, 'Fortunata', 'Farina', 'augusto74@example.com', 1);
 #
 # TABLE STRUCTURE FOR: posts
 #
@@ -124,7 +125,7 @@ CREATE TABLE `all_std_types` (
   `fld02` float(10,4) NOT NULL,
   `fld03` tinyint(3) NOT NULL,
   `fld04` bigint(20) NOT NULL,
-  `fld05` bit(1) NOT NULL,
+  `fld05` bit(8) NOT NULL,
   `fld06` char(10) NOT NULL,
   `fld07` varchar(255) NOT NULL,
   `fld08` text NOT NULL,
@@ -138,16 +139,16 @@ CREATE TABLE `all_std_types` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
-INSERT INTO `all_std_types` (`id`, `fld01`, `fld02`, `fld03`, `fld04`, `fld05`, `fld06`, `fld07`, `fld08`, `fld09`, `fld10`, `fld11`, `fld12`, `fld13`, `fld14`, `fld15`) VALUES (1, '0.00', '6187.8999', 1, '2', '1', 'ut', 'Aut necessitatibus necessitatibus incidunt consequatur voluptas commodi dolores.', 'Fugiat vel aliquid minus.', 'item3', 'item2', '1974-10-01', '2003-11-26 13:05:06', '1976-01-26 20:28:58', '18:13:15', '2019');
-INSERT INTO `all_std_types` (`id`, `fld01`, `fld02`, `fld03`, `fld04`, `fld05`, `fld06`, `fld07`, `fld08`, `fld09`, `fld10`, `fld11`, `fld12`, `fld13`, `fld14`, `fld15`) VALUES (2, '423.00', '0.6784', 7, '1', '0', 'qui', 'Est magni est minima id eligendi consequatur.', 'Dolorem facere aliquid error enim qui totam officiis.', 'item1', 'item1', '1997-02-15', '1992-06-27 03:34:40', '1985-01-29 16:53:36', '17:10:59', '2006');
-INSERT INTO `all_std_types` (`id`, `fld01`, `fld02`, `fld03`, `fld04`, `fld05`, `fld06`, `fld07`, `fld08`, `fld09`, `fld10`, `fld11`, `fld12`, `fld13`, `fld14`, `fld15`) VALUES (3, '1618.11', '1000000.0000', 8, '2', '1', 'natus', 'Omnis ipsam odio dignissimos neque nobis.', 'Ipsum illo quo sequi minima alias.', 'item1', 'item2', '1973-09-11', '2007-02-01 18:24:51', '2001-04-03 23:42:35', '16:30:30', '2003');
-INSERT INTO `all_std_types` (`id`, `fld01`, `fld02`, `fld03`, `fld04`, `fld05`, `fld06`, `fld07`, `fld08`, `fld09`, `fld10`, `fld11`, `fld12`, `fld13`, `fld14`, `fld15`) VALUES (4, '0.00', '0.0000', 8, '8', '0', 'dicta', 'Omnis ab voluptatem et et aut inventore officia maxime.', 'Iure alias consequatur voluptatum repellat odio omnis aut.', 'item1', 'item3', '2015-03-04', '2014-01-03 01:35:36', '2003-06-20 21:22:49', '13:20:37', '1990');
-INSERT INTO `all_std_types` (`id`, `fld01`, `fld02`, `fld03`, `fld04`, `fld05`, `fld06`, `fld07`, `fld08`, `fld09`, `fld10`, `fld11`, `fld12`, `fld13`, `fld14`, `fld15`) VALUES (5, '99999999.99', '29.8700', 9, '4', '0', 'et', 'Minima autem numquam expedita itaque modi nostrum odit eum.', 'Doloremque esse sunt id et dignissimos vero sapiente.', 'item3', 'item2', '1981-03-07', '1990-06-14 12:52:09', '2020-05-30 13:41:26', '10:45:35', '2011');
-INSERT INTO `all_std_types` (`id`, `fld01`, `fld02`, `fld03`, `fld04`, `fld05`, `fld06`, `fld07`, `fld08`, `fld09`, `fld10`, `fld11`, `fld12`, `fld13`, `fld14`, `fld15`) VALUES (6, '6847.07', '0.0000', 5, '4', '1', 'nesciunt', 'Autem molestiae enim facilis voluptas molestiae sit.', 'Laborum cum dolorum sunt assumenda.', 'item1', 'item2', '1985-02-09', '2017-10-05 17:53:16', '1992-09-24 09:12:33', '16:01:44', '2017');
-INSERT INTO `all_std_types` (`id`, `fld01`, `fld02`, `fld03`, `fld04`, `fld05`, `fld06`, `fld07`, `fld08`, `fld09`, `fld10`, `fld11`, `fld12`, `fld13`, `fld14`, `fld15`) VALUES (7, '12733.29', '0.0000', 5, '0', '1', 'enim', 'Quia at vero optio et impedit.', 'Quasi quia optio aut sit.', 'item1', 'item1', '2010-05-23', '1999-08-25 01:28:11', '1978-03-26 08:47:30', '20:05:26', '2008');
-INSERT INTO `all_std_types` (`id`, `fld01`, `fld02`, `fld03`, `fld04`, `fld05`, `fld06`, `fld07`, `fld08`, `fld09`, `fld10`, `fld11`, `fld12`, `fld13`, `fld14`, `fld15`) VALUES (8, '11858.18', '1.1300', 0, '6', '0', 'repudianda', 'Et dolorum in placeat quo.', 'Totam a consequuntur ipsa provident error.', 'item2', 'item2', '1978-10-14', '2016-09-05 12:57:56', '1992-01-11 18:54:58', '23:28:26', '2014');
-INSERT INTO `all_std_types` (`id`, `fld01`, `fld02`, `fld03`, `fld04`, `fld05`, `fld06`, `fld07`, `fld08`, `fld09`, `fld10`, `fld11`, `fld12`, `fld13`, `fld14`, `fld15`) VALUES (9, '341120.90', '4228.9502', 1, '5', '1', 'sit', 'Quasi omnis debitis saepe voluptatum rerum recusandae ipsa.', 'Deserunt sapiente distinctio hic qui qui in fuga.', 'item3', 'item2', '1993-05-30', '2005-09-02 02:32:55', '2005-12-28 15:39:22', '21:09:12', '1974');
-INSERT INTO `all_std_types` (`id`, `fld01`, `fld02`, `fld03`, `fld04`, `fld05`, `fld06`, `fld07`, `fld08`, `fld09`, `fld10`, `fld11`, `fld12`, `fld13`, `fld14`, `fld15`) VALUES (10, '200.77', '0.0000', 9, '7', '1', 'quia', 'Et labore nihil in nobis voluptate dolorum quo.', 'Est cumque voluptas dolorum voluptas minima autem.', 'item1', 'item3', '2006-12-07', '1996-01-22 12:42:57', '1981-08-22 14:32:24', '16:33:35', '2022');
+INSERT INTO `all_std_types` (`id`, `fld01`, `fld02`, `fld03`, `fld04`, `fld05`, `fld06`, `fld07`, `fld08`, `fld09`, `fld10`, `fld11`, `fld12`, `fld13`, `fld14`, `fld15`) VALUES (1, '0.00', '6187.8999', 1, '2', b'01010000', 'ut', 'Aut necessitatibus necessitatibus incidunt consequatur voluptas commodi dolores.', 'Fugiat vel aliquid minus.', 'item3', 'item2', '1974-10-01', '2003-11-26 13:05:06', '1976-01-26 20:28:58', '18:13:15', '2019');
+INSERT INTO `all_std_types` (`id`, `fld01`, `fld02`, `fld03`, `fld04`, `fld05`, `fld06`, `fld07`, `fld08`, `fld09`, `fld10`, `fld11`, `fld12`, `fld13`, `fld14`, `fld15`) VALUES (2, '423.00', '0.6784', 7, '1', b'00000000', 'qui', 'Est magni est minima id eligendi consequatur.', 'Dolorem facere aliquid error enim qui totam officiis.', 'item1', 'item1', '1997-02-15', '1992-06-27 03:34:40', '1985-01-29 16:53:36', '17:10:59', '2006');
+INSERT INTO `all_std_types` (`id`, `fld01`, `fld02`, `fld03`, `fld04`, `fld05`, `fld06`, `fld07`, `fld08`, `fld09`, `fld10`, `fld11`, `fld12`, `fld13`, `fld14`, `fld15`) VALUES (3, '1618.11', '1000.0000', 8, '2', b'11111100', 'natus', 'Omnis ipsam odio dignissimos neque nobis.', 'Ipsum illo quo sequi minima alias.', 'item1', 'item2', '1973-09-11', '2007-02-01 18:24:51', '2001-04-03 23:42:35', '16:30:30', '2003');
+INSERT INTO `all_std_types` (`id`, `fld01`, `fld02`, `fld03`, `fld04`, `fld05`, `fld06`, `fld07`, `fld08`, `fld09`, `fld10`, `fld11`, `fld12`, `fld13`, `fld14`, `fld15`) VALUES (4, '0.00', '0.0000', 8, '8', b'01010101', 'dicta', 'Omnis ab voluptatem et et aut inventore officia maxime.', 'Iure alias consequatur voluptatum repellat odio omnis aut.', 'item1', 'item3', '2015-03-04', '2014-01-03 01:35:36', '2003-06-20 21:22:49', '13:20:37', '1990');
+INSERT INTO `all_std_types` (`id`, `fld01`, `fld02`, `fld03`, `fld04`, `fld05`, `fld06`, `fld07`, `fld08`, `fld09`, `fld10`, `fld11`, `fld12`, `fld13`, `fld14`, `fld15`) VALUES (5, '99999999.99', '29.8700', 9, '4', b'10111010', 'et', 'Minima autem numquam expedita itaque modi nostrum odit eum.', 'Doloremque esse sunt id et dignissimos vero sapiente.', 'item3', 'item2', '1981-03-07', '1990-06-14 12:52:09', '2020-05-30 13:41:26', '10:45:35', '2011');
+INSERT INTO `all_std_types` (`id`, `fld01`, `fld02`, `fld03`, `fld04`, `fld05`, `fld06`, `fld07`, `fld08`, `fld09`, `fld10`, `fld11`, `fld12`, `fld13`, `fld14`, `fld15`) VALUES (6, '6847.07', '0.0000', 5, '4', b'11000011', 'nesciunt', 'Autem molestiae enim facilis voluptas molestiae sit.', 'Laborum cum dolorum sunt assumenda.', 'item1', 'item2', '1985-02-09', '2017-10-05 17:53:16', '1992-09-24 09:12:33', '16:01:44', '2017');
+INSERT INTO `all_std_types` (`id`, `fld01`, `fld02`, `fld03`, `fld04`, `fld05`, `fld06`, `fld07`, `fld08`, `fld09`, `fld10`, `fld11`, `fld12`, `fld13`, `fld14`, `fld15`) VALUES (7, '12733.29', '0.0000', 5, '0', b'10101101', 'enim', 'Quia at vero optio et impedit.', 'Quasi quia optio aut sit.', 'item1', 'item1', '2010-05-23', '1999-08-25 01:28:11', '1978-03-26 08:47:30', '20:05:26', '2008');
+INSERT INTO `all_std_types` (`id`, `fld01`, `fld02`, `fld03`, `fld04`, `fld05`, `fld06`, `fld07`, `fld08`, `fld09`, `fld10`, `fld11`, `fld12`, `fld13`, `fld14`, `fld15`) VALUES (8, '11858.18', '1.1300', 0, '6', b'01110011', 'repudianda', 'Et dolorum in placeat quo.', 'Totam a consequuntur ipsa provident error.', 'item2', 'item2', '1978-10-14', '2016-09-05 12:57:56', '1992-01-11 18:54:58', '23:28:26', '2014');
+INSERT INTO `all_std_types` (`id`, `fld01`, `fld02`, `fld03`, `fld04`, `fld05`, `fld06`, `fld07`, `fld08`, `fld09`, `fld10`, `fld11`, `fld12`, `fld13`, `fld14`, `fld15`) VALUES (9, '341120.90', '4228.9502', 1, '5', b'00001101', 'sit', 'Quasi omnis debitis saepe voluptatum rerum recusandae ipsa.', 'Deserunt sapiente distinctio hic qui qui in fuga.', 'item3', 'item2', '1993-05-30', '2005-09-02 02:32:55', '2005-12-28 15:39:22', '21:09:12', '1974');
+INSERT INTO `all_std_types` (`id`, `fld01`, `fld02`, `fld03`, `fld04`, `fld05`, `fld06`, `fld07`, `fld08`, `fld09`, `fld10`, `fld11`, `fld12`, `fld13`, `fld14`, `fld15`) VALUES (10, '200.77', '0.0000', 9, '7', b'10101000', 'quia', 'Et labore nihil in nobis voluptate dolorum quo.', 'Est cumque voluptas dolorum voluptas minima autem.', 'item1', 'item3', '2006-12-07', '1996-01-22 12:42:57', '1981-08-22 14:32:24', '16:33:35', '2022');
 
 #
 # TABLE STRUCTURE FOR: all_other_types
