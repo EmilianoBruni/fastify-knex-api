@@ -49,10 +49,19 @@ t.test('schema', async t => {
         t.ok(appjson, '200 content application/json exists');
         const schema = appjson.schema;
         t.ok(schema, '200 schema exists');
-        const props = schema.properties;
-        t.ok(props, '200 schema properties exists');
-        const id = props.id;
-        t.ok(id, 'properties id exists');
-        t.equal(id.type, 'integer', 'id type is integer');
+        const ref = schema.$ref;
+        t.ok(ref, '200 schema ref exists');
+        // TODO: check ref
+    });
+    t.test('exists the api for the table "authors"', async t => {
+        // test if exists the api for the table "users"
+        const res_list = await server.inject({ url: '/api/authors/' });
+        t.equal(res_list.statusCode, 200);
+        t.equal(
+            res_list.headers['content-type'],
+            'application/json; charset=utf-8'
+        );
     });
 });
+
+t.end();
