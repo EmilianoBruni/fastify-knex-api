@@ -112,4 +112,57 @@ INSERT INTO `posts` (`post_id`, `author_id`, `title`, `description`, `content`) 
 INSERT INTO `posts` (`post_id`, `author_id`, `title`, `description`, `content`) VALUES (9, 9, 'Omnis sit beatae autem consequatur eum.', 'Vero quaerat doloremque non voluptatem. Quibusdam atque corporis enim culpa explicabo accusantium a. Occaecati quam quibusdam occaecati. Esse exercitationem ut aut hic sunt.', 'Quisquam hic eos quaerat illo. Cumque consectetur odio sequi. Repellat et enim porro sapiente expedita quis amet. Sed facilis nemo consequatur tempore aut aperiam rerum.');
 INSERT INTO `posts` (`post_id`, `author_id`, `title`, `description`, `content`) VALUES (10, 10, 'Voluptatum rerum odit ipsam ratione beatae nihil quaerat.', 'Earum saepe nobis provident consequatur tempore. Blanditiis nesciunt maxime ea. Ipsa est inventore dolor laboriosam aut consequatur id. Repellat nemo autem quis natus odio consectetur quae quibusdam.', 'Aliquid consectetur eos veniam. Necessitatibus alias dolor debitis veniam iure. Id molestias aut tempore sit earum commodi est. Earum et voluptas quia veritatis error.');
 
+#
+# TABLE STRUCTURE FOR: all_std_types
+#
 
+DROP TABLE IF EXISTS `all_std_types`;
+
+CREATE TABLE `all_std_types` (
+  `id` int(9) unsigned NOT NULL AUTO_INCREMENT,
+  `fld01` decimal(10,2) unsigned NOT NULL,
+  `fld02` float(10,4) NOT NULL,
+  `fld03` tinyint(3) NOT NULL,
+  `fld04` bigint(20) NOT NULL,
+  `fld05` bit(1) NOT NULL,
+  `fld06` char(10) NOT NULL,
+  `fld07` varchar(255) NOT NULL,
+  `fld08` text NOT NULL,
+  `fld09` enum('item1','item2','item3') NOT NULL,
+  `fld10` set('item1','item2','item3') NOT NULL,
+  `fld11` date NOT NULL,
+  `fld12` datetime NOT NULL,
+  `fld13` timestamp NOT NULL DEFAULT current_timestamp(),
+  `fld14` time NOT NULL,
+  `fld15` year(4) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+INSERT INTO `all_std_types` (`id`, `fld01`, `fld02`, `fld03`, `fld04`, `fld05`, `fld06`, `fld07`, `fld08`, `fld09`, `fld10`, `fld11`, `fld12`, `fld13`, `fld14`, `fld15`) VALUES (1, '0.00', '6187.8999', 1, '2', '1', 'ut', 'Aut necessitatibus necessitatibus incidunt consequatur voluptas commodi dolores.', 'Fugiat vel aliquid minus.', 'item3', 'item2', '1974-10-01', '2003-11-26 13:05:06', '1976-01-26 20:28:58', '18:13:15', '2019');
+INSERT INTO `all_std_types` (`id`, `fld01`, `fld02`, `fld03`, `fld04`, `fld05`, `fld06`, `fld07`, `fld08`, `fld09`, `fld10`, `fld11`, `fld12`, `fld13`, `fld14`, `fld15`) VALUES (2, '423.00', '0.6784', 7, '1', '0', 'qui', 'Est magni est minima id eligendi consequatur.', 'Dolorem facere aliquid error enim qui totam officiis.', 'item1', 'item1', '1997-02-15', '1992-06-27 03:34:40', '1985-01-29 16:53:36', '17:10:59', '2006');
+INSERT INTO `all_std_types` (`id`, `fld01`, `fld02`, `fld03`, `fld04`, `fld05`, `fld06`, `fld07`, `fld08`, `fld09`, `fld10`, `fld11`, `fld12`, `fld13`, `fld14`, `fld15`) VALUES (3, '1618.11', '1000000.0000', 8, '2', '1', 'natus', 'Omnis ipsam odio dignissimos neque nobis.', 'Ipsum illo quo sequi minima alias.', 'item1', 'item2', '1973-09-11', '2007-02-01 18:24:51', '2001-04-03 23:42:35', '16:30:30', '2003');
+INSERT INTO `all_std_types` (`id`, `fld01`, `fld02`, `fld03`, `fld04`, `fld05`, `fld06`, `fld07`, `fld08`, `fld09`, `fld10`, `fld11`, `fld12`, `fld13`, `fld14`, `fld15`) VALUES (4, '0.00', '0.0000', 8, '8', '0', 'dicta', 'Omnis ab voluptatem et et aut inventore officia maxime.', 'Iure alias consequatur voluptatum repellat odio omnis aut.', 'item1', 'item3', '2015-03-04', '2014-01-03 01:35:36', '2003-06-20 21:22:49', '13:20:37', '1990');
+INSERT INTO `all_std_types` (`id`, `fld01`, `fld02`, `fld03`, `fld04`, `fld05`, `fld06`, `fld07`, `fld08`, `fld09`, `fld10`, `fld11`, `fld12`, `fld13`, `fld14`, `fld15`) VALUES (5, '99999999.99', '29.8700', 9, '4', '0', 'et', 'Minima autem numquam expedita itaque modi nostrum odit eum.', 'Doloremque esse sunt id et dignissimos vero sapiente.', 'item3', 'item2', '1981-03-07', '1990-06-14 12:52:09', '2020-05-30 13:41:26', '10:45:35', '2011');
+INSERT INTO `all_std_types` (`id`, `fld01`, `fld02`, `fld03`, `fld04`, `fld05`, `fld06`, `fld07`, `fld08`, `fld09`, `fld10`, `fld11`, `fld12`, `fld13`, `fld14`, `fld15`) VALUES (6, '6847.07', '0.0000', 5, '4', '1', 'nesciunt', 'Autem molestiae enim facilis voluptas molestiae sit.', 'Laborum cum dolorum sunt assumenda.', 'item1', 'item2', '1985-02-09', '2017-10-05 17:53:16', '1992-09-24 09:12:33', '16:01:44', '2017');
+INSERT INTO `all_std_types` (`id`, `fld01`, `fld02`, `fld03`, `fld04`, `fld05`, `fld06`, `fld07`, `fld08`, `fld09`, `fld10`, `fld11`, `fld12`, `fld13`, `fld14`, `fld15`) VALUES (7, '12733.29', '0.0000', 5, '0', '1', 'enim', 'Quia at vero optio et impedit.', 'Quasi quia optio aut sit.', 'item1', 'item1', '2010-05-23', '1999-08-25 01:28:11', '1978-03-26 08:47:30', '20:05:26', '2008');
+INSERT INTO `all_std_types` (`id`, `fld01`, `fld02`, `fld03`, `fld04`, `fld05`, `fld06`, `fld07`, `fld08`, `fld09`, `fld10`, `fld11`, `fld12`, `fld13`, `fld14`, `fld15`) VALUES (8, '11858.18', '1.1300', 0, '6', '0', 'repudianda', 'Et dolorum in placeat quo.', 'Totam a consequuntur ipsa provident error.', 'item2', 'item2', '1978-10-14', '2016-09-05 12:57:56', '1992-01-11 18:54:58', '23:28:26', '2014');
+INSERT INTO `all_std_types` (`id`, `fld01`, `fld02`, `fld03`, `fld04`, `fld05`, `fld06`, `fld07`, `fld08`, `fld09`, `fld10`, `fld11`, `fld12`, `fld13`, `fld14`, `fld15`) VALUES (9, '341120.90', '4228.9502', 1, '5', '1', 'sit', 'Quasi omnis debitis saepe voluptatum rerum recusandae ipsa.', 'Deserunt sapiente distinctio hic qui qui in fuga.', 'item3', 'item2', '1993-05-30', '2005-09-02 02:32:55', '2005-12-28 15:39:22', '21:09:12', '1974');
+INSERT INTO `all_std_types` (`id`, `fld01`, `fld02`, `fld03`, `fld04`, `fld05`, `fld06`, `fld07`, `fld08`, `fld09`, `fld10`, `fld11`, `fld12`, `fld13`, `fld14`, `fld15`) VALUES (10, '200.77', '0.0000', 9, '7', '1', 'quia', 'Et labore nihil in nobis voluptate dolorum quo.', 'Est cumque voluptas dolorum voluptas minima autem.', 'item1', 'item3', '2006-12-07', '1996-01-22 12:42:57', '1981-08-22 14:32:24', '16:33:35', '2022');
+
+#
+# TABLE STRUCTURE FOR: all_other_types
+#
+
+DROP TABLE IF EXISTS `all_other_types`;
+
+CREATE TABLE `all_other_types` (
+  `id` int(9) unsigned NOT NULL AUTO_INCREMENT,
+  `fld01` INET4,
+  `fld02` INET6,
+  `fld03` JSON,
+  `fld04` UUID,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+INSERT INTO `all_other_types` (`id`, `fld01`, `fld02`, `fld03`, `fld04`) VALUES (1, '192.168.0.10', '2001:db8::ff00:42:8329', '[{"_id":"659566b88fa74fa916479f75","index":0,"guid":"ea725f9f-c257-4001-85a1-b297c7d82556"},{"_id":"659566b8dcd2a4a0f288d66b","index":1,"guid":"eec29ab8-df9f-43dd-89cc-0064c7dd646d"}]','123e4567-e89b-12d3-a456-426655440000');
+INSERT INTO `all_other_types` (`id`, `fld01`, `fld02`, `fld03`, `fld04`) VALUES (2, 0xA0000012, x'20010DB8000000000000FF0000428329','[{"_id":"659566b88fa74fa916479f75","index":0,"guid":"ea725f9f-c257-4001-85a1-b297c7d82556"},{"_id":"659566b8dcd2a4a0f288d66b","index":1,"guid":"eec29ab8-df9f-43dd-89cc-0064c7dd646d"}]',x'fffffffffffffffffffffffffffffffe');
