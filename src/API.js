@@ -129,6 +129,7 @@ class API {
             case 'bit':
             case 'tinyinteger':
             case 'smallinteger':
+            case 'smallint':
             case 'tinyint':
             case 'mediuminteger':
             case 'unsignedinteger':
@@ -195,8 +196,10 @@ class API {
                 prop.format = 'ipv6';
                 break;
             default:
-                throw new Error(`Unknown column type ${columnInfo.type} for field ${name}: ` 
-                    + JSON.stringify(columnInfo));
+                throw new Error(
+                    `Unknown column type ${columnInfo.type} for field ${name}: ` +
+                        JSON.stringify(columnInfo)
+                );
         }
     }
 }
