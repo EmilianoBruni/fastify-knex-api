@@ -31,14 +31,33 @@ class API {
         // register routes for each table
         return Promise.all(
             this._tables.map(table =>
-                this._generateSchemas(table.name).then(schemas => {
-                    const optReg = {
-                        prefix: `${this._prefix}/${table.name}`,
-                        controller: new DefaultController(table.name, table.pk),
-                        ...schemas
-                    };
-                    return this._fastify.register(crudGen, optReg);
-                })
+                this._knex(table.name)
+                    .columnInfo()
+                    .then(columnsInfo => {
+                        const schema = this._getTableSchema(columnsInfo);
+                        // register schema in fastify
+                        const ref_id = `fastify-knex-api-${table.name}`;
+                        this._fastify.addSchema({
+                            $id: ref_id,
+                            type: 'object',
+                            properties: schema
+                        });
+                        // get default schemas
+                        const defSchemas = defaultSchemas(table.name);
+                        // add response to schemas
+                        this._appendResponseToSchemas(defSchemas, ref_id);
+                        // register routes
+                        const optReg = {
+                            prefix: `${this._prefix}/${table.name}`,
+                            controller: new DefaultController(
+                                table.name,
+                                columnsInfo,
+                                table.pk
+                            ),
+                            ...defSchemas
+                        };
+                        return this._fastify.register(crudGen, optReg);
+                    })
             )
         );
     }
@@ -61,50 +80,38 @@ class API {
         }
     }
 
-    _generateSchemas(tableName) {
-        return this._knex(tableName)
-            .columnInfo()
-            .then(columnInfos => {
-                const retColumnInfo = defaultSchemas(tableName);
-                const retSchema = retColumnInfo.view.schema;
-                retSchema.response = retSchema.response || {};
-                retSchema.response['200'] = retSchema.response['200'] || {
-                    type: 'object'
-                };
-                retSchema.response['200'].properties =
-                    retSchema.response['200'].properties || {};
-                const p = retSchema.response['200'].properties;
-                for (const k of Object.keys(columnInfos)) {
-                    const columnInfo = columnInfos[k];
-                    p[k] = {};
-                    this._addTypeFormat(k, columnInfo, p[k]);
-                    if (
-                        columnInfo.maxLength !== undefined &&
-                        columnInfo.maxLength !== null
-                    ) {
-                        p[k].maxLength = columnInfo.maxLength;
-                    }
-                    if (
-                        columnInfo.description !== undefined &&
-                        columnInfo.description !== null
-                    ) {
-                        p[k].description = columnInfo.description;
-                    }
-                    if (
-                        columnInfo.example !== undefined &&
-                        columnInfo.example !== null
-                    ) {
-                        p[k].example = columnInfo.example;
-                    }
-                    if (columnInfo.primary) {
-                        p[k].description += ' (primary key)';
-                    }
-                    if (columnInfo.unique) {
-                        p[k].description += ' (unique)';
-                    }
-                }
-                return retColumnInfo;
-            });
+    _buildPropsFromColumnsInfo(columnsInfo) {
+        const props = {};
+        for (const k of Object.keys(columnsInfo)) {
+            const columnInfo = columnsInfo[k];
+            props[k] = {};
+            this._addTypeFormat(k, columnInfo, props[k]);
+            if (
+                columnInfo.maxLength !== undefined &&
+                columnInfo.maxLength !== null
+            ) {
+                props[k].maxLength = columnInfo.maxLength;
+            }
+            if (
+                columnInfo.description !== undefined &&
+                columnInfo.description !== null
+            ) {
+                props[k].description = columnInfo.description;
+            }
+            if (
+                columnInfo.example !== undefined &&
+                columnInfo.example !== null
+            ) {
+                props[k].example = columnInfo.example;
+            }
+            if (columnInfo.primary) {
+                props[k].description += ' (primary key)';
+            }
+            if (columnInfo.unique) {
+                props[k].description += ' (unique)';
+            }
+        }
+        return props;
     }
 
     async _getDBTables() {
@@ -193,6 +200,32 @@ class API {
                         JSON.stringify(columnInfo)
                 );
         }
+    }
+
+    _getTableSchema(columnsInfo) {
+        return this._buildPropsFromColumnsInfo(columnsInfo);
+    }
+
+    _appendResponseToSchemas(schemas, ref_id) {
+        // view, create, update return ref_id for response=200
+        ['view', 'create', 'update'].forEach(k => {
+            const schema = schemas[k].schema;
+            schema.response = schema.response || {};
+            schema.response['200'] = schema.response['200'] || {
+                type: 'object'
+            };
+            schema.response['200'].$ref = `${ref_id}#`;
+        });
+
+        // list return array of ref_id for response=200
+        const schema = schemas.list.schema;
+        schema.response = schema.response || {};
+        schema.response['200'] = schema.response['200'] || {
+            total: { type: 'integer', example: '1' },
+            items: { type: 'array', items: { $ref: `${ref_id}#` } }
+        };
+
+        return schemas;
     }
 }
 
