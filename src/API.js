@@ -84,13 +84,7 @@ class API {
                 for (const k of Object.keys(columnInfos)) {
                     const columnInfo = columnInfos[k];
                     p[k] = {};
-                    const [type, format] = this._convTypeDBToAjvSchema(
-                        columnInfo.type
-                    );
-                    p[k].type = type;
-                    if (format !== undefined && format !== null) {
-                        p[k].format = format;
-                    }
+                    this._addTypeFormat(k, columnInfo, p[k]);
                     if (
                         columnInfo.maxLength !== undefined &&
                         columnInfo.maxLength !== null
@@ -124,51 +118,85 @@ class API {
         return await this.schemaInspector.tables();
     }
 
-    _convTypeDBToAjvSchema(type) {
-        // convert Knex column type to Ajv schema type
+    _addTypeFormat(name, columnInfo, prop) {
+        // add type/format and other properties to the schema
         // See: https://ajv.js.org/json-type-definition.html
-
-        switch (type) {
+        switch (columnInfo.type.toLowerCase()) {
             case 'integer':
-            case 'bigInteger':
+            case 'biginteger':
+            case 'bigint':
             case 'int':
-            case 'tinyInteger':
-            case 'smallInteger':
+            case 'bit':
+            case 'tinyinteger':
+            case 'smallinteger':
             case 'tinyint':
-            case 'mediumInteger':
-            case 'unsignedInteger':
-            case 'unsignedBigInteger':
-            case 'unsignedSmallInteger':
-            case 'unsignedMediumInteger':
-                return ['integer', undefined];
+            case 'mediuminteger':
+            case 'unsignedinteger':
+            case 'unsignedbiginteger':
+            case 'unsignedsmallinteger':
+            case 'unsignedmediuminteger':
+            case 'year':
+                prop.type = 'integer';
+                break;
             case 'float':
             case 'decimal':
             case 'double':
-                return ['number', undefined];
+                prop.type = 'number';
+                break;
             case 'binary':
-            case 'json':
             case 'jsonb':
+                prop.type = 'string';
+                prop.format = 'binary';
+                break;
             case 'uuid':
-            case 'enu':
-                return ['object', undefined];
+                prop.type = 'string';
+                prop.format = 'uuid';
+                break;
             case 'boolean':
-                return [type, undefined];
+                prop.type = 'boolean';
+                break;
             case 'string':
             case 'text':
-            case 'mediumText':
-            case 'longText':
+            case 'mediumtext':
+            case 'longtext':
             case 'enum':
             case 'char':
             case 'varchar':
             case 'text':
-                return ['string', undefined];
-            case 'dateTime':
-            case 'dateTimeTz':
+            case 'tinytext':
+            case 'json':
+                prop.type = 'string';
+                break;
+            case 'datetime':
+            case 'datetimetz':
             case 'timestamp':
-            case 'timestampTz':
-                return ['string', 'date-time'];
+            case 'timestamptz':
+                prop.type = 'string';
+                prop.format = 'date-time';
+                break;
+            case 'date':
+                prop.type = 'string';
+                prop.format = 'date';
+                break;
+            case 'time':
+                prop.type = 'string';
+                prop.format = 'time';
+                break;
+            case 'set':
+                prop.type = 'array';
+                prop.items = { type: 'string' };
+                break;
+            case 'inet4':
+                prop.type = 'string';
+                prop.format = 'ipv4';
+                break;
+            case 'inet6':
+                prop.type = 'string';
+                prop.format = 'ipv6';
+                break;
             default:
-                throw new Error(`Unknown column type ${type}`);
+                throw new Error(`Unknown column type ${columnInfo.type} for field ${name}: ` 
+                    + JSON.stringify(columnInfo));
         }
     }
 }
