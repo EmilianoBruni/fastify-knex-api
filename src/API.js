@@ -1,7 +1,7 @@
 // Class that handles all API calls
 
 import DefaultController from './DefaultController.js';
-import { defaultSchemas } from './DefaultSchemas.js';
+import { defaultSchemas, defaultHttpCode } from './DefaultSchemas.js';
 import crudGen from 'fastify-crud-generator';
 import { SchemaInspector } from 'knex-schema-inspector';
 
@@ -28,6 +28,8 @@ class API {
     initialize() {
         // normalize tables
         this._tables = this._normalizeTables(this._tables);
+        // register default http code
+        this._fastify.addSchema(defaultHttpCode);
         // register routes for each table
         return Promise.all(
             this._tables.map(table =>
@@ -90,7 +92,8 @@ class API {
                 columnInfo.maxLength !== undefined &&
                 columnInfo.maxLength !== null
             ) {
-                props[k].maxLength = columnInfo.maxLength;
+                if (props[k].type === 'string')
+                    props[k].maxLength = columnInfo.maxLength;
             }
             if (
                 columnInfo.description !== undefined &&
@@ -218,17 +221,33 @@ class API {
         });
 
         // list return array of ref_id for response=200
-        const schema = schemas.list.schema;
-        schema.response = schema.response || {};
-        schema.response['200'] = schema.response['200'] || {
-            total: { type: 'integer', example: '1' },
-            items: { type: 'array', items: { $ref: `${ref_id}#` } }
+        schemas.list.schema.response = {
+            200: {
+                total: { type: 'integer', example: '1' },
+                items: { type: 'array', items: { $ref: `${ref_id}#` } }
+            }
         };
 
         // for create and update, ref_id also for body post
         ['create', 'update'].forEach(k => {
             const schema = schemas[k].schema;
             schema.body = { $ref: `${ref_id}#` };
+        });
+
+        /// add default httpcode
+
+        // delete return 204 if success
+        schemas.delete.schema.response = {
+            204: { $ref: 'fastify-knex-api/http-code#/204' }
+        };
+
+        ['view', 'list', 'create', 'update', 'delete'].forEach(k => {
+            const response = schemas[k].schema.response;
+            response['500'] = { $ref: 'fastify-knex-api/http-code#/500' };
+        });
+        ['view', 'update', 'delete'].forEach(k => {
+            const response = schemas[k].schema.response;
+            response['404'] = { $ref: 'fastify-knex-api/http-code#/404' };
         });
 
         return schemas;
