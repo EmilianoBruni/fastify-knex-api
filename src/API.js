@@ -225,6 +225,12 @@ class API {
             items: { type: 'array', items: { $ref: `${ref_id}#` } }
         };
 
+        // for create and update, ref_id also for body post
+        ['create', 'update'].forEach(k => {
+            const schema = schemas[k].schema;
+            schema.body = { $ref: `${ref_id}#` };
+        });
+
         return schemas;
     }
 }
