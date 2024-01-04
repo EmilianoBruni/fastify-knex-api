@@ -30,7 +30,7 @@ class DefaultController {
         await this._applyProjection(query, req.query);
         const data = await query;
         if (data.length === 0) {
-            reply.code(404).send({ message: 'Not found' });
+            return reply.code(404).send(DefaultController.HTTP_ERROR[404]);
         }
         return data[0];
     }
@@ -46,7 +46,7 @@ class DefaultController {
             }
             data = await query;
         } catch (err) {
-            return reply.code(500).send({ message: 'Error', err: err });
+            return reply.code(500).send(DefaultController.HTTP_ERROR[500](err));
         }
         // client is mysql or mysql2
         if (!this._returningClient.includes(client)) {
@@ -70,10 +70,10 @@ class DefaultController {
             }
             data = await query;
         } catch (err) {
-            return reply.code(500).send({ message: 'Error', err: err });
+            return reply.code(500).send(DefaultController.HTTP_ERROR[500](err));
         }
         if (data === 0) {
-            return reply.code(404).send({ message: 'Not found' });
+            return reply.code(404).send(DefaultController.HTTP_ERROR[404]);
         }
         if (!this._returningClient.includes(client)) {
             // doesn't support returning but return last id in data[0]
@@ -87,10 +87,9 @@ class DefaultController {
         const id = req.params.id;
         await this._fillPkIfUndefined(req);
         const data = await req.server.knex(this.table).del().where(this.pk, id);
-        if (data === 0) {
-            reply.code(404).send({ message: 'Not found' });
-        }
-        return { affected: data };
+        if (data === 0)
+            return reply.code(404).send(DefaultController.HTTP_ERROR[404]);
+        reply.code(204).send();
     }
 
     async _count(knex) {
@@ -177,6 +176,21 @@ class DefaultController {
             query.whereRaw(filters.filter);
         }
     }
+
+    static HTTP_ERROR = {
+        404: {
+            statusCode: 404,
+            error: 'Not Found',
+            message: 'Object Not Found'
+        },
+        500: (message = 'Something went wrong') => {
+            return {
+                statusCode: 500,
+                error: 'Internal Server Error',
+                message: message
+            };
+        }
+    };
 }
 
 export default DefaultController;
