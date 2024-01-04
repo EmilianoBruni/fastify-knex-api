@@ -36,7 +36,7 @@ class API {
                     .then(columnsInfo => {
                         const schema = this._getTableSchema(columnsInfo);
                         // register schema in fastify
-                        const ref_id = `fastify-knex-api-${table.name}`;
+                        const ref_id = `fastify-knex-api/${table.name}`;
                         this._fastify.addSchema({
                             $id: ref_id,
                             type: 'object',
