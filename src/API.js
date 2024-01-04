@@ -238,16 +238,20 @@ class API {
 
         // delete return 204 if success
         schemas.delete.schema.response = {
-            204: { $ref: 'fastify-knex-api/http-code#/204' }
+            204: { $ref: 'fastify-knex-api/http-code#/properties/204' }
         };
 
         ['view', 'list', 'create', 'update', 'delete'].forEach(k => {
             const response = schemas[k].schema.response;
-            response['500'] = { $ref: 'fastify-knex-api/http-code#/500' };
+            response['500'] = {
+                $ref: 'fastify-knex-api/http-code#/properties/500'
+            };
         });
         ['view', 'update', 'delete'].forEach(k => {
             const response = schemas[k].schema.response;
-            response['404'] = { $ref: 'fastify-knex-api/http-code#/404' };
+            response['404'] = {
+                $ref: 'fastify-knex-api/http-code#/properties/404'
+            };
         });
 
         return schemas;

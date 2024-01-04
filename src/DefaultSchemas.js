@@ -114,30 +114,32 @@ const defaultSchemas = modelName => {
 const defaultHttpCode = {
     $id: 'fastify-knex-api/http-code',
     type: 'object',
-    204: {
-        type: 'object',
-        description: 'No Content',
-        properties: {
-            message: { type: 'string', example: 'Object delete' },
-            statusCode: { type: 'number', example: 204 }
-        }
-    },
-    404: {
-        type: 'object',
-        description: 'Object not found',
-        properties: {
-            error: { type: 'string', example: 'Not Found' },
-            message: { type: 'string', example: 'Object Not Found' },
-            statusCode: { type: 'number', example: 404 }
-        }
-    },
-    500: {
-        type: 'object',
-        description: 'Internal Server Error',
-        properties: {
-            error: { type: 'string', example: 'Internal Server Error' },
-            message: { type: 'string', example: 'Something went wrong' },
-            statusCode: { type: 'number', example: 500 }
+    properties: {
+        204: {
+            type: 'object',
+            description: 'No Content',
+            properties: {
+                message: { type: 'string', example: 'Object delete' },
+                statusCode: { type: 'number', example: 204 }
+            }
+        },
+        404: {
+            type: 'object',
+            description: 'Object not found',
+            properties: {
+                error: { type: 'string', example: 'Not Found' },
+                message: { type: 'string', example: 'Object Not Found' },
+                statusCode: { type: 'number', example: 404 }
+            }
+        },
+        500: {
+            type: 'object',
+            description: 'Internal Server Error',
+            properties: {
+                error: { type: 'string', example: 'Internal Server Error' },
+                message: { type: 'string', example: 'Something went wrong' },
+                statusCode: { type: 'number', example: 500 }
+            }
         }
     }
 };
