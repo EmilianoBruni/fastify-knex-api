@@ -1,4 +1,5 @@
 import { createServer } from './helpers.js';
+import DefaultController from '../src/DefaultController.js';
 import t from 'tap';
 
 const firstRecordAuthors = {
@@ -73,7 +74,7 @@ t.test('Autodiscovery tables info', async t => {
     t.test('Wrong record id', async t => {
         const res = await app.inject({ url: '/api/authors/0' });
         t.equal(res.statusCode, 404);
-        t.equal(res.json().message, 'Not found');
+        t.equal(res.json().message, DefaultController.HTTP_ERROR[404].message);
     });
 
     t.test('exists the api for the table "posts"', async t => {
@@ -120,8 +121,12 @@ t.test('Autodiscovery tables info', async t => {
             url: '/api/authors/',
             payload: newRecordAuthors
         });
-        t.equal(res.statusCode, 500);
-        t.equal(res.json().message, 'Error');
+        t.equal(res.statusCode, 500, 'Status code 500');
+        t.equal(res.json().error, DefaultController.HTTP_ERROR[500]().error);
+        t.ok(
+            (res.json().message = ~'Duplicate entry'),
+            'Duplicate entry message'
+        );
     });
 
     t.test('update last record', t => {
@@ -157,7 +162,7 @@ t.test('Autodiscovery tables info', async t => {
             }
         });
         t.equal(res.statusCode, 404);
-        t.equal(res.json().message, 'Not found');
+        t.equal(res.json().message, DefaultController.HTTP_ERROR[404].message);
     });
 
     t.test('Try to update a record with wrong payload', async t => {
@@ -169,7 +174,11 @@ t.test('Autodiscovery tables info', async t => {
             }
         });
         t.equal(res.statusCode, 500);
-        t.equal(res.json().message, 'Error');
+        t.equal(res.json().error, DefaultController.HTTP_ERROR[500]().error);
+        t.ok(
+            (res.json().message = ~'Unknown column'),
+            'Unknown column message'
+        );
     });
 
     t.test('delete last record', t => {
@@ -177,8 +186,7 @@ t.test('Autodiscovery tables info', async t => {
             method: 'DELETE',
             url: `/api/authors/${lastId}`
         }).then(res => {
-            t.equal(res.statusCode, 200);
-            t.equal(res.json().affected, 1);
+            t.equal(res.statusCode, 204);
             t.end();
         });
     });
@@ -189,7 +197,7 @@ t.test('Autodiscovery tables info', async t => {
             url: `/api/authors/${lastId}`
         });
         t.equal(res.statusCode, 404);
-        t.equal(res.json().message, 'Not found');
+        t.equal(res.json().message, DefaultController.HTTP_ERROR[404].message);
     });
 });
 
