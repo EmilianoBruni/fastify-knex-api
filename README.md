@@ -162,6 +162,39 @@ return
 }
 ```
 
+### Create
+
+```javascript
+POST /api/authors/
+{
+  first_name: 'Michael',
+  last_name: 'Messina',
+  email: 'monia89@example.org',
+}
+```
+
+Create a new record in `authors`. Return saved record.
+
+
+```javascript
+{
+  id: 1,
+  first_name: 'Michael',
+  last_name: 'Messina',
+  email: 'monia89@example.org',
+  active: 1,
+  added: '2011-10-09T08:34:11.000Z'
+}
+```
+
+Supports [projection](#projection) as parameter.
+
+```javascript
+POST /api/authors/?fields=id,first_name
+```
+
+return only selected fields
+
 ## Options for list method
 
 In list method (`GET /api/authors`) we can use URL options to paginating, sorting, filter items and a mix of them.

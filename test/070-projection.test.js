@@ -189,4 +189,101 @@ t.test('Projection single record', async t => {
     });
 });
 
+t.test('Projection on create', async t => {
+    const server = await createServer(t);
+    let id;
+    const rec = {
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@email.fak'
+    };
+    const cleanUp = async () => {
+        await server.inject({
+            method: 'DELETE',
+            url: `/api/authors/${id}`
+        });
+    };
+    t.afterEach(cleanUp);
+
+    t.test('Show a single field', async t => {
+        const res = await server.inject({
+            method: 'POST',
+            url: '/api/authors?fields=id',
+            body: rec
+        });
+
+        t.equal(res.statusCode, 200, 'Status code is 200');
+        t.hasOwnPropsOnly(
+            res.json(),
+            ['id'],
+            'Only the requested fields are returned'
+        );
+        id = res.json().id;
+    });
+
+    t.test('Show multiple fields', async t => {
+        const res = await server.inject({
+            method: 'POST',
+            url: '/api/authors?fields=id,first_name,last_name',
+            body: rec
+        });
+
+        t.equal(res.statusCode, 200, 'Status code is 200');
+        t.hasOwnPropsOnly(
+            res.json(),
+            ['id', 'first_name', 'last_name'],
+            'Only the requested fields are returned'
+        );
+        id = res.json().id;
+    });
+
+    t.test('Show all fields explicit', async t => {
+        const res = await server.inject({
+            method: 'POST',
+            url: '/api/authors?fields=*',
+            body: rec
+        });
+
+        t.equal(res.statusCode, 200, 'Status code is 200');
+        t.hasOwnPropsOnly(
+            res.json(),
+            ['id', 'first_name', 'last_name', 'email', 'active', 'added'],
+            'Only the requested fields are returned'
+        );
+        id = res.json().id;
+    });
+
+    t.test('Exclude a single field', async t => {
+        const res = await server.inject({
+            method: 'POST',
+            url: '/api/authors?fields=-email',
+            body: rec
+        });
+
+        t.equal(res.statusCode, 200, 'Status code is 200');
+        t.hasOwnPropsOnly(
+            res.json(),
+            ['id', 'first_name', 'last_name', 'active', 'added'],
+            'Only the requested fields are returned'
+        );
+        id = res.json().id;
+    });
+
+    t.test('Exclude multiple fields', async t => {
+        const res = await server.inject({
+            method: 'POST',
+            url: '/api/authors?fields=-email,active,added',
+            body: rec
+        });
+
+        t.equal(res.statusCode, 200, 'Status code is 200');
+        t.hasOwnPropsOnly(
+            res.json(),
+            ['id', 'first_name', 'last_name'],
+            'Only the requested fields are returned'
+        );
+        id = res.json().id;
+    });
+});
+
 t.end();

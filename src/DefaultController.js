@@ -38,11 +38,13 @@ class DefaultController {
     async create(req, reply) {
         const knex = req.server.knex;
         const client = knex.client.config.client;
+        await this._fillPkIfUndefined(req);
         let data;
         try {
             const query = knex(this.table).insert(req.body);
             if (this._returningClient.includes(client)) {
-                query.returning(this.pk);
+                // TODO: projection for returningClient
+                query.returning(Object.keys(this._columnsInfo));
             }
             data = await query;
         } catch (err) {
@@ -52,7 +54,10 @@ class DefaultController {
         if (!this._returningClient.includes(client)) {
             // doesn't support returning but return last id in data[0]
             // query DB to get the last inserted record
-            data = await knex(this.table).where(this.pk, data[0]);
+            const query = knex(this.table).where(this.pk, data[0]);
+            // apply projection to the query
+            await this._applyProjection(query, req.query);
+            data = await query;
         }
         return data[0];
     }

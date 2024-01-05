@@ -75,7 +75,17 @@ const defaultSchemas = modelName => {
         create: {
             schema: {
                 summary: 'Create a new ' + modelName,
-                tags: [modelName]
+                tags: [modelName],
+                querystring: {
+                    type: 'object',
+                    properties: {
+                        fields: {
+                            type: 'string',
+                            description:
+                                'Comma separated list of fields to return'
+                        }
+                    }
+                }
             }
         },
         update: {
