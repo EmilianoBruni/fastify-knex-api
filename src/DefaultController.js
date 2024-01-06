@@ -74,7 +74,11 @@ class DefaultController {
         try {
             const query = knex(this.table).where(this.pk, id).update(req.body);
             if (this._returningClient.includes(client)) {
-                query.returning(Object.keys(this._columnsInfo));
+                const returning = this._filterReturningFields(
+                    Object.keys(this._columnsInfo),
+                    req.query
+                );
+                query.returning(returning);
             }
             data = await query;
         } catch (err) {
@@ -86,7 +90,10 @@ class DefaultController {
         if (!this._returningClient.includes(client)) {
             // doesn't support returning but return last id in data[0]
             // query DB to get the last inserted record
-            data = await knex(this.table).where(this.pk, id);
+            const query = knex(this.table).where(this.pk, id);
+            // apply projection to the query
+            await this._applyProjection(query, req.query);
+            data = await query;
         }
         return data[0];
     }

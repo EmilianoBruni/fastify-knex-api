@@ -100,6 +100,16 @@ const defaultSchemas = modelName => {
                             description: 'Unique identifier of ' + modelName
                         }
                     }
+                },
+                querystring: {
+                    type: 'object',
+                    properties: {
+                        fields: {
+                            type: 'string',
+                            description:
+                                'Comma separated list of fields to return'
+                        }
+                    }
                 }
             }
         },

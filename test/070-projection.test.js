@@ -286,4 +286,102 @@ t.test('Projection on create', async t => {
     });
 });
 
+t.test('Projection on update', async t => {
+    const server = await createServer(t);
+
+    const cleanUp = async () => {
+        // revert update
+        await server.inject({
+            method: 'PATCH',
+            url: `/api/authors/1`,
+            body: {
+                first_name: 'Michael',
+                last_name: 'Messina'
+            }
+        });
+    };
+    t.afterEach(cleanUp);
+
+    const firstRecordAuthors = {
+        first_name: 'Michael',
+        last_name: 'Jefferson'
+    };
+
+    t.test('Show a single field', async t => {
+        const res = await server.inject({
+            method: 'PATCH',
+            url: '/api/authors/1?fields=first_name',
+            body: firstRecordAuthors
+        });
+
+        t.equal(res.statusCode, 200, 'Status code is 200');
+        t.hasOwnPropsOnly(
+            res.json(),
+            ['first_name'],
+            'Only the requested fields are returned'
+        );
+    });
+
+    t.test('Show multiple fields', async t => {
+        const res = await server.inject({
+            method: 'PATCH',
+            url: '/api/authors/1?fields=first_name,last_name',
+            body: firstRecordAuthors
+        });
+
+        t.equal(res.statusCode, 200, 'Status code is 200');
+        t.hasOwnPropsOnly(
+            res.json(),
+            ['first_name', 'last_name'],
+            'Only the requested fields are returned'
+        );
+        t.equal(res.json().last_name, 'Jefferson');
+    });
+
+    t.test('Show all fields explicit', async t => {
+        const res = await server.inject({
+            method: 'PATCH',
+            url: '/api/authors/1?fields=*',
+            body: firstRecordAuthors
+        });
+
+        t.equal(res.statusCode, 200, 'Status code is 200');
+        t.hasOwnPropsOnly(
+            res.json(),
+            ['id', 'first_name', 'last_name', 'email', 'active', 'added'],
+            'Only the requested fields are returned'
+        );
+    });
+
+    t.test('Exclude a single field', async t => {
+        const res = await server.inject({
+            method: 'PATCH',
+            url: '/api/authors/1?fields=-email',
+            body: firstRecordAuthors
+        });
+
+        t.equal(res.statusCode, 200, 'Status code is 200');
+        t.hasOwnPropsOnly(
+            res.json(),
+            ['id', 'first_name', 'last_name', 'active', 'added'],
+            'Only the requested fields are returned'
+        );
+    });
+
+    t.test('Exclude multiple fields', async t => {
+        const res = await server.inject({
+            method: 'PATCH',
+            url: '/api/authors/1?fields=-email,active,added',
+            body: firstRecordAuthors
+        });
+
+        t.equal(res.statusCode, 200, 'Status code is 200');
+        t.hasOwnPropsOnly(
+            res.json(),
+            ['id', 'first_name', 'last_name'],
+            'Only the requested fields are returned'
+        );
+    });
+});
+
 t.end();
