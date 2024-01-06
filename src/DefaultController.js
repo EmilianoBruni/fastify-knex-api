@@ -17,9 +17,12 @@ class DefaultController {
         this._applyOtherStatments(query, req.query);
         // apply projection to the query
         await this._applyProjection(query, req.query);
-        // got items for filters
-        const items = await query;
-        return this._formatManyResult(total, items);
+        try {
+            const items = await query;
+            return this._formatManyResult(total, items);
+        } catch (err) {
+            return reply.code(500).send(DefaultController.HTTP_ERROR[500](err));
+        }
     }
 
     async view(req, reply) {
@@ -28,7 +31,12 @@ class DefaultController {
         const query = req.server.knex(this.table).where(this.pk, id);
         // apply projection to the query
         await this._applyProjection(query, req.query);
-        const data = await query;
+        let data;
+        try {
+            data = await query;
+        } catch (err) {
+            return reply.code(500).send(DefaultController.HTTP_ERROR[500](err));
+        }
         if (data.length === 0) {
             return reply.code(404).send(DefaultController.HTTP_ERROR[404]);
         }
@@ -39,16 +47,16 @@ class DefaultController {
         const knex = req.server.knex;
         const client = knex.client.config.client;
         await this._fillPkIfUndefined(req);
+        const query = knex(this.table).insert(req.body);
         let data;
+        if (this._returningClient.includes(client)) {
+            const returning = this._filterReturningFields(
+                Object.keys(this._columnsInfo),
+                req.query
+            );
+            query.returning(returning);
+        }
         try {
-            const query = knex(this.table).insert(req.body);
-            if (this._returningClient.includes(client)) {
-                const returning = this._filterReturningFields(
-                    Object.keys(this._columnsInfo),
-                    req.query
-                );
-                query.returning(returning);
-            }
             data = await query;
         } catch (err) {
             return reply.code(500).send(DefaultController.HTTP_ERROR[500](err));
@@ -61,6 +69,13 @@ class DefaultController {
             // apply projection to the query
             await this._applyProjection(query, req.query);
             data = await query;
+            try {
+                data = await query;
+            } catch (err) {
+                return reply
+                    .code(500)
+                    .send(DefaultController.HTTP_ERROR[500](err));
+            }
         }
         return data[0];
     }
@@ -71,15 +86,15 @@ class DefaultController {
         const knex = req.server.knex;
         const client = knex.client.config.client;
         let data;
+        const query = knex(this.table).where(this.pk, id).update(req.body);
+        if (this._returningClient.includes(client)) {
+            const returning = this._filterReturningFields(
+                Object.keys(this._columnsInfo),
+                req.query
+            );
+            query.returning(returning);
+        }
         try {
-            const query = knex(this.table).where(this.pk, id).update(req.body);
-            if (this._returningClient.includes(client)) {
-                const returning = this._filterReturningFields(
-                    Object.keys(this._columnsInfo),
-                    req.query
-                );
-                query.returning(returning);
-            }
             data = await query;
         } catch (err) {
             return reply.code(500).send(DefaultController.HTTP_ERROR[500](err));
@@ -93,17 +108,28 @@ class DefaultController {
             const query = knex(this.table).where(this.pk, id);
             // apply projection to the query
             await this._applyProjection(query, req.query);
-            data = await query;
+            try {
+                data = await query;
+            } catch (err) {
+                return reply
+                    .code(500)
+                    .send(DefaultController.HTTP_ERROR[500](err));
+            }
         }
         return data[0];
     }
 
     async delete(req, reply) {
         const id = req.params.id;
+        const knex = req.server.knex;
         await this._fillPkIfUndefined(req);
-        const data = await req.server.knex(this.table).del().where(this.pk, id);
-        if (data === 0)
-            return reply.code(404).send(DefaultController.HTTP_ERROR[404]);
+        try {
+            const data = await knex(this.table).del().where(this.pk, id);
+            if (data === 0)
+                return reply.code(404).send(DefaultController.HTTP_ERROR[404]);
+        } catch (err) {
+            return reply.code(500).send(DefaultController.HTTP_ERROR[500](err));
+        }
         reply.code(204).send();
     }
 
