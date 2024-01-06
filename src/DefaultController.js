@@ -43,8 +43,11 @@ class DefaultController {
         try {
             const query = knex(this.table).insert(req.body);
             if (this._returningClient.includes(client)) {
-                // TODO: projection for returningClient
-                query.returning(Object.keys(this._columnsInfo));
+                const returning = this._filterReturningFields(
+                    Object.keys(this._columnsInfo),
+                    req.query
+                );
+                query.returning(returning);
             }
             data = await query;
         } catch (err) {
@@ -173,6 +176,21 @@ class DefaultController {
             }
         }
         query.select(filterFields);
+    }
+
+    _filterReturningFields(allFields, filters) {
+        // if fields is not defined or = '*', return all fields
+        if (!filters.fields || filters.fields === '*') return allFields;
+        // if fields is defined, not start with -,
+        // return only the fields in the list
+        if (!filters.fields.startsWith('-')) {
+            return filters.fields.split(',');
+        } else {
+            // first character is a minus, remove it and set the mode as exclude
+            filters.fields = filters.fields.substr(1).split(',');
+            // take filter.fields and remove from allFields
+            return allFields.filter(field => !filters.fields.includes(field));
+        }
     }
 
     _applyFilters(query, filters) {
