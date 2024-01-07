@@ -1,7 +1,7 @@
 // Class that handles all API calls
 
 import DefaultController from './DefaultController.js';
-import { defaultSchemas, defaultHttpCode } from './DefaultSchemas.js';
+import { defaultSchemas, defaultRefs } from './DefaultSchemas.js';
 import crudGen from 'fastify-crud-generator';
 import { SchemaInspector } from 'knex-schema-inspector';
 
@@ -29,7 +29,7 @@ class API {
         // normalize tables
         this._tables = this._normalizeTables(this._tables);
         // register default http code
-        this._fastify.addSchema(defaultHttpCode);
+        this._fastify.addSchema(defaultRefs);
         // register routes for each table
         return Promise.all(
             this._tables.map(table =>
@@ -38,7 +38,7 @@ class API {
                     .then(columnsInfo => {
                         const schema = this._getTableSchema(columnsInfo);
                         // register schema in fastify
-                        const ref_id = `fastify-knex-api/${table.name}`;
+                        const ref_id = `fastify-knex-api/tables/${table.name}`;
                         this._fastify.addSchema({
                             $id: ref_id,
                             type: 'object',
@@ -238,19 +238,19 @@ class API {
 
         // delete return 204 if success
         schemas.delete.schema.response = {
-            204: { $ref: 'fastify-knex-api/http-code#/properties/204' }
+            204: { $ref: 'fastify-knex-api/default#/properties/http-code-204' }
         };
 
         ['view', 'list', 'create', 'update', 'delete'].forEach(k => {
             const response = schemas[k].schema.response;
             response['500'] = {
-                $ref: 'fastify-knex-api/http-code#/properties/500'
+                $ref: 'fastify-knex-api/default#/properties/http-code-500'
             };
         });
         ['view', 'update', 'delete'].forEach(k => {
             const response = schemas[k].schema.response;
             response['404'] = {
-                $ref: 'fastify-knex-api/http-code#/properties/404'
+                $ref: 'fastify-knex-api/default#/properties/http-code-404'
             };
         });
 
