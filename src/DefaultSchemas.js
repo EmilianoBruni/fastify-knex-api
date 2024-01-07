@@ -13,79 +13,21 @@ const defaultSchemas = modelName => {
                         }
                     }
                 },
-                querystring: {
-                    type: 'object',
-                    properties: {
-                        fields: {
-                            type: 'string',
-                            description:
-                                'Comma separated list of fields to return'
-                        }
-                    }
-                }
+                $ref: 'fastify-knex-api/default#/properties/field-querystring'
             }
         },
         list: {
             schema: {
                 summary: 'List ' + modelName,
                 tags: [modelName],
-                querystring: {
-                    type: 'object',
-                    properties: {
-                        offset: {
-                            type: 'number',
-                            description: 'offset of the list'
-                        },
-                        skip: {
-                            type: 'number',
-                            description: 'number of items to skip'
-                        },
-                        limit: {
-                            type: 'number',
-                            description: 'limit the records to return'
-                        },
-                        page: {
-                            type: 'number',
-                            description:
-                                'based on limit, return page of the list'
-                        },
-                        window: {
-                            type: 'number',
-                            description:
-                                'based on limit, return page of the list'
-                        },
-                        sort: {
-                            type: 'string',
-                            description:
-                                'a comma separated list of fields to sort by'
-                        },
-                        filter: {
-                            type: 'string',
-                            description: 'knex whereRaw filter'
-                        },
-                        fields: {
-                            type: 'string',
-                            description:
-                                'Comma separated list of fields to return'
-                        }
-                    }
-                }
+                $ref: 'fastify-knex-api/default#/properties/list-querystring'
             }
         },
         create: {
             schema: {
                 summary: 'Create a new ' + modelName,
                 tags: [modelName],
-                querystring: {
-                    type: 'object',
-                    properties: {
-                        fields: {
-                            type: 'string',
-                            description:
-                                'Comma separated list of fields to return'
-                        }
-                    }
-                }
+                $ref: 'fastify-knex-api/default#/properties/field-querystring'
             }
         },
         update: {
@@ -101,16 +43,7 @@ const defaultSchemas = modelName => {
                         }
                     }
                 },
-                querystring: {
-                    type: 'object',
-                    properties: {
-                        fields: {
-                            type: 'string',
-                            description:
-                                'Comma separated list of fields to return'
-                        }
-                    }
-                }
+                $ref: 'fastify-knex-api/default#/properties/field-querystring'
             }
         },
         delete: {
@@ -131,11 +64,11 @@ const defaultSchemas = modelName => {
     };
 };
 
-const defaultHttpCode = {
-    $id: 'fastify-knex-api/http-code',
+const defaultRefs = {
+    $id: 'fastify-knex-api/default',
     type: 'object',
     properties: {
-        204: {
+        'http-code-204': {
             type: 'object',
             description: 'No Content',
             properties: {
@@ -143,7 +76,7 @@ const defaultHttpCode = {
                 statusCode: { type: 'number', example: 204 }
             }
         },
-        404: {
+        'http-code-404': {
             type: 'object',
             description: 'Object not found',
             properties: {
@@ -152,7 +85,7 @@ const defaultHttpCode = {
                 statusCode: { type: 'number', example: 404 }
             }
         },
-        500: {
+        'http-code-500': {
             type: 'object',
             description: 'Internal Server Error',
             properties: {
@@ -160,8 +93,59 @@ const defaultHttpCode = {
                 message: { type: 'string', example: 'Something went wrong' },
                 statusCode: { type: 'number', example: 500 }
             }
+        },
+        'list-querystring': {
+            querystring: {
+                type: 'object',
+                properties: {
+                    offset: {
+                        type: 'number',
+                        description: 'offset of the list'
+                    },
+                    skip: {
+                        type: 'number',
+                        description: 'number of items to skip'
+                    },
+                    limit: {
+                        type: 'number',
+                        description: 'limit the records to return'
+                    },
+                    page: {
+                        type: 'number',
+                        description: 'based on limit, return page of the list'
+                    },
+                    window: {
+                        type: 'number',
+                        description: 'based on limit, return page of the list'
+                    },
+                    sort: {
+                        type: 'string',
+                        description:
+                            'a comma separated list of fields to sort by'
+                    },
+                    filter: {
+                        type: 'string',
+                        description: 'knex whereRaw filter'
+                    },
+                    fields: {
+                        type: 'string',
+                        description: 'Comma separated list of fields to return'
+                    }
+                }
+            }
+        },
+        'field-querystring': {
+            querystring: {
+                type: 'object',
+                properties: {
+                    fields: {
+                        type: 'string',
+                        description: 'Comma separated list of fields to return'
+                    }
+                }
+            }
         }
     }
 };
 
-export { defaultSchemas, defaultHttpCode };
+export { defaultSchemas, defaultRefs };
