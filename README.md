@@ -398,9 +398,9 @@ If `.schemas` and `schemaDirPath` are used together, the schemas defined in `.sc
 
 The generated validation and serialization is compatible with other plugins like [@fastify/swagger](https://github.com/fastify/fastify-swagger) and [@fastify/swagger-ui](https://github.com/fastify/fastify-swagger-ui) for automatically serving OpenAPI v2/v3 schemas
 
-### Example of a generated validation and serializazion schema
+### Example of an auto-generated validation and serializazion schema
 
-As an example, if you have an authors table like this
+As an example, in MySQL, if you have an authors table like this
 
 ```sql
 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -414,7 +414,191 @@ As an example, if you have an authors table like this
 this is the default generated schema for CRUD operations over this table
 
 ```javascript
+{
+  "view": {
+    "schema": {
+      "summary": "Get details of single authors",
+      "tags": [
+        "authors"
+      ],
+      "params": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of authors"
+          }
+        }
+      },
+      "$ref": "fastify-knex-api/default#/properties/field-querystring",
+      "response": {
+        "200": {
+          "type": "object",
+          "$ref": "fastify-knex-api/tables/authors#"
+        },
+        "404": {
+          "$ref": "fastify-knex-api/default#/properties/http-code-404"
+        },
+        "500": {
+          "$ref": "fastify-knex-api/default#/properties/http-code-500"
+        }
+      }
+    }
+  },
+  "list": {
+    "schema": {
+      "summary": "List authors",
+      "tags": [
+        "authors"
+      ],
+      "$ref": "fastify-knex-api/default#/properties/list-querystring",
+      "response": {
+        "200": {
+          "total": {
+            "type": "integer",
+            "example": "1"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "fastify-knex-api/tables/authors#"
+            }
+          }
+        },
+        "500": {
+          "$ref": "fastify-knex-api/default#/properties/http-code-500"
+        }
+      }
+    }
+  },
+  "create": {
+    "schema": {
+      "summary": "Create a new authors",
+      "tags": [
+        "authors"
+      ],
+      "$ref": "fastify-knex-api/default#/properties/field-querystring",
+      "response": {
+        "200": {
+          "type": "object",
+          "$ref": "fastify-knex-api/tables/authors#"
+        },
+        "500": {
+          "$ref": "fastify-knex-api/default#/properties/http-code-500"
+        }
+      },
+      "body": {
+        "$ref": "fastify-knex-api/tables/authors#"
+      }
+    }
+  },
+  "update": {
+    "schema": {
+      "summary": "Update existing authors",
+      "tags": [
+        "authors"
+      ],
+      "params": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of authors"
+          }
+        }
+      },
+      "$ref": "fastify-knex-api/default#/properties/field-querystring",
+      "response": {
+        "200": {
+          "type": "object",
+          "$ref": "fastify-knex-api/tables/authors#"
+        },
+        "404": {
+          "$ref": "fastify-knex-api/default#/properties/http-code-404"
+        },
+        "500": {
+          "$ref": "fastify-knex-api/default#/properties/http-code-500"
+        }
+      },
+      "body": {
+        "$ref": "fastify-knex-api/tables/authors#"
+      }
+    }
+  },
+  "delete": {
+    "schema": {
+      "summary": "Delete existing authors",
+      "tags": [
+        "authors"
+      ],
+      "params": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of authors"
+          }
+        }
+      },
+      "response": {
+        "204": {
+          "$ref": "fastify-knex-api/default#/properties/http-code-204"
+        },
+        "404": {
+          "$ref": "fastify-knex-api/default#/properties/http-code-404"
+        },
+        "500": {
+          "$ref": "fastify-knex-api/default#/properties/http-code-500"
+        }
+      }
+    }
+  }
+}
 ```
+
+where `fastify-knex-api/tables/authors#` is this auto-generated schema for table
+
+```javascript
+"$ref": "fastify-knex-api/tables/authors#"
+"type": "object",
+"properties": {
+  "id": {
+    "type": "integer"
+  },
+  "first_name": {
+    "type": "string",
+    "maxLength": 50
+  },
+  "last_name": {
+    "type": "string",
+    "maxLength": 50
+  },
+  "email": {
+    "type": "string",
+    "maxLength": 100
+  },
+  "active": {
+    "type": "integer"
+  },
+  "added": {
+    "type": "string",
+    "format": "date-time"
+  }
+}
+```
+while 
+
+* `fastify-knex-api/default#/properties/http-code-204`
+* `fastify-knex-api/default#/properties/http-code-404`
+* `fastify-knex-api/default#/properties/http-code-500` 
+
+are schemas for delete response and errors and 
+* `fastify-knex-api/default#/properties/list-querystring`
+* `fastify-knex-api/default#/properties/field-querystring` 
+
+are schemas for list method query string and for projection returning query string.
+
+Definitions of there references can be found in [./src/DefaultSchemas.js](./src/DefaultSchemas.js).
 
 ## License
 
@@ -422,4 +606,4 @@ Licensed under [APACHE 2.0](./LICENSE)
 
 ## AUTHOR
 
-Emiliano Bruni <info@ebruni.it>
+Emiliano Bruni (<info@ebruni.it>)
