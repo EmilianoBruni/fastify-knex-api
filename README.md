@@ -311,6 +311,111 @@ will return everything except fields in the parameter.
 | -------- | ----------- | ------------- |
 |Projection| fields      | *             |
 
+## Validation and Serialization
+
+Generated API support standard fastify validation and serialization via `.schemas` option.
+
+If you are not confidable with fastify validation and serialization logics, see [documentation](https://www.fastify.io/docs/latest/Reference/Validation-and-Serialization/).
+
+If you don't set `.schemas`, it's automatic generated See [later](#example-of-a-generated-validation-and-serializazion-schema) for an example of a generated schema. 
+
+If you set `.schemas = []` as an empty array validation and serialization will be disabled.
+
+If you set a null schema for a single table like this
+
+```javascript
+schemas: [
+  { name: 'tableName' }
+]
+```
+validation and serialization will be disabled only for table_name CRUD operations.
+
+If you wish to add or update default schema for your API you should add an object to `.schemas` array or set a directory where automatically load schemas with `.schemaDirPath`:
+
+```javascript
+fastify.register(knexAPI, { 
+    knexConfig: {...},
+    schemas: [
+    {
+      name: 'tableName',
+      view:   {},
+	    list:   {},
+      create: {},
+	    update: {},
+	    delete: {}
+    },
+    { name: 'anotherTableName',
+      ...
+    },
+    ...
+  ],
+  schemaDirPath: '/path/to/your/schemas',
+
+```
+
+where `tableName` is the name of the table to which this schema will be applied and the others are validation and/or serialization schemas for related restful http verbs where:
+
+| validation name | URL | VERB |
+|-----------------|-----|------|
+| list            | /   | GET  |
+| create          | /   | POST |
+| view            | /id | GET  |
+| update          | /id | PATCH|
+| delete          | /id | DELETE|
+
+If you omit one of these, the [default](#example-of-a-generated-validation-and-serializazion-schema) is used.
+
+If you set to empty one, validation and serialization are disabled.
+
+If you set an not empty one, it will be merged with [defaults](#example-of-a-generated-validation-and-serializazion-schema), with, obviously, custom parameters with precedence.
+
+As an example, it declares author first and last name as required. Do this for `POST` only
+
+```javascript
+const schemas = {
+  name: 'authors',
+  create: {
+    body: {
+      required: ['first_name', 'last_name']
+    }
+  }
+};
+
+fastify.register(knexAPI, { 
+  knexConfig: {...},
+  schemas: schemas
+});
+
+```
+
+As you can see taking a look to defaults, this plugin supports the URI [references](https://datatracker.ietf.org/doc/html/draft-handrews-json-schema-01#section-8) `$ref` to other schemas.
+
+You can add manually these references through `fastify.addSchema(schema)` or automatically if your schema has a `ref` attribute.
+
+This attribute could be a single object or an array of objects if you wish to register more references at once.
+
+If `.schemas` and `schemaDirPath` are used together, the schemas defined in `.schemas` have precedence to there loaded in `schemaDirPath`.
+
+The generated validation and serialization is compatible with other plugins like [@fastify/swagger](https://github.com/fastify/fastify-swagger) and [@fastify/swagger-ui](https://github.com/fastify/fastify-swagger-ui) for automatically serving OpenAPI v2/v3 schemas
+
+### Example of a generated validation and serializazion schema
+
+As an example, if you have an authors table like this
+
+```sql
+`id` int(11) NOT NULL AUTO_INCREMENT,
+`first_name` varchar(50) NOT NULL,
+`last_name` varchar(50) NOT NULL,
+`email` varchar(100) NOT NULL,
+`active` tinyint(1) NOT NULL DEFAULT 1,
+`added` timestamp NOT NULL DEFAULT current_timestamp(),
+```
+
+this is the default generated schema for CRUD operations over this table
+
+```javascript
+```
+
 ## License
 
 Licensed under [APACHE 2.0](./LICENSE)
