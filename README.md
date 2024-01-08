@@ -430,17 +430,19 @@ this is the default generated schema for CRUD operations over this table
           }
         }
       },
-      "$ref": "fastify-knex-api/default#/properties/field-querystring",
+      "query": {
+        "$ref": "fastify-knex-api/query#/properties/fields"
+      },
       "response": {
         "200": {
           "type": "object",
           "$ref": "fastify-knex-api/tables/authors#"
         },
         "404": {
-          "$ref": "fastify-knex-api/default#/properties/http-code-404"
+          "$ref": "fastify-knex-api/http-code#/properties/404"
         },
         "500": {
-          "$ref": "fastify-knex-api/default#/properties/http-code-500"
+          "$ref": "fastify-knex-api/http-code#/properties/500"
         }
       }
     }
@@ -451,7 +453,9 @@ this is the default generated schema for CRUD operations over this table
       "tags": [
         "authors"
       ],
-      "$ref": "fastify-knex-api/default#/properties/list-querystring",
+      "query": {
+        "$ref": "fastify-knex-api/query#/properties/list"
+      },
       "response": {
         "200": {
           "total": {
@@ -466,7 +470,7 @@ this is the default generated schema for CRUD operations over this table
           }
         },
         "500": {
-          "$ref": "fastify-knex-api/default#/properties/http-code-500"
+          "$ref": "fastify-knex-api/http-code#/properties/500"
         }
       }
     }
@@ -477,14 +481,17 @@ this is the default generated schema for CRUD operations over this table
       "tags": [
         "authors"
       ],
-      "$ref": "fastify-knex-api/default#/properties/field-querystring",
+      "query": {
+        "type": "object",
+        "$ref": "fastify-knex-api/query#/properties/fields"
+      },
       "response": {
         "200": {
           "type": "object",
           "$ref": "fastify-knex-api/tables/authors#"
         },
         "500": {
-          "$ref": "fastify-knex-api/default#/properties/http-code-500"
+          "$ref": "fastify-knex-api/http-code#/properties/500"
         }
       },
       "body": {
@@ -507,17 +514,19 @@ this is the default generated schema for CRUD operations over this table
           }
         }
       },
-      "$ref": "fastify-knex-api/default#/properties/field-querystring",
+      "query": {
+        "$ref": "fastify-knex-api/query#/properties/fields"
+      },
       "response": {
         "200": {
           "type": "object",
           "$ref": "fastify-knex-api/tables/authors#"
         },
         "404": {
-          "$ref": "fastify-knex-api/default#/properties/http-code-404"
+          "$ref": "fastify-knex-api/http-code#/properties/404"
         },
         "500": {
-          "$ref": "fastify-knex-api/default#/properties/http-code-500"
+          "$ref": "fastify-knex-api/http-code#/properties/500"
         }
       },
       "body": {
@@ -542,13 +551,13 @@ this is the default generated schema for CRUD operations over this table
       },
       "response": {
         "204": {
-          "$ref": "fastify-knex-api/default#/properties/http-code-204"
+          "$ref": "fastify-knex-api/http-code#/properties/204"
         },
         "404": {
-          "$ref": "fastify-knex-api/default#/properties/http-code-404"
+          "$ref": "fastify-knex-api/http-code#/properties/404"
         },
         "500": {
-          "$ref": "fastify-knex-api/default#/properties/http-code-500"
+          "$ref": "fastify-knex-api/http-code#/properties/500"
         }
       }
     }
@@ -588,13 +597,14 @@ where `fastify-knex-api/tables/authors#` is this auto-generated schema for table
 ```
 while 
 
-* `fastify-knex-api/default#/properties/http-code-204`
-* `fastify-knex-api/default#/properties/http-code-404`
-* `fastify-knex-api/default#/properties/http-code-500` 
+* `fastify-knex-api/http-code#/properties/204`
+* `fastify-knex-api/http-code#/properties/404`
+* `fastify-knex-api/http-code#/properties/500` 
 
 are schemas for delete response and errors and 
-* `fastify-knex-api/default#/properties/list-querystring`
-* `fastify-knex-api/default#/properties/field-querystring` 
+
+* `fastify-knex-api/query#/properties/list`
+* `fastify-knex-api/query#/properties/field` 
 
 are schemas for list method query string and for projection returning query string.
 

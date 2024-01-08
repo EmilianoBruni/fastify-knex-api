@@ -1,7 +1,11 @@
 // Class that handles all API calls
 
 import DefaultController from './DefaultController.js';
-import { defaultSchemas, defaultRefs } from './DefaultSchemas.js';
+import {
+    defaultSchemas,
+    defaultHttpCode,
+    defaultQueries
+} from './DefaultSchemas.js';
 import crudGen from 'fastify-crud-generator';
 import { SchemaInspector } from 'knex-schema-inspector';
 
@@ -29,7 +33,8 @@ class API {
         // normalize tables
         this._tables = this._normalizeTables(this._tables);
         // register default http code
-        this._fastify.addSchema(defaultRefs);
+        this._fastify.addSchema(defaultHttpCode);
+        this._fastify.addSchema(defaultQueries);
         // register routes for each table
         return Promise.all(
             this._tables.map(table =>
@@ -238,19 +243,19 @@ class API {
 
         // delete return 204 if success
         schemas.delete.schema.response = {
-            204: { $ref: 'fastify-knex-api/default#/properties/http-code-204' }
+            204: { $ref: 'fastify-knex-api/http-code#/properties/204' }
         };
 
         ['view', 'list', 'create', 'update', 'delete'].forEach(k => {
             const response = schemas[k].schema.response;
             response['500'] = {
-                $ref: 'fastify-knex-api/default#/properties/http-code-500'
+                $ref: 'fastify-knex-api/http-code#/properties/500'
             };
         });
         ['view', 'update', 'delete'].forEach(k => {
             const response = schemas[k].schema.response;
             response['404'] = {
-                $ref: 'fastify-knex-api/default#/properties/http-code-404'
+                $ref: 'fastify-knex-api/http-code#/properties/404'
             };
         });
 
