@@ -14,6 +14,7 @@ class API {
         this._fastify = params.fastify;
         this._knex = params.knex;
         this._tables = params.tables;
+        this._schemas = params.schemas;
 
         this._prefix = params.prefix || '/api';
 
@@ -66,6 +67,16 @@ class API {
     }
 
     _buildSchema(table, columnsInfo) {
+        // return empty schema if this._schemas is defined but is 
+        // and empty array or there is an array element with name = table.name
+        // and no schema is defined
+        if (
+            this._schemas &&
+            (this._schemas.length === 0 ||
+                this._schemas.find(s => s.name === table.name && !s.schema))
+        ) {
+            return {};
+        }
         const schemaTableFields = this._getTableSchema(columnsInfo);
         // register table fields schema in fastify
         const ref_id = `fastify-knex-api/tables/${table.name}`;
