@@ -38,53 +38,51 @@ class API {
         // register routes for each table
         return Promise.all(
             this._tables.map(table =>
-                this._knex(table.name)
-                    .columnInfo()
-                    .then(columnsInfo => {
-                        const schema = this._getTableSchema(columnsInfo);
-                        // register schema in fastify
-                        const ref_id = `fastify-knex-api/tables/${table.name}`;
-                        this._fastify.addSchema({
-                            $id: ref_id,
-                            type: 'object',
-                            properties: schema
-                        });
-                        // get default schemas
-                        const defSchemas = defaultSchemas(table.name);
-                        // add response to schemas
-                        this._appendResponseToSchemas(defSchemas, ref_id);
-                        // register routes
-                        const optReg = {
-                            prefix: `${this._prefix}/${table.name}`,
-                            controller: new DefaultController(
-                                table.name,
-                                columnsInfo,
-                                table.pk
-                            ),
-                            ...defSchemas
-                        };
-                        return this._fastify.register(crudGen, optReg);
-                    })
+                this._buildOptReg(table).then(optReg => {
+                    // register routes
+                    return this._fastify.register(crudGen, optReg);
+                })
             )
         );
     }
 
-    _normalizeTables(tables) {
-        // return array of objects {name, pk}
-        if (Array.isArray(tables)) {
-            return tables.map(table => {
-                if (typeof table === 'string') {
-                    return { name: table, pk: undefined };
-                }
-                // throw error if not exists name
-                if (!table.name) {
-                    throw new Error('Table name not specified');
-                }
-                // if not exists, set pk to undefined
-                if (!table.pk) table.pk = undefined;
-                return table;
-            });
-        }
+    /**
+     * Builds the options to register crud routes for a given table.
+     * @param {Object} table - The table object.
+     * @returns {Object} - The options for registration routes.
+     */
+    async _buildOptReg(table) {
+        const columnsInfo = await this._knex(table.name).columnInfo();
+        const schema = this._buildSchema(table, columnsInfo);
+        return {
+            prefix: `${this._prefix}/${table.name}`,
+            controller: new DefaultController(
+                table.name,
+                columnsInfo,
+                table.pk
+            ),
+            ...schema
+        };
+    }
+
+    _buildSchema(table, columnsInfo) {
+        const schemaTableFields = this._getTableSchema(columnsInfo);
+        // register table fields schema in fastify
+        const ref_id = `fastify-knex-api/tables/${table.name}`;
+        this._fastify.addSchema({
+            $id: ref_id,
+            type: 'object',
+            properties: schemaTableFields
+        });
+        // get default schemas valid for every table
+        const schema = defaultSchemas(table.name);
+        // add response to schemas
+        this._appendResponseToSchemas(schema, ref_id);
+        return schema;
+    }
+
+    _getTableSchema(columnsInfo) {
+        return this._buildPropsFromColumnsInfo(columnsInfo);
     }
 
     _buildPropsFromColumnsInfo(columnsInfo) {
@@ -122,8 +120,52 @@ class API {
         return props;
     }
 
-    async _getDBTables() {
-        return await this.schemaInspector.tables();
+    _appendResponseToSchemas(schemas, ref_id) {
+        // view, create, update return ref_id for response=200
+        ['view', 'create', 'update'].forEach(k => {
+            const schema = schemas[k].schema;
+            schema.response = schema.response || {};
+            schema.response['200'] = schema.response['200'] || {
+                type: 'object'
+            };
+            schema.response['200'].$ref = `${ref_id}#`;
+        });
+
+        // list return array of ref_id for response=200
+        schemas.list.schema.response = {
+            200: {
+                total: { type: 'integer', example: '1' },
+                items: { type: 'array', items: { $ref: `${ref_id}#` } }
+            }
+        };
+
+        // for create and update, ref_id also for body post
+        ['create', 'update'].forEach(k => {
+            const schema = schemas[k].schema;
+            schema.body = { $ref: `${ref_id}#` };
+        });
+
+        /// add default httpcode
+
+        // delete return 204 if success
+        schemas.delete.schema.response = {
+            204: { $ref: 'fastify-knex-api/http-code#/properties/204' }
+        };
+
+        ['view', 'list', 'create', 'update', 'delete'].forEach(k => {
+            const response = schemas[k].schema.response;
+            response['500'] = {
+                $ref: 'fastify-knex-api/http-code#/properties/500'
+            };
+        });
+        ['view', 'update', 'delete'].forEach(k => {
+            const response = schemas[k].schema.response;
+            response['404'] = {
+                $ref: 'fastify-knex-api/http-code#/properties/404'
+            };
+        });
+
+        return schemas;
     }
 
     _addTypeFormat(name, columnInfo, prop) {
@@ -210,56 +252,26 @@ class API {
         }
     }
 
-    _getTableSchema(columnsInfo) {
-        return this._buildPropsFromColumnsInfo(columnsInfo);
+    _normalizeTables(tables) {
+        // return array of objects {name, pk}
+        if (Array.isArray(tables)) {
+            return tables.map(table => {
+                if (typeof table === 'string') {
+                    return { name: table, pk: undefined };
+                }
+                // throw error if not exists name
+                if (!table.name) {
+                    throw new Error('Table name not specified');
+                }
+                // if not exists, set pk to undefined
+                if (!table.pk) table.pk = undefined;
+                return table;
+            });
+        }
     }
 
-    _appendResponseToSchemas(schemas, ref_id) {
-        // view, create, update return ref_id for response=200
-        ['view', 'create', 'update'].forEach(k => {
-            const schema = schemas[k].schema;
-            schema.response = schema.response || {};
-            schema.response['200'] = schema.response['200'] || {
-                type: 'object'
-            };
-            schema.response['200'].$ref = `${ref_id}#`;
-        });
-
-        // list return array of ref_id for response=200
-        schemas.list.schema.response = {
-            200: {
-                total: { type: 'integer', example: '1' },
-                items: { type: 'array', items: { $ref: `${ref_id}#` } }
-            }
-        };
-
-        // for create and update, ref_id also for body post
-        ['create', 'update'].forEach(k => {
-            const schema = schemas[k].schema;
-            schema.body = { $ref: `${ref_id}#` };
-        });
-
-        /// add default httpcode
-
-        // delete return 204 if success
-        schemas.delete.schema.response = {
-            204: { $ref: 'fastify-knex-api/http-code#/properties/204' }
-        };
-
-        ['view', 'list', 'create', 'update', 'delete'].forEach(k => {
-            const response = schemas[k].schema.response;
-            response['500'] = {
-                $ref: 'fastify-knex-api/http-code#/properties/500'
-            };
-        });
-        ['view', 'update', 'delete'].forEach(k => {
-            const response = schemas[k].schema.response;
-            response['404'] = {
-                $ref: 'fastify-knex-api/http-code#/properties/404'
-            };
-        });
-
-        return schemas;
+    async _getDBTables() {
+        return await this.schemaInspector.tables();
     }
 }
 
