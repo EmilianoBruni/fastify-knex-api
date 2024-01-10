@@ -319,76 +319,51 @@ If you are not confidable with fastify validation and serialization logics, see 
 
 If you don't set `.schemas`, it's automatic generated See [later](#example-of-a-generated-validation-and-serializazion-schema) for an example of a generated schema. 
 
-If you set `.schemas = []` as an empty array validation and serialization will be disabled.
+If you set `.schemas` as a function, it received the name of table and its generated schema. What it's returned, it will be used as schema for the table.
 
-If you set a null schema for a single table like this
+You can disable serialization and validation at all returning `undefined`
 
 ```javascript
-schemas: [
-  { name: 'tableName' }
-]
+schemas: () => {}
 ```
-validation and serialization will be disabled only for table_name CRUD operations.
 
-If you wish to add or update default schema for your API you should add an object to `.schemas` array or set a directory where automatically load schemas with `.schemaDirPath`:
+You can disable it for a single table 
+
+```javascript
+schemas: (tn, schema) => tn === 'authors' ? undefined : schema;
+```
+
+You can add or update default schema by change it inside schemas(tn,schema) and return the changed schema.
 
 ```javascript
 fastify.register(knexAPI, { 
     knexConfig: {...},
-    schemas: [
-    {
-      name: 'tableName',
-      view:   {},
-	    list:   {},
-      create: {},
-	    update: {},
-	    delete: {}
-    },
-    { name: 'anotherTableName',
-      ...
+    schemas: (tn, schema) => {
+      if (tn === 'authors') {
+        // for author creation, we set 'active' as required
+        schema.create.schema.body.required = ['active'];
+      }
+      // remember to return schema
+      return schema;
     },
     ...
-  ],
-  schemaDirPath: '/path/to/your/schemas',
-
 ```
 
-where `tableName` is the name of the table to which this schema will be applied and the others are validation and/or serialization schemas for related restful http verbs where:
+where `schema.create` are validation and/or serialization schema for related restful http verbs where:
 
 | validation name | URL | VERB |
 |-----------------|-----|------|
-| list            | /   | GET  |
-| create          | /   | POST |
-| view            | /id | GET  |
-| update          | /id | PATCH|
-| delete          | /id | DELETE|
+| schema.list            | /   | GET  |
+| schema.create          | /   | POST |
+| schema.view            | /id | GET  |
+| schema.update          | /id | PATCH|
+| schema.delete          | /id | DELETE|
 
 If you omit one of these, the [default](#example-of-a-generated-validation-and-serializazion-schema) is used.
 
-If you set to empty one, validation and serialization are disabled.
+If you set to `undefined` one, validation and serialization are disabled for this verb.
 
-If you set an not empty one, it will be merged with [defaults](#example-of-a-generated-validation-and-serializazion-schema), with, obviously, custom parameters with precedence.
-
-As an example, it declares author first and last name as required. Do this for `POST` only
-
-```javascript
-const schemas = {
-  name: 'authors',
-  create: {
-    body: {
-      required: ['first_name', 'last_name']
-    }
-  }
-};
-
-fastify.register(knexAPI, { 
-  knexConfig: {...},
-  schemas: schemas
-});
-
-```
-
-As you can see taking a look to defaults, this plugin supports the URI [references](https://datatracker.ietf.org/doc/html/draft-handrews-json-schema-01#section-8) `$ref` to other schemas.
+As you can see, taking a look to defaults, this plugin supports the URI [references](https://datatracker.ietf.org/doc/html/draft-handrews-json-schema-01#section-8) `$ref` to other schemas.
 
 You can add manually these references through `fastify.addSchema(schema)` or automatically if your schema has a `ref` attribute.
 

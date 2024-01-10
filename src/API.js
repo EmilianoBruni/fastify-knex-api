@@ -67,16 +67,6 @@ class API {
     }
 
     _buildSchema(table, columnsInfo) {
-        // return empty schema if this._schemas is defined but is 
-        // and empty array or there is an array element with name = table.name
-        // and no schema is defined
-        if (
-            this._schemas &&
-            (this._schemas.length === 0 ||
-                this._schemas.find(s => s.name === table.name && !s.schema))
-        ) {
-            return {};
-        }
         const schemaTableFields = this._getTableSchema(columnsInfo);
         // register table fields schema in fastify
         const ref_id = `fastify-knex-api/tables/${table.name}`;
@@ -86,9 +76,12 @@ class API {
             properties: schemaTableFields
         });
         // get default schemas valid for every table
-        const schema = defaultSchemas(table.name);
+        let schema = defaultSchemas(table.name);
         // add response to schemas
         this._appendResponseToSchemas(schema, ref_id);
+        if (this._schemas && typeof this._schemas === 'function') {
+            schema = this._schemas(table.name, schema);
+        }
         return schema;
     }
 
@@ -153,7 +146,7 @@ class API {
         // for create and update, ref_id also for body post
         ['create', 'update'].forEach(k => {
             const schema = schemas[k].schema;
-            schema.body = { $ref: `${ref_id}#` };
+            schema.body = { type: 'object', $ref: `${ref_id}#` };
         });
 
         /// add default httpcode
