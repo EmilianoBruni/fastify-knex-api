@@ -1,3 +1,4 @@
+import path from 'path';
 import { initServer, registerKnexAPI } from './helpers.js';
 import t from 'tap';
 
@@ -167,10 +168,6 @@ t.test('Checking empty schema for specific tables', async t => {
 
 t.test('Alter schema for specific tables', async t => {
     const server = initServer(t);
-    const routes = [];
-    server.addHook('onRoute', route => {
-        routes.push(route);
-    });
     const schemas = (tableName, defSchemas) => {
         if (tableName === 'authors') {
             // for author creation, we set 'active' as required
@@ -214,6 +211,107 @@ t.test('Alter schema for specific tables', async t => {
     // remove author
     const id = res2.json().id;
     await server.knex('authors').where('id', id).del();
+});
+
+t.test('Checking schemaDirPath', async t => {
+    const server = initServer(t);
+    const routes = [];
+    server.addHook('onRoute', route => {
+        routes.push(route);
+    });
+    // build full path to test/schemas
+    const __dirname = path.dirname(new URL(import.meta.url).pathname);
+    const schemaDirPath = path.join(__dirname, 'schemas');
+    registerKnexAPI(server, { schemaDirPath: schemaDirPath });
+    await server.ready();
+    t.test('Checking schema for GET /authors (required fields)', async t => {
+        // try to create an author without 'active'
+        const rec = {
+            first_name: 'John',
+            last_name: 'Doe',
+            email: 'jd@jd.com'
+        };
+        const res = await server.inject({
+            method: 'POST',
+            url: '/api/authors/',
+            body: rec
+        });
+        t.equal(res.statusCode, 400);
+        // json.message should have 'active' as required
+        t.match(res.json().message, /active/);
+        if (res.json().id) {
+            t.fail('Author was created without required active');
+            // remove author
+            const id = res.json().id;
+            await server.knex('authors').where('id', id).del();
+        }
+
+        // all works if we add active
+        rec.active = true;
+        const res2 = await server.inject({
+            method: 'POST',
+            url: '/api/authors/',
+            body: rec
+        });
+        t.equal(res2.statusCode, 200);
+        t.ok(res2.json().id);
+        // remove author
+        const id = res2.json().id;
+        await server.knex('authors').where('id', id).del();
+    });
+
+    t.test('Checking schema for GET /posts (no schema at all)', async t => {
+        // find all router for /api/posts
+
+        const routesList = routes.filter(route => route.url === '/api/posts/');
+        routesList.forEach(route => {
+            t.ok(route);
+            t.notOk(route.schema, 'Route has no schema defined');
+        });
+        const routesGet = routes.filter(
+            route => route.url === '/api/posts/:id'
+        );
+        routesGet.forEach(route => {
+            t.ok(route);
+            t.notOk(route.schema, 'Route has no schema defined');
+        });
+    });
+
+    t.test(
+        'Checking schema for GET /all_std_types (disabled list, create, delete)',
+        async t => {
+            // find all router for /api/posts
+
+            const routesList = routes.filter(
+                route => route.url === '/api/all_std_types/'
+            );
+            routesList.forEach(route => {
+                t.ok(route);
+                t.notOk(route.schema, 'Route has no schema defined');
+            });
+            const routesGet = routes.filter(
+                route => route.url === '/api/all_std_types/:id'
+            );
+            routesGet.forEach(route => {
+                if (route.method === 'DELETE') {
+                    // no schema for DELETE
+                    t.ok(route);
+                    t.notOk(route.schema, 'Route has no schema defined');
+                } else {
+                    // schema for GET
+                    t.ok(route);
+                    t.ok(route.schema);
+                    t.ok(route.schema.response);
+                    t.ok(route.schema.response[200]);
+                    t.ok(route.schema.response[200].$ref);
+                    t.equal(
+                        route.schema.response[200].$ref,
+                        'fastify-knex-api/tables/all_std_types#'
+                    );
+                }
+            });
+        }
+    );
 });
 
 t.end();

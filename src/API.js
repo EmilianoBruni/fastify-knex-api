@@ -1,5 +1,7 @@
 // Class that handles all API calls
 
+import { existsSync, statSync } from 'fs';
+import path from 'path';
 import DefaultController from './DefaultController.js';
 import {
     defaultSchemas,
@@ -15,6 +17,7 @@ class API {
         this._knex = params.knex;
         this._tables = params.tables;
         this._schemas = params.schemas;
+        this._schemaDirPath = params.schemaDirPath;
 
         this._prefix = params.prefix || '/api';
 
@@ -54,7 +57,7 @@ class API {
      */
     async _buildOptReg(table) {
         const columnsInfo = await this._knex(table.name).columnInfo();
-        const schema = this._buildSchema(table, columnsInfo);
+        const schema = await this._buildSchema(table, columnsInfo);
         return {
             prefix: `${this._prefix}/${table.name}`,
             controller: new DefaultController(
@@ -66,7 +69,7 @@ class API {
         };
     }
 
-    _buildSchema(table, columnsInfo) {
+    async _buildSchema(table, columnsInfo) {
         const schemaTableFields = this._getTableSchema(columnsInfo);
         // register table fields schema in fastify
         const ref_id = `fastify-knex-api/tables/${table.name}`;
@@ -79,6 +82,9 @@ class API {
         let schema = defaultSchemas(table.name);
         // add response to schemas
         this._appendResponseToSchemas(schema, ref_id);
+        // load and apply custom schemas in schemaDirPath
+        schema = await this._loadSchemaDirPath(table, schema);
+        // if exists custom schemas, apply it
         if (this._schemas && typeof this._schemas === 'function') {
             schema = this._schemas(table.name, schema);
         }
@@ -254,6 +260,26 @@ class API {
                         JSON.stringify(columnInfo)
                 );
         }
+    }
+
+    async _loadSchemaDirPath(table, schema) {
+        if (!this._schemaDirPath || typeof this._schemaDirPath !== 'string')
+            return schema;
+        const schemaPath = path.join(
+            this._schemaDirPath,
+            `${table.name}.schema.js`
+        );
+        if (!existsSync(schemaPath)) return schema;
+        if (!statSync(schemaPath).isFile()) return schema;
+        try {
+            const customSchema = (await import(schemaPath)).default;
+            if (typeof customSchema === 'function') {
+                schema = customSchema(schema);
+            }
+        } catch (e) {
+            throw new Error(`Error loading schema ${schemaPath}: ${e.message}`);
+        }
+        return schema;
     }
 
     _normalizeTables(tables) {
