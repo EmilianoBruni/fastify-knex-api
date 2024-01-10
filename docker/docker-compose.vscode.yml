@@ -8,15 +8,13 @@ services:
             dockerfile: docker/lib/Dockerfile
             args:
                 - IDIR=fastify-knex-api
-                - BMODE=dev
+                #- BMODE=production # default development on Dockerfile
         volumes:
             - ../:/ws/fastify-knex-api:cached
             # node_modules in un volume temporaneo che non mi sovraccarica il prj reale in debug
             - fastify-knex-api-lib-modules:/ws/fastify-knex-api/node_modules 
-            # pnpm-store
-            - pnpm-store:/home/node/pnpm/store
 
-    # Overrides default command so things don't shut down after the process ends.
+        # Overrides default command so things don't shut down after the process ends.
         command: sleep infinity
         deploy:
             resources:
@@ -36,7 +34,6 @@ services:
 
 volumes:
     fastify-knex-api-lib-modules:
-    pnpm-store:
 
 networks:
     default:
