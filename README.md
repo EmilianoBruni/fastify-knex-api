@@ -87,6 +87,44 @@ An array of tables to expose or an object of tables to expose with their primary
 ```
 Default is to autodiscover and expose all tables and, on request, to autodiscover their primary keys if not manually set.
 
+#### .schemas: function
+
+Optional function to call to alter [default validation and serialization schema](#example-of-an-auto-generated-validation-and-serializazion-schema).
+
+See [here](#schemas-function) for some example. 
+
+`.schemas` has this signature
+
+```javascript
+.schemas = (table_name, schema) => {
+  ...
+  return schema;
+}
+```
+
+where table_name is the table name and schema is the generated schema. 
+
+If `.schemaDirPath` is defined, it's called after `.schemaDirPath`.
+
+#### .schemaDirPath: function
+
+Directory where it's possible to define schemas for validation and serialization. 
+
+If exists, module `.schemaDirPath/${table_name}.schema.js` is loaded and the default export function has called.
+
+This function should have this signature:
+
+```javascript
+(schema) => {
+  ...
+  return schema;
+}
+```
+
+where schema is the generated schema. 
+
+If `.schemas` is defined, it's called before `.schemas`.
+
 ## API schema
 
 ### List
@@ -369,7 +407,7 @@ You can add manually these references through `fastify.addSchema(schema)` or aut
 
 This attribute could be a single object or an array of objects if you wish to register more references at once.
 
-If `.schemas` and `schemaDirPath` are used together, the schemas defined in `.schemas` have precedence to there loaded in `schemaDirPath`.
+If `.schemas` and `.schemaDirPath` are used together, the schemas defined in `.schemas` have precedence to there loaded in `.schemaDirPath`.
 
 The generated validation and serialization is compatible with other plugins like [@fastify/swagger](https://github.com/fastify/fastify-swagger) and [@fastify/swagger-ui](https://github.com/fastify/fastify-swagger-ui) for automatically serving OpenAPI v2/v3 schemas
 
