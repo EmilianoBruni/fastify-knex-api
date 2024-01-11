@@ -53,6 +53,41 @@ fastify.register(knexAPI, options);
 
 with following options:
 
+#### .checkAuth : function
+
+Function to run before any API request to check authorization permissions in. 
+
+If not set, all crud routes are allowed.
+
+
+```javascript
+  checkAuth: async (req, reply) => {
+    ...
+    return true;
+  }, // all crud routes are allowed. As not set checkAuth
+```
+
+If return `true`, user is allowed to perform action.
+
+If return `false`, user is not allowed to perform action. In this case you should return a 401 custom error code as this
+
+```javascript
+ checkAuth: async(req, reply) => {
+  reply.status(401);
+ } // all crud routes are denied
+```
+
+If `checkAuth` doesn't set an error code, a default is set.
+
+```json
+{
+  "statusCode": 401,
+  "code": "CRUD_NOT_AUTHORIZED",
+  "error": "Unauthorized",
+  "message": "Not authorized to perform CRUD operation"
+}
+```
+
 ### .knexConfig
 
 Knex configuration options like
