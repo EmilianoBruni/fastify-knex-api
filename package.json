@@ -18,7 +18,13 @@
     "knex",
     "knexjs",
     "crud",
-    "api"
+    "api",
+    "sql",
+    "schema",
+    "mysql",
+    "postgresql",
+    "sqlite3",
+    "javascript"
   ],
   "author": "Emiliano Bruni <info@ebruni.it>",
   "license": "Apache-2.0",
@@ -37,6 +43,7 @@
     "eslint-plugin-n": "^15.0.0 || ^16.0.0 ",
     "eslint-plugin-prettier": "^5.1.0",
     "eslint-plugin-promise": "^6.0.0",
+    "mysql2": "^3.7.0",
     "prettier": "^3.1.1",
     "tap": "^18.6.1"
   },
@@ -45,7 +52,6 @@
     "fastify": "^4.25.1",
     "fastify-plugin": "^4.5.1",
     "knex": "^3.1.0",
-    "knex-schema-inspector": "^3.1.0",
-    "mysql2": "^3.6.5"
+    "knex-schema-inspector": "^3.1.0"
   }
 }
