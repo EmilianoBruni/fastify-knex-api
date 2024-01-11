@@ -1,7 +1,9 @@
-import { createServer } from './helpers.js';
+import { createServer, checkEnv } from './helpers.js';
 import t from 'tap';
 
 const prefix = '/crud';
+
+checkEnv(t)
 
 t.test('Use a different prefix', async t => {
     const app = await createServer(t, { prefix: prefix });

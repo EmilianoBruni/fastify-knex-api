@@ -1,6 +1,8 @@
 import path from 'path';
-import { initServer, registerKnexAPI } from './helpers.js';
+import { initServer, registerKnexAPI, checkEnv } from './helpers.js';
 import t from 'tap';
+
+checkEnv(t)
 
 t.test('Checking default schema', async t => {
     const server = initServer(t);

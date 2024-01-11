@@ -1,6 +1,8 @@
-import { createServer } from './helpers.js';
+import { createServer, checkEnv } from './helpers.js';
 import { createError } from '@fastify/error';
 import t from 'tap';
+
+checkEnv(t)
 
 let isAuthed = false;
 let isDefined = false;

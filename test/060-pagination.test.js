@@ -1,5 +1,7 @@
-import { createServer } from './helpers.js';
+import { createServer, checkEnv } from './helpers.js';
 import t from 'tap';
+
+checkEnv(t)
 
 t.test('Check pagination without filters', async t => {
     const app = await createServer(t);

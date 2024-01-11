@@ -1,4 +1,4 @@
-import { createServer } from './helpers.js';
+import { createServer, checkEnv } from './helpers.js';
 import DefaultController from '../src/DefaultController.js';
 import t from 'tap';
 
@@ -29,6 +29,8 @@ const newRecordAuthors = {
 };
 
 let lastId = 0;
+
+checkEnv(t)
 
 t.test('Unitialized Knex config', async t => {
     t.rejects(
