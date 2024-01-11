@@ -1,2 +1,7 @@
 /docker
 .devcontainer.json
+.tap
+.vscode
+.dockerignore
+.eslintignore.json
+.prettierrc.json
