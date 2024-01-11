@@ -13,6 +13,9 @@ services:
             - ../:/ws/fastify-knex-api:cached
             # node_modules in un volume temporaneo che non mi sovraccarica il prj reale in debug
             - fastify-knex-api-lib-modules:/ws/fastify-knex-api/node_modules 
+        environment:
+            - CRUD_CLIENT=mysql2
+            - CRUD_DB_URI=mysql://root:test@mariadb:3306/test
 
         # Overrides default command so things don't shut down after the process ends.
         command: sleep infinity
