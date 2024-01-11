@@ -3,5 +3,5 @@
 .tap
 .vscode
 .dockerignore
-.eslintignore.json
+.eslintrc.json
 .prettierrc.json
