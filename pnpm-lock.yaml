@@ -5,12 +5,12 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@fastify/error':
+    specifier: ^3.4.1
+    version: 3.4.1
   fastify:
     specifier: ^4.25.1
     version: 4.25.2
-  fastify-crud-generator:
-    specifier: ^1.0.1
-    version: 1.0.1
   fastify-plugin:
     specifier: ^4.5.1
     version: 4.5.1
@@ -141,10 +141,6 @@ packages:
 
   /@fastify/deepmerge@1.3.0:
     resolution: {integrity: sha512-J8TOSBq3SoZbDhM9+R/u77hP93gz/rajSA+K2kGyijPpORPWUXHUpTaleoj+92As0S9uPRP7Oi8IqMf0u+ro6A==}
-    dev: false
-
-  /@fastify/error@2.0.0:
-    resolution: {integrity: sha512-wI3fpfDT0t7p8E6dA2eTECzzOd+bZsZCJ2Hcv+Onn2b7ZwK3RwD27uW2QDaMtQhAfWQQP+WNK7nKf0twLsBf9w==}
     dev: false
 
   /@fastify/error@3.4.1:
@@ -1851,12 +1847,6 @@ packages:
 
   /fast-uri@2.3.0:
     resolution: {integrity: sha512-eel5UKGn369gGEWOqBShmFJWfq/xSJvsgDzgLYC845GneayWvXBf0lJCBn5qTABfewy1ZDPoaR5OZCP+kssfuw==}
-    dev: false
-
-  /fastify-crud-generator@1.0.1:
-    resolution: {integrity: sha512-xL0z9i6W3BC0EEZ/MpM3MkMaXcDL+Be6tLf0lETcmpfcOPlJnn40t2ehKol1udmpT317oq7FtBaXA2Dnbt9xjQ==}
-    dependencies:
-      '@fastify/error': 2.0.0
     dev: false
 
   /fastify-plugin@4.5.1:
