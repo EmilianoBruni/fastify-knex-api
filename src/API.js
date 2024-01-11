@@ -2,13 +2,13 @@
 
 import { existsSync, statSync } from 'fs';
 import path from 'path';
+import crudGen from './crud.js';
 import DefaultController from './DefaultController.js';
 import {
     defaultSchemas,
     defaultHttpCode,
     defaultQueries
 } from './DefaultSchemas.js';
-import crudGen from 'fastify-crud-generator';
 import { SchemaInspector } from 'knex-schema-inspector';
 
 class API {
@@ -18,6 +18,7 @@ class API {
         this._tables = params.tables;
         this._schemas = params.schemas;
         this._schemaDirPath = params.schemaDirPath;
+        this._checkAuth = params.checkAuth;
 
         this._prefix = params.prefix || '/api';
 
@@ -65,7 +66,8 @@ class API {
                 columnsInfo,
                 table.pk
             ),
-            ...schema
+            ...schema,
+            checkAuth: this._checkAuth
         };
     }
 
