@@ -24,7 +24,7 @@ jobs:
         run: npm run test
         env:
           CRUD_CLIENT: mysql2
-          CRUD_DB_URI: mysql://root:test@localhost:3306/test
+          CRUD_DB_URI: mysql://root:test@mariadb:3306/test
       - name: coveralls
         uses: coverallsapp/github-action@master
         with:
