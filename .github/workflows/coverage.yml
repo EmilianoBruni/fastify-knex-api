@@ -10,7 +10,7 @@ jobs:
           MYSQL_ROOT_PASSWORD: test
           MYSQL_DATABASE: test
         ports:
-          - 5100:3306
+          - 3306:3306
         volumes:
             - /test/seed/maria.sql:/docker-entrypoint-initdb.d/seed.sql
     steps:
@@ -24,7 +24,7 @@ jobs:
         run: npm run test
         env:
           CRUD_CLIENT: mysql2
-          CRUD_DB_URI: mysql://root:test@mariadb:3306/test
+          CRUD_DB_URI: mysql://root:test@/test
       - name: coveralls
         uses: coverallsapp/github-action@master
         with:
