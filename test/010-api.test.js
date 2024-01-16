@@ -30,7 +30,7 @@ const newRecordAuthors = {
 
 let lastId = 0;
 
-checkEnv(t)
+checkEnv(t);
 
 t.test('Unitialized Knex config', async t => {
     t.rejects(
@@ -103,7 +103,22 @@ t.test('Autodiscovery tables info', async t => {
         t.same(res_view.json(), firstRecordPosts);
     });
 
-    t.test('create a new record', t => {
+    t.test('Exists the api for the table "all_std_types"', async t => {
+        // test if exists the api for the table "all_std_type"
+        const res_list = await app.inject({ url: '/api/all_std_types/' });
+        t.equal(res_list.statusCode, 200);
+        t.equal(
+            res_list.headers['content-type'],
+            'application/json; charset=utf-8'
+        );
+        t.ok(typeof res_list.json() === 'object');
+        t.ok(typeof res_list.json().total === 'number');
+        t.ok(Array.isArray(res_list.json().items));
+        // check total = items.length
+        t.equal(res_list.json().total, res_list.json().items.length);
+    });
+
+    t.test('create a new record in authors', t => {
         app.inject({
             method: 'POST',
             url: '/api/authors/',
