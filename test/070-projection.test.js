@@ -1,7 +1,7 @@
 import { createServer, checkEnv } from './helpers.js';
 import t from 'tap';
 
-checkEnv(t)
+checkEnv(t);
 
 t.test('Projection list', async t => {
     const server = await createServer(t);

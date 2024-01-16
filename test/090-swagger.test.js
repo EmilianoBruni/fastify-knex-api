@@ -3,7 +3,7 @@ import swagger from '@fastify/swagger';
 import swagger_ui from '@fastify/swagger-ui';
 import t from 'tap';
 
-checkEnv(t)
+checkEnv(t);
 
 t.test('Swagger generation from API schema', async t => {
     const server = initServer(t);
