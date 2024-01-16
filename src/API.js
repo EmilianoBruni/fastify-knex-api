@@ -188,7 +188,6 @@ class API {
             case 'biginteger':
             case 'bigint':
             case 'int':
-            case 'bit':
             case 'tinyinteger':
             case 'smallinteger':
             case 'smallint':
@@ -208,6 +207,7 @@ class API {
                 break;
             case 'binary':
             case 'jsonb':
+            case 'bit':
                 prop.type = 'string';
                 prop.format = 'binary';
                 break;
