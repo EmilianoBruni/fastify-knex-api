@@ -223,6 +223,7 @@ class API {
             case 'mediumtext':
             case 'longtext':
             case 'enum':
+            case 'set':
             case 'char':
             case 'varchar':
             case 'tinytext':
@@ -243,10 +244,6 @@ class API {
             case 'time':
                 prop.type = 'string';
                 prop.format = 'time';
-                break;
-            case 'set':
-                prop.type = 'array';
-                prop.items = { type: 'string' };
                 break;
             case 'inet4':
                 prop.type = 'string';
