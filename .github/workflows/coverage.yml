@@ -1,0 +1,31 @@
+name: coverage
+on: [push, pull_request, workflow_dispatch]
+jobs:
+  coveralls:
+    runs-on: ubuntu-latest
+    services:
+      mariadb:
+        image: mariadb
+        env:
+          MYSQL_ROOT_PASSWORD: test
+          MYSQL_DATABASE: test
+        ports:
+          - 3306:3306
+        volumes:
+            - /test/seed/maria.sql:/docker-entrypoint-initdb.d/seed.sql
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 18
+      - name: npm install
+        run: npm i
+      - name: npm run test
+        run: npm run test
+        env:
+          CRUD_CLIENT: mysql2
+          CRUD_DB_URI: mysql://root:test@/test
+      - name: coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
