@@ -31,11 +31,11 @@ jobs:
         run: docker ps -a
       - name: docker log
         run: DID=$(docker ps --format "{{.ID}}") && docker exec "$DID" ps xa
-      #- name: npm run test
-      #  run: npm run test
-       # env:
-       #   CRUD_CLIENT: mysql2
-       #   CRUD_DB_URI: mysql://root:test@mariadb/test
+      - name: npm run test
+        run: npm run test
+        env:
+          CRUD_CLIENT: mysql2
+          CRUD_DB_URI: mysql://root:test@mariadb/test
       #- name: coveralls
       #  uses: coverallsapp/github-action@master
       #  with:
