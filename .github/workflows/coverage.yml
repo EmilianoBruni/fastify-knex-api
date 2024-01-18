@@ -1,5 +1,6 @@
 name: coverage
-on: [push, pull_request, workflow_dispatch]
+# on: [push, pull_request, workflow_dispatch] # disabled for debug
+on: [workflow_dispatch]
 jobs:
   coveralls:
     runs-on: ubuntu-latest
@@ -24,7 +25,7 @@ jobs:
         run: npm run test
         env:
           CRUD_CLIENT: mysql2
-          CRUD_DB_URI: mysql://root:test@/test
+          CRUD_DB_URI: mysql://root:test@localhost/test
       - name: coveralls
         uses: coverallsapp/github-action@master
         with:
