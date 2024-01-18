@@ -17,16 +17,16 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 18
-      - name: npm install
-        run: npm install
       - name: docker ps
         run: docker ps -a
+      - name: get container id
+        run: export DID=$(docker ps --format "{{.ID}}") 
       - name: copy db test script
-        run: DID=$(docker ps --format "{{.ID}}") && docker cp  test/seed/maria.sql "$DID":/tmp
-      - name: ls
-        run: DID=$(docker ps --format "{{.ID}}") && docker exec "$DID" ls /tmp
+        run: docker cp  test/seed/maria.sql "$DID":/tmp
       - name: create db test
-        run: DID=$(docker ps --format "{{.ID}}") && docker exec "$DID" /bin/bash -c 'mariadb -uroot -ptest test < /tmp/maria.sql'
+        run: docker exec "$DID" /bin/bash -c 'mariadb -uroot -ptest test < /tmp/maria.sql'
+      - name: npm install
+        run: npm install
       - name: npm run test
         run: npm run test
         env:
