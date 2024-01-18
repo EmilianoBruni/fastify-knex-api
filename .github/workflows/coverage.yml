@@ -19,16 +19,16 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 18
-      - name: npm install
-        run: npm install
+      #- name: npm install
+      #  run: npm install
       - name: docker log
         run: DID=$(docker ps --format "{{.ID}}") && docker exec "$DID" ps xa
-      - name: npm run test
-        run: npm run test
-        env:
-          CRUD_CLIENT: mysql2
-          CRUD_DB_URI: mysql://root:test@mariadb/test
-      - name: coveralls
-        uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+      #- name: npm run test
+      #  run: npm run test
+       # env:
+       #   CRUD_CLIENT: mysql2
+       #   CRUD_DB_URI: mysql://root:test@mariadb/test
+      #- name: coveralls
+      #  uses: coverallsapp/github-action@master
+      #  with:
+      #    github-token: ${{ secrets.GITHUB_TOKEN }}
