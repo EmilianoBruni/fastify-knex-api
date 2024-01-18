@@ -22,7 +22,7 @@ jobs:
       #- name: npm install
       #  run: npm install
       - name: cat
-        run: DID=$(docker ps --format "{{.ID}}") && docker exec "$DID" cat /docker-entrypoint-initdb.d/seed.sql
+        run: DID=$(docker ps --format "{{.ID}}") && docker exec "$DID" ls /github/workspace
       - name: docker ps
         run: docker ps -a
       - name: docker log
