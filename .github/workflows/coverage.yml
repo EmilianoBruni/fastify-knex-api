@@ -12,8 +12,6 @@ jobs:
           MYSQL_DATABASE: test
         ports:
           - 3306:3306
-        volumes:
-            - /home/runner/work/fastify-knex-api/fastify-knex-api/test/seed/maria.sql:/docker-entrypoint-initdb.d/seed.sql
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v1
@@ -21,16 +19,10 @@ jobs:
           node-version: 18
       - name: npm install
         run: npm install
-      - name: whereare
-        run: pwd
-      - name: ls
-        run: ls
-      - name: cat
-        run: DID=$(docker ps --format "{{.ID}}") && docker exec "$DID" ls /docker-entrypoint-initdb.d/seed.sql
-      - name: docker ps
-        run: docker ps -a
-      - name: docker log
-        run: DID=$(docker ps --format "{{.ID}}") && docker exec "$DID" ps xa
+      - name: copy db test script
+        run: DID=$(docker ps --format "{{.ID}}") && docker cp "$DID" test/seed/maria.sql /tmp
+      - name: create db test
+        run: DID=$(docker ps --format "{{.ID}}") && docker cp "$DID" mariadb -uroot -ptest test < /tmp/maria.sql
       - name: npm run test
         run: npm run test
         env:
