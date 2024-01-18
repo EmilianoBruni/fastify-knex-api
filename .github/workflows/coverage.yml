@@ -26,7 +26,7 @@ jobs:
       - name: ls
         run: DID=$(docker ps --format "{{.ID}}") && docker exec "$DID" ls /tmp
       - name: create db test
-        run: DID=$(docker ps --format "{{.ID}}") && docker exec "$DID" mariadb -uroot -ptest test < /tmp/maria.sql
+        run: DID=$(docker ps --format "{{.ID}}") && docker exec "$DID" /bin/bash -c 'mariadb -uroot -ptest test < /tmp/maria.sql'
       - name: npm run test
         run: npm run test
         env:
