@@ -19,6 +19,8 @@ jobs:
           node-version: 18
       - name: npm install
         run: npm install
+      - name: docker ps
+        run: docker ps -a
       - name: copy db test script
         run: DID=$(docker ps --format "{{.ID}}") && docker cp "$DID" test/seed/maria.sql /tmp
       - name: create db test
