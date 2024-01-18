@@ -21,6 +21,8 @@ jobs:
           node-version: 18
       #- name: npm install
       #  run: npm install
+      - name: docker ps
+        run: docker ps -a
       - name: docker log
         run: DID=$(docker ps --format "{{.ID}}") && docker exec "$DID" ps xa
       #- name: npm run test
