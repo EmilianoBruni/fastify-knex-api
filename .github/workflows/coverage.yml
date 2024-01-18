@@ -13,14 +13,14 @@ jobs:
         ports:
           - 3306:3306
         volumes:
-            - /test/seed/maria.sql:/docker-entrypoint-initdb.d/seed.sql
+            - /home/runner/work/fastify-knex-api/fastify-knex-api/test/seed/maria.sql:/docker-entrypoint-initdb.d/seed.sql
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v1
         with:
           node-version: 18
-      #- name: npm install
-      #  run: npm install
+      - name: npm install
+        run: npm install
       - name: whereare
         run: pwd
       - name: ls
