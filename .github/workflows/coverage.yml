@@ -21,8 +21,12 @@ jobs:
           node-version: 18
       #- name: npm install
       #  run: npm install
+      - name: whereare
+        run: pwd
+      - name: ls
+        run: ls
       - name: cat
-        run: DID=$(docker ps --format "{{.ID}}") && docker exec "$DID" ls /github/workspace
+        run: DID=$(docker ps --format "{{.ID}}") && docker exec "$DID" ls /docker-entrypoint-initdb.d/seed.sql
       - name: docker ps
         run: docker ps -a
       - name: docker log
