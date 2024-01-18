@@ -19,10 +19,12 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 18
-      - name: docker ps -a
-        run: DID=$(docker ps --format "{{.ID}}") && docker logs --details "$DID"
       - name: npm install
         run: npm install
+      - name: docker ps -a
+        run: docker ps -a
+      - name: docker log
+        run: DID=$(docker ps --format "{{.ID}}") && docker logs --details "$DID"
       - name: npm run test
         run: npm run test
         env:
