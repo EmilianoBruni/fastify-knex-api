@@ -19,8 +19,8 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 18
-      #- name: npm install
-      #  run: npm install
+      - name: npm install
+        run: npm install
       - name: docker ps
         run: docker ps -a
       - name: docker log
