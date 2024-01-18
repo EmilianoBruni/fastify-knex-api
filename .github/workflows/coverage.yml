@@ -17,8 +17,6 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 18
-      - name: docker ps
-        run: docker ps -a
       - name: get container id
         id: vars
         run: DID=$(docker ps --format "{{.ID}}") && echo "DID=${DID}" >> "$GITHUB_OUTPUT"
