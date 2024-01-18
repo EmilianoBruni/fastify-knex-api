@@ -20,11 +20,12 @@ jobs:
       - name: docker ps
         run: docker ps -a
       - name: get container id
-        run: export DID=$(docker ps --format "{{.ID}}") 
+        id: vars
+        run: DID=$(docker ps --format "{{.ID}}") && echo "DID=${DID}" >> "$GITHUB_OUTPUT"
       - name: copy db test script
-        run: docker cp  test/seed/maria.sql "$DID":/tmp
+        run: docker cp  test/seed/maria.sql ${{steps.vars.outputs.DID}}:/tmp
       - name: create db test
-        run: docker exec "$DID" /bin/bash -c 'mariadb -uroot -ptest test < /tmp/maria.sql'
+        run: docker exec ${{steps.vars.outputs.DID}} /bin/bash -c 'mariadb -uroot -ptest test < /tmp/maria.sql'
       - name: npm install
         run: npm install
       - name: npm run test
