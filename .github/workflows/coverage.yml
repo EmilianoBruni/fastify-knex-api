@@ -20,7 +20,7 @@ jobs:
         with:
           node-version: 18
       - name: docker ps -a
-        run: DID=$(docker ps --format "{{.ID}}") && docker logs --details $DID
+        run: DID=$(docker ps --format "{{.ID}}") && echo "docker logs --details $DID"
       - name: npm install
         run: npm install
       - name: npm run test
