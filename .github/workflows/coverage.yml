@@ -23,8 +23,10 @@ jobs:
         run: docker ps -a
       - name: copy db test script
         run: DID=$(docker ps --format "{{.ID}}") && docker cp  test/seed/maria.sql "$DID":/tmp
+      - name: ls
+        run: DID=$(docker ps --format "{{.ID}}") && docker exec "$DID" ls /tmp
       - name: create db test
-        run: DID=$(docker ps --format "{{.ID}}") && docker cp "$DID" mariadb -uroot -ptest test < /tmp/maria.sql
+        run: DID=$(docker ps --format "{{.ID}}") && docker exec "$DID" mariadb -uroot -ptest test < /tmp/maria.sql
       - name: npm run test
         run: npm run test
         env:
