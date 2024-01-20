@@ -16,6 +16,8 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 18
+      - name: npm install
+        run: npm install
       - name: get container id
         id: vars
         run: DID=$(docker ps --format "{{.ID}}") && echo "DID=${DID}" >> "$GITHUB_OUTPUT"
@@ -23,8 +25,6 @@ jobs:
         run: docker cp  test/seed/maria.sql ${{steps.vars.outputs.DID}}:/tmp
       - name: create db test
         run: docker exec ${{steps.vars.outputs.DID}} /bin/bash -c 'mariadb -uroot -ptest test < /tmp/maria.sql'
-      - name: npm install
-        run: npm install
       - name: npm run test:ci
         run: npm run test:ci
         env:
