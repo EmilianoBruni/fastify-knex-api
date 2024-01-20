@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": " tap -j1 ./test/*.test.js",
+    "test:ci": "npm run test -- -j2 --allow-incomplete-coverage",
     "lint": "eslint \"index.js\" \"src/**/*.js\" \"test/**/*.js\"",
     "lint:fix": "npm run lint -- --fix"
   },
