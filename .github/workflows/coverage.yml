@@ -25,8 +25,8 @@ jobs:
         run: docker exec ${{steps.vars.outputs.DID}} /bin/bash -c 'mariadb -uroot -ptest test < /tmp/maria.sql'
       - name: npm install
         run: npm install
-      - name: npm run test
-        run: npm run test
+      - name: npm run test:ci
+        run: npm run test:ci
         env:
           CRUD_CLIENT: mysql2
           CRUD_DB_URI: mysql://root:test@127.0.0.1/test
