@@ -2,13 +2,15 @@ import { createServer, checkEnv } from './helpers.js';
 import DefaultController from '../src/DefaultController.js';
 import t from 'tap';
 
+process.env.TZ = 'UTC'; // set timezone to UTC to avoid problems with dates
+
 const firstRecordAuthors = {
     id: 1,
     first_name: 'Michael',
     last_name: 'Messina',
     email: 'monia89@example.org',
     active: true,
-    added: '2011-10-09T06:34:11.000Z'
+    added: '2011-10-09T08:34:11.000Z'
 };
 
 const firstRecordPosts = {
