@@ -17,7 +17,7 @@ CREATE TABLE `authors` (
   UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=71 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
-INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `added`) VALUES (1, 'Michael', 'Messina', 'monia89@example.org', '2011-10-09 08:34:11') ;
+INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`, `added`) VALUES (1, 'Michael', 'Messina', 'monia89@example.org', FROM_UNIXTIME(1318149251));
 INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`) VALUES (2, 'Joannes', 'Russo', 'sorrentino.akira@example.net');
 INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`) VALUES (3, 'Deborah', 'Vitale', 'ibattaglia@example.net');
 INSERT INTO `authors` (`id`, `first_name`, `last_name`, `email`) VALUES (4, 'Quasimodo', 'Galli', 'marcella.vitali@example.net');
