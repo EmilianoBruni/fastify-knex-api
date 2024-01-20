@@ -666,6 +666,14 @@ This module supports both ESM and CommonJS. If you are using CommonJS, you can i
 const knexAPI = require('knex-fastify-api');
 ```
 
+## Bugs / Help / Feature Requests / Contributing
+
+* For feature requests or help, please visit [the discussions page on GitHub](https://github.com/EmilianoBruni/fastify-knex-api/discussions).
+
+* For bug reports, please file an issue on [the issues page on GitHub](https://github.com/EmilianoBruni/fastify-knex-api/issues).
+
+* Contributions welcome! Please open a [pull request on GitHub](https://github.com/EmilianoBruni/fastify-knex-api/pulls) with your changes. You can run them by me first on [the discussions page](https://github.com/EmilianoBruni/fastify-knex-api/discussions) if you'd like. Please add tests for any changes.
+
 ## License
 
 Licensed under [APACHE 2.0](./LICENSE)
