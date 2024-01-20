@@ -5,3 +5,4 @@
 .dockerignore
 .eslintrc.json
 .prettierrc.json
+.github
