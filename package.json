@@ -13,9 +13,8 @@
     "lint": "eslint \"index.js\" \"src/**/*.js\" \"test/**/*.js\"",
     "lint:fix": "npm run lint -- --fix",
     "prepublishOnly": "npm run buildcjs && npm test",
-    "test": " tap -j1 ./test/*.test.js",
-    "test:ci": "npm run test -- -j2 --allow-incomplete-coverage",
-    "prepare": "husky install"
+    "test": " tap -j1 --allow-incomplete-coverage ./test/*.test.js",
+    "test:ci": "npm run test -- -j2 "
   },
   "repository": {
     "type": "git",
@@ -51,7 +50,6 @@
     "eslint-plugin-n": "^15.0.0 || ^16.0.0 ",
     "eslint-plugin-prettier": "^5.1.0",
     "eslint-plugin-promise": "^6.0.0",
-    "husky": "^8.0.3",
     "mysql2": "^3.7.0",
     "prettier": "^3.1.1",
     "rollup": "^4.9.5",
