@@ -658,6 +658,14 @@ are schemas for list method query string and for projection returning query stri
 
 Definitions of there references can be found in [./src/DefaultSchemas.js](./src/DefaultSchemas.js).
 
+## CommonJS
+
+This module supports both ESM and CommonJS. If you are using CommonJS, you can import it like so:
+
+```js
+const knexAPI = require('knex-fastify-api');
+```
+
 ## Bugs / Help / Feature Requests / Contributing
 
 * For feature requests or help, please visit [the discussions page on GitHub](https://github.com/EmilianoBruni/fastify-knex-api/discussions).

@@ -131,3 +131,6 @@ dist
 
 .tap
 .vscode
+
+# generated .cjs files in root folder
+*.cjs

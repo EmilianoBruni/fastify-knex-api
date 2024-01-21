@@ -3,11 +3,19 @@
   "version": "0.1.1",
   "description": "Fastify plugin to expose API for Knex Query Builder",
   "main": "index.js",
+  "type": "module",
+  "exports": {
+    "import": "./index.js",
+    "require": "./index.cjs"
+  },
   "scripts": {
-    "test": " tap -j1 ./test/*.test.js",
-    "test:ci": "npm run test -- -j2 --allow-incomplete-coverage",
-    "lint": "eslint \"index.js\" \"src/**/*.js\" \"test/**/*.js\"",
-    "lint:fix": "npm run lint -- --fix"
+    "buildcjs": "rollup ./index.js --file ./index.cjs --format cjs",
+    "lint": "eslint \"index.js\" \"src/**/*.js\" \"test/**/*.?(c)js\" ",
+    "lint:fix": "npm run lint -- --fix",
+    "postpublishOnly": "rimraf ./index.cjs",
+    "prepublishOnly": "npm run buildcjs && npm test",
+    "test": "tap -j1 --allow-incomplete-coverage \"./test/*.test.?(c)js\"",
+    "test:ci": "npm run test -- -j2 "
   },
   "repository": {
     "type": "git",
@@ -33,7 +41,6 @@
     "url": "https://github.com/EmilianoBruni/fastify-knex-api/issues"
   },
   "homepage": "https://github.com/EmilianoBruni/fastify-knex-api#readme",
-  "type": "module",
   "devDependencies": {
     "@fastify/swagger": "^8.13.0",
     "@fastify/swagger-ui": "^2.0.1",
@@ -46,6 +53,8 @@
     "eslint-plugin-promise": "^6.0.0",
     "mysql2": "^3.7.0",
     "prettier": "^3.1.1",
+    "rimraf": "^5.0.5",
+    "rollup": "^4.9.5",
     "tap": "^18.6.1"
   },
   "dependencies": {
