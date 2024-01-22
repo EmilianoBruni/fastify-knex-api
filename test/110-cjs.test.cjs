@@ -1,15 +1,15 @@
 // this test try to use this library as a commonjs module
 
 const { test } = require('tap');
+const scriptPath = '../src/index.cjs';
+const scriptFullPath = require('path').join(__dirname, scriptPath);
 
 // skip if ../index.cjs not exists
 test(
     'Knex as cjs module',
     {
         // use dirname to resolve the path
-        skip: !require('fs').existsSync(
-            require('path').join(__dirname, '../index.cjs')
-        )
+        skip: !require('fs').existsSync(scriptFullPath)
     },
     async t => {
         if (!process.env.CRUD_CLIENT || !process.env.CRUD_DB_URI) {
@@ -18,7 +18,7 @@ test(
             process.exit(0);
         }
 
-        const KnexAPI = require('../index.cjs');
+        const KnexAPI = require(scriptPath);
         const app = require('fastify')();
         app.register(KnexAPI, {
             knexConfig: {

@@ -1,4 +1,4 @@
-import API from './src/API.js';
+import API from './Classes/API.js';
 import fp from 'fastify-plugin';
 import knex from 'knex';
 

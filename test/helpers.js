@@ -1,4 +1,4 @@
-import knexAPI from '../index.js';
+import knexAPI from '../src/index.js';
 import fastify from 'fastify';
 
 export async function createServer(t, pluginConfig = {}) {

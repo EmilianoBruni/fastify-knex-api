@@ -2,17 +2,17 @@
   "name": "fastify-knex-api",
   "version": "0.1.2",
   "description": "Fastify plugin to expose API for Knex Query Builder",
-  "main": "index.js",
+  "main": "src/index.js",
   "type": "module",
   "exports": {
-    "import": "./index.js",
-    "require": "./index.cjs"
+    "import": "./src/index.js",
+    "require": "./src/index.cjs"
   },
   "scripts": {
-    "buildcjs": "rollup ./index.js --file ./index.cjs --format cjs",
-    "lint": "eslint \"index.js\" \"src/**/*.js\" \"test/**/*.?(c)js\" ",
+    "buildcjs": "rollup ./src/index.js --file ./src/index.cjs --format cjs",
+    "lint": "eslint \"src/**/*.js\" \"test/**/*.?(c)js\" ",
     "lint:fix": "npm run lint -- --fix",
-    "postpublishOnly": "rimraf ./index.cjs",
+    "postpublishOnly": "rimraf ./src/index.cjs",
     "prepublishOnly": "npm run buildcjs && npm test",
     "test": "tap -j1 --allow-incomplete-coverage \"./test/*.test.?(c)js\"",
     "test:ci": "npm run test"

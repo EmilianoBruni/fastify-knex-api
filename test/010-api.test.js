@@ -1,5 +1,5 @@
 import { createServer, checkEnv } from './helpers.js';
-import DefaultController from '../src/DefaultController.js';
+import DefaultController from '../src/Classes/DefaultController.js';
 import t from 'tap';
 
 process.env.TZ = 'UTC'; // set timezone to UTC to avoid problems with dates
