@@ -9,15 +9,16 @@
     "require": "./dist/index.cjs"
   },
   "scripts": {
-    "buildcjs": "rollup ./src/index.js --file ./src/index.cjs --format cjs",
+    "buildcjs": "rollup ./dist/index.js --file ./dist/index.cjs --format cjs",
+    "clean": "rimraf ./dist",
     "lint": "eslint \"src/**/*.js\" \"test/**/*.?(c)js\" ",
     "lint:fix": "npm run lint -- --fix",
     "postpublishOnly": "rimraf ./src/index.cjs",
     "prepublishOnly": "npm run buildcjs && npm test",
-    "test": "npm run tsc; tap -j1 --allow-incomplete-coverage \"./test/*.test.?(c)js\"",
+    "test": "tap -j1 --allow-incomplete-coverage \"./test/*.test.?(c)js\"",
     "test:ci": "npm run test",
     "test:ts": "tsd",
-    "tsc": "tsc"
+    "tsc": "npm run clean; tsc"
   },
   "repository": {
     "type": "git",
