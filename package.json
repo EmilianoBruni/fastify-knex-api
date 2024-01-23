@@ -14,7 +14,7 @@
     "lint:fix": "npm run lint -- --fix",
     "postpublishOnly": "rimraf ./src/index.cjs",
     "prepublishOnly": "npm run buildcjs && npm test",
-    "test": "tap -j1 --allow-incomplete-coverage \"./test/*.test.?(c)js\"",
+    "test": "npm run tsc; tap -j1 --allow-incomplete-coverage \"./test/*.test.?(c)js\"",
     "test:ci": "npm run test",
     "test:ts": "tsd",
     "tsc": "tsc"
