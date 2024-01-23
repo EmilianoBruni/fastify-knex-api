@@ -1,7 +1,7 @@
 // this test try to use this library as a commonjs module
 
 const { test } = require('tap');
-const scriptPath = '../src/index.cjs';
+const scriptPath = '../dist/index.cjs';
 const scriptFullPath = require('path').join(__dirname, scriptPath);
 
 // skip if ../index.cjs not exists
