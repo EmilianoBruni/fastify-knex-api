@@ -1,9 +1,12 @@
+import { FastifyInstance , FastifyPluginAsync } from 'fastify';
 import API from './Classes/API.js';
 import fp from 'fastify-plugin';
 import knex from 'knex';
 
-async function initPlugin(fastify, opts) {
-    opts.fastify = fastify;
+import type { IKA, IKAPluginOptions, IKAApiOptions } from './types.ts';
+
+//async function initPlugin(fastify: IKA, opts: IKAPluginOptions): Promise<void> {
+const initPlugin: FastifyPluginAsync<IKAPluginOptions> = async (fastify:FastifyInstance, opts:IKAPluginOptions) => {
 
     // opts.knexConfig is required and must be an object
     if (!opts.knexConfig || typeof opts.knexConfig !== 'object') {
@@ -11,25 +14,27 @@ async function initPlugin(fastify, opts) {
     }
 
     const knexHandler = knex(opts.knexConfig);
-    delete opts.knexConfig;
 
-    opts.knex = knexHandler;
+    const apiOpts: IKAApiOptions = {
+        ...opts,
+        fastify,
+        knex: knexHandler
+    };
 
-    const api = new API(opts);
+    const api = new API(apiOpts);
     await api.isInizialized;
 
     fastify.decorate('knexAPI', api);
     fastify.decorate('knex', knexHandler);
 
-    fastify.addHook('onClose', (instance, done) => {
+    fastify.addHook('onClose', async (instance: IKA) => {
         if (instance.knex === knexHandler) {
-            instance.knex.destroy(done);
+            instance.knex.destroy();
             delete instance.knex;
         }
         if (instance.knexAPI === api) {
             delete instance.knexAPI;
         }
-        done();
     });
 }
 
