@@ -12,6 +12,7 @@
     "buildcjs": "rollup ./dist/index.js --file ./dist/index.cjs --format cjs",
     "clean": "rimraf ./dist",
     "lint": "eslint \"src/**/*.js\" \"test/**/*.?(c)js\" ",
+    "lint:ts": "eslint \"src/**/*.ts\"",
     "lint:fix": "npm run lint -- --fix",
     "postpublishOnly": "rimraf ./src/index.cjs",
     "prepublishOnly": "npm run buildcjs && npm test",
@@ -47,6 +48,8 @@
   "devDependencies": {
     "@fastify/swagger": "^8.13.0",
     "@fastify/swagger-ui": "^2.0.1",
+    "@typescript-eslint/eslint-plugin": "^6.19.1",
+    "@typescript-eslint/parser": "^6.19.1",
     "eslint": "^8.0.1",
     "eslint-config-prettier": "^9.1.0",
     "eslint-config-standard": "^17.1.0",
@@ -54,13 +57,15 @@
     "eslint-plugin-n": "^15.0.0 || ^16.0.0 ",
     "eslint-plugin-prettier": "^5.1.0",
     "eslint-plugin-promise": "^6.0.0",
+    "eslint-plugin@latest": "link:typescript-eslint/eslint-plugin@latest",
     "mysql2": "^3.7.0",
     "prettier": "^3.1.1",
     "rimraf": "^5.0.5",
     "rollup": "^4.9.5",
     "tap": "^18.6.1",
     "tsd": "^0.30.4",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "typescript-eslint": "0.0.1-alpha.0"
   },
   "dependencies": {
     "@fastify/error": "^3.4.1",
