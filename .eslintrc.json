@@ -5,6 +5,8 @@
     },
     "extends": [
         "eslint:recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended",
         "prettier"
     ],
     "plugins": ["import", "prettier"],
@@ -23,6 +25,13 @@
                 "order": "asc",
                 "caseInsensitive": true
             }
-        }]
+        }],
+        "@typescript-eslint/consistent-type-imports": [
+            "error",
+            {
+                "prefer": "type-imports"
+            }
+        ],
+        "@typescript-eslint/no-explicit-any": "off"
     }
 }
