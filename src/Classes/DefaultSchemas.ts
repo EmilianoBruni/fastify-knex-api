@@ -1,4 +1,6 @@
-const defaultSchemas = modelName => {
+import type { TKAAPISchemas } from '../types.js';
+
+const defaultSchemas = (modelName: string): TKAAPISchemas => {
     return {
         view: {
             schema: {

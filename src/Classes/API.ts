@@ -1,5 +1,17 @@
 // Class that handles all API calls
 
+import type {
+    IKAApiOptions,
+    TTablesDefinition,
+    TTableDefinition,
+    TTablesDefinitionNormalized,
+    TKAAPISchemas,
+    TKAVerbs,
+    JSONSchemaProps,
+    TColumnsInfo
+} from '../types.js';
+import type { Knex } from 'knex';
+import type { SchemaInspector as ISchemaInspector } from 'knex-schema-inspector/dist/types/schema-inspector.js';
 import { existsSync, statSync } from 'fs';
 import path from 'path';
 import crudGen from './crud.js';
@@ -12,10 +24,20 @@ import {
 import { SchemaInspector } from 'knex-schema-inspector';
 
 class API {
-    constructor(params = {}) {
+    private _fastify: IKAApiOptions['fastify'];
+    private _knex: IKAApiOptions['knex'];
+    private _tables: TTablesDefinitionNormalized = [];
+    private _schemas: IKAApiOptions['schemas'];
+    private _schemaDirPath: IKAApiOptions['schemaDirPath'];
+    private _checkAuth: IKAApiOptions['checkAuth'];
+    private _prefix: IKAApiOptions['prefix'];
+    private schemaInspector: ISchemaInspector;
+
+    public isInizialized: Promise<boolean>;
+
+    constructor(params: IKAApiOptions) {
         this._fastify = params.fastify;
         this._knex = params.knex;
-        this._tables = params.tables;
         this._schemas = params.schemas;
         this._schemaDirPath = params.schemaDirPath;
         this._checkAuth = params.checkAuth;
@@ -24,24 +46,23 @@ class API {
 
         this.schemaInspector = SchemaInspector(this._knex);
 
-        if (!this._tables) {
+        if (!params.tables) {
             this.isInizialized = this._getDBTables().then(tables => {
-                this._tables = tables;
-                return this.initialize();
+                return this.initialize(tables);
             });
         } else {
-            this.isInizialized = this.initialize();
+            this.isInizialized = this.initialize(params.tables);
         }
     }
 
-    initialize() {
+    async initialize(tables: TTablesDefinition): Promise<boolean> {
         // normalize tables
-        this._tables = this._normalizeTables(this._tables);
+        this._tables = this._normalizeTables(tables);
         // register default http code
         this._fastify.addSchema(defaultHttpCode);
         this._fastify.addSchema(defaultQueries);
         // register routes for each table
-        return Promise.all(
+        await Promise.all(
             this._tables.map(table =>
                 this._buildOptReg(table).then(optReg => {
                     // register routes
@@ -49,6 +70,7 @@ class API {
                 })
             )
         );
+        return true;
     }
 
     /**
@@ -56,7 +78,7 @@ class API {
      * @param {Object} table - The table object.
      * @returns {Object} - The options for registration routes.
      */
-    async _buildOptReg(table) {
+    async _buildOptReg(table: TTableDefinition) {
         const columnsInfo = await this._knex(table.name).columnInfo();
         const schema = await this._buildSchema(table, columnsInfo);
         return {
@@ -71,7 +93,10 @@ class API {
         };
     }
 
-    async _buildSchema(table, columnsInfo) {
+    async _buildSchema(
+        table: TTableDefinition,
+        columnsInfo: TColumnsInfo
+    ): Promise<object> {
         const schemaTableFields = this._getTableSchema(columnsInfo);
         // register table fields schema in fastify
         const ref_id = `fastify-knex-api/tables/${table.name}`;
@@ -93,48 +118,51 @@ class API {
         return schema;
     }
 
-    _getTableSchema(columnsInfo) {
+    _getTableSchema(columnsInfo: TColumnsInfo) {
         return this._buildPropsFromColumnsInfo(columnsInfo);
     }
 
-    _buildPropsFromColumnsInfo(columnsInfo) {
-        const props = {};
+    _buildPropsFromColumnsInfo(columnsInfo: TColumnsInfo) {
+        const props: Record<string, JSONSchemaProps> = {};
         for (const k of Object.keys(columnsInfo)) {
             const columnInfo = columnsInfo[k];
-            props[k] = {};
-            this._addTypeFormat(k, columnInfo, props[k]);
+            if (!columnInfo) continue;
+            const prop = this._initProps(k, columnInfo);
             if (
                 columnInfo.maxLength !== undefined &&
                 columnInfo.maxLength !== null
             ) {
-                if (props[k].type === 'string')
-                    props[k].maxLength = columnInfo.maxLength;
+                if (prop.type === 'string')
+                    prop.maxLength = columnInfo.maxLength;
             }
-            if (
-                columnInfo.description !== undefined &&
-                columnInfo.description !== null
-            ) {
-                props[k].description = columnInfo.description;
-            }
-            if (
-                columnInfo.example !== undefined &&
-                columnInfo.example !== null
-            ) {
-                props[k].example = columnInfo.example;
-            }
-            if (columnInfo.primary) {
-                props[k].description += ' (primary key)';
-            }
-            if (columnInfo.unique) {
-                props[k].description += ' (unique)';
-            }
+            // TODO: columnInfo seems not have description, example, primary, unique
+            // if (
+            //     columnInfo.description !== undefined &&
+            //     columnInfo.description !== null
+            // ) {
+            //     prop.description = columnInfo.description;
+            // }
+            // if (
+            //     columnInfo.example !== undefined &&
+            //     columnInfo.example !== null
+            // ) {
+            //     prop.example = columnInfo.example;
+            // }
+            // if (columnInfo.primary) {
+            //     prop.description += ' (primary key)';
+            // }
+            // if (columnInfo.unique) {
+            //     prop.description += ' (unique)';
+            // }
+            props[k] = prop;
         }
         return props;
     }
 
-    _appendResponseToSchemas(schemas, ref_id) {
+    _appendResponseToSchemas(schemas: TKAAPISchemas, ref_id: string) {
         // view, create, update return ref_id for response=200
-        ['view', 'create', 'update'].forEach(k => {
+        const arr1: TKAVerbs[] = ['view', 'create', 'update'];
+        arr1.forEach(k => {
             const schema = schemas[k].schema;
             schema.response = schema.response || {};
             schema.response['200'] = schema.response['200'] || {
@@ -152,7 +180,8 @@ class API {
         };
 
         // for create and update, ref_id also for body post
-        ['create', 'update'].forEach(k => {
+        const arr2: TKAVerbs[] = ['create', 'update'];
+        arr2.forEach(k => {
             const schema = schemas[k].schema;
             schema.body = { type: 'object', $ref: `${ref_id}#` };
         });
@@ -164,14 +193,17 @@ class API {
             204: { $ref: 'fastify-knex-api/http-code#/properties/204' }
         };
 
-        ['view', 'list', 'create', 'update', 'delete'].forEach(k => {
-            const response = schemas[k].schema.response;
-            response['500'] = {
-                $ref: 'fastify-knex-api/http-code#/properties/500'
+        const arr3: TKAVerbs[] = ['view', 'list', 'create', 'update', 'delete'];
+        arr3.forEach(k => {
+            schemas[k].schema.response = {
+                500: {
+                    $ref: 'fastify-knex-api/http-code#/properties/500'
+                }
             };
         });
-        ['view', 'update', 'delete'].forEach(k => {
-            const response = schemas[k].schema.response;
+        const arr4: TKAVerbs[] = ['view', 'update', 'delete'];
+        arr4.forEach(k => {
+            const response = (schemas[k].schema.response ??= {});
             response['404'] = {
                 $ref: 'fastify-knex-api/http-code#/properties/404'
             };
@@ -180,9 +212,10 @@ class API {
         return schemas;
     }
 
-    _addTypeFormat(name, columnInfo, prop) {
+    _initProps(name: string, columnInfo: Knex.ColumnInfo): JSONSchemaProps {
         // add type/format and other properties to the schema
         // See: https://ajv.js.org/json-type-definition.html
+        const prop: JSONSchemaProps = { type: 'null' };
         switch (columnInfo.type.toLowerCase()) {
             case 'integer':
             case 'biginteger':
@@ -259,9 +292,10 @@ class API {
                         JSON.stringify(columnInfo)
                 );
         }
+        return prop;
     }
 
-    async _loadSchemaDirPath(table, schema) {
+    async _loadSchemaDirPath(table: TTableDefinition, schema: TKAAPISchemas) {
         if (!this._schemaDirPath || typeof this._schemaDirPath !== 'string')
             return schema;
         const schemaPath = path.join(
@@ -275,13 +309,15 @@ class API {
             if (typeof customSchema === 'function') {
                 schema = customSchema(schema);
             }
-        } catch (e) {
+        } catch (e: any) {
             throw new Error(`Error loading schema ${schemaPath}: ${e.message}`);
         }
         return schema;
     }
 
-    _normalizeTables(tables) {
+    _normalizeTables(
+        tables: IKAApiOptions['tables']
+    ): TTablesDefinitionNormalized {
         // return array of objects {name, pk}
         if (Array.isArray(tables)) {
             return tables.map(table => {
@@ -296,6 +332,10 @@ class API {
                 if (!table.pk) table.pk = undefined;
                 return table;
             });
+        } else {
+            throw new Error(
+                'tables must be an array of string or an array of object'
+            );
         }
     }
 
