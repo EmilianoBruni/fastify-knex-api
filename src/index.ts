@@ -1,13 +1,14 @@
-import { FastifyInstance , FastifyPluginAsync } from 'fastify';
+import type { IKA, IKAPluginOptions, IKAApiOptions } from './types.ts';
+import type { FastifyInstance, FastifyPluginAsync } from 'fastify';
 import API from './Classes/API.js';
 import fp from 'fastify-plugin';
 import knex from 'knex';
 
-import type { IKA, IKAPluginOptions, IKAApiOptions } from './types.ts';
-
 //async function initPlugin(fastify: IKA, opts: IKAPluginOptions): Promise<void> {
-const initPlugin: FastifyPluginAsync<IKAPluginOptions> = async (fastify:FastifyInstance, opts:IKAPluginOptions) => {
-
+const initPlugin: FastifyPluginAsync<IKAPluginOptions> = async (
+    fastify: FastifyInstance,
+    opts: IKAPluginOptions
+) => {
     // opts.knexConfig is required and must be an object
     if (!opts.knexConfig || typeof opts.knexConfig !== 'object') {
         throw new Error('knexConfig is required');
@@ -36,7 +37,7 @@ const initPlugin: FastifyPluginAsync<IKAPluginOptions> = async (fastify:FastifyI
             delete instance.knexAPI;
         }
     });
-}
+};
 
 const plugin = fp(initPlugin, {
     fastify: '>=2.0.0',
