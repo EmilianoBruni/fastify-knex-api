@@ -67,7 +67,6 @@ class API {
             this._tables.map(table =>
                 this._buildOptReg(table).then(optReg => {
                     // register routes
-                    console.log(optReg);
                     return this._fastify.register(crudGen, optReg);
                 })
             )
