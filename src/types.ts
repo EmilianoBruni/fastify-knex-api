@@ -1,11 +1,23 @@
-import type API from './Classes/API.js';
-import type { FastifyInstance, FastifyPluginOptions } from 'fastify';
+import type {
+    FastifyInstance,
+    FastifyPluginOptions,
+    FastifyReply,
+    FastifyRequest
+} from 'fastify';
 import type { Knex } from 'knex';
 
-export type IKA = FastifyInstance & {
-    knexAPI?: API;
-    knex?: Knex;
+// export type IKA = FastifyInstance & {
+//     knexAPI: API;
+//     knex: Knex;
+// };
+
+export type TKARequest = FastifyRequest;
+export type TKAReply = FastifyReply;
+
+export type TKARequestList = TKARequest & {
+    query: TKAControllerFiltersList | unknown;
 };
+export type TKAParamsId = { id: string };
 
 export type TTableDefinition = {
     name: string;
@@ -15,15 +27,17 @@ export type TTableDefinition = {
 export type TTablesDefinition = Array<string | TTableDefinition>;
 export type TTablesDefinitionNormalized = Array<TTableDefinition>;
 
+export type TKACheckAuth = (req: TKARequest, res: TKAReply) => boolean;
+
 export type IKACommonOptions = {
     prefix?: string;
     // table is an array of table names or an array of objects with table name and table primary key
     tables?: TTablesDefinition;
     // schemas is a function (table_name, schema) => schema
     // schema is an structure like DefaultSchema
-    schemas?: (tableName: string, schema: any) => any;
+    schemas?: (tableName: string, schema: TKAAPISchemas) => TKAAPISchemas;
     schemaDirPath?: string;
-    checkAuth?: (req: any, res: any) => boolean;
+    checkAuth?: TKACheckAuth | undefined;
 };
 
 export type IKAOptions = {
@@ -121,3 +135,74 @@ export type JSONSchemaProps = {
     [key: string]: any;
     example?: string | number | boolean | object | Array<any> | null;
 };
+
+// DefaultController
+
+export interface TKAController {
+    list: (req: TKARequest, res: TKAReply) => Promise<TKAListResult>;
+    view: (req: TKARequest, res: TKAReply) => Promise<any>;
+    create: (req: TKARequest, res: TKAReply) => Promise<any>;
+    update: (req: TKARequest, res: TKAReply) => Promise<any>;
+    delete: (req: TKARequest, res: TKAReply) => Promise<any>;
+    //[key: string]: (req: TKARequest, reply: TKAReply) => Promise<any>;
+}
+
+export type TKAControllerFiltersPagination = {
+    offset?: number;
+    skip?: number;
+    limit?: number;
+    page?: number;
+    window?: number;
+};
+
+export type TKAControllerFiltersSort = {
+    sort?: string;
+};
+
+export type TKAControllerFiltersProjection = {
+    fields?: string;
+};
+
+export type TKAControllerFiltersSearch = {
+    filter?: string;
+};
+
+export type TKAControllerFiltersList = TKAControllerFiltersPagination &
+    TKAControllerFiltersSort &
+    TKAControllerFiltersProjection &
+    TKAControllerFiltersSearch;
+
+// crud.ts
+
+export type TKACrudVerbOptions = {
+    url: string;
+    schema?: TKASchema;
+    handler?: any;
+};
+
+export type TKACrudVerbs = {
+    list?: TKACrudVerbOptions;
+    view?: TKACrudVerbOptions;
+    create?: TKACrudVerbOptions;
+    update?: TKACrudVerbOptions;
+    delete?: TKACrudVerbOptions;
+};
+
+export type TKACrudOptions = {
+    controller: TKAController;
+    prefix?: string;
+    checkAuth?: TKACheckAuth | undefined;
+} & TKAAPISchemas;
+
+export type TKACrudGenHandlerOptions = {
+    type: TKAVerbs;
+} & TKACrudOptions;
+
+// rappresent a generic row of a database
+
+export type TKACrudRow = Record<string, any>;
+export type TKAListResult = {
+    total: number;
+    items: Array<TKACrudRow>;
+};
+export type TKAVerbResult = TKACrudRow;

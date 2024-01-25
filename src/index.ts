@@ -1,4 +1,4 @@
-import type { IKA, IKAPluginOptions, IKAApiOptions } from './types.ts';
+import type { IKAPluginOptions, IKAApiOptions } from './types.ts';
 import type { FastifyInstance, FastifyPluginAsync } from 'fastify';
 import API from './Classes/API.js';
 import fp from 'fastify-plugin';
@@ -28,7 +28,7 @@ const initPlugin: FastifyPluginAsync<IKAPluginOptions> = async (
     fastify.decorate('knexAPI', api);
     fastify.decorate('knex', knexHandler);
 
-    fastify.addHook('onClose', async (instance: IKA) => {
+    fastify.addHook('onClose', async instance => {
         if (instance.knex === knexHandler) {
             instance.knex.destroy();
             delete instance.knex;

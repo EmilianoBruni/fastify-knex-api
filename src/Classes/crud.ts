@@ -1,8 +1,12 @@
 // Class to manage CRUD operations
-
-import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
+import type {
+    TKACrudGenHandlerOptions,
+    TKACrudOptions,
+    TKARequest,
+    TKAReply
+} from '../types.js';
+import type { FastifyInstance, FastifyPluginAsync } from 'fastify';
 import { createError } from '@fastify/error';
-import { TKACrudGenHandlerOptions, TKACrudOptions } from '../types.js';
 
 const MissingControllerError = createError(
     'CRUD_MISSING_CONTROLLER',
@@ -15,7 +19,10 @@ const NotAuthorizedError = createError(
     401
 );
 
-const crud = async (fastify: FastifyInstance, opts: TKACrudOptions) => {
+const crud: FastifyPluginAsync<TKACrudOptions> = async (
+    fastify: FastifyInstance,
+    opts: TKACrudOptions
+) => {
     if (!opts.controller) {
         throw new MissingControllerError(opts.prefix || '/');
     }
@@ -63,7 +70,11 @@ const crud = async (fastify: FastifyInstance, opts: TKACrudOptions) => {
     });
 };
 
-const genHandler = async (req: FastifyRequest, reply: FastifyReply, config: TKACrudGenHandlerOptions) => {
+const genHandler = async (
+    req: TKARequest,
+    reply: TKAReply,
+    config: TKACrudGenHandlerOptions
+) => {
     let checkAuth = true;
     if (typeof config.checkAuth === 'function') {
         checkAuth = await config.checkAuth(req, reply);
