@@ -1,157 +1,229 @@
-class DefaultController {
-    constructor(tableName, columsInfo, pk = undefined) {
+import type {
+    TColumnsInfo,
+    TKAControllerFiltersPagination,
+    TKAControllerFiltersProjection,
+    TKAControllerFiltersSearch,
+    TKAControllerFiltersSort,
+    TKACrudRow,
+    TKAListResult,
+    TKAParamsId,
+    TKAReply,
+    TKARequest,
+    TKARequestList
+} from '../types.js';
+import type { TKAController } from '../types.js';
+import type { Knex } from 'knex';
+
+class DefaultController implements TKAController {
+    private _returningClient = ['pg', 'mssql', 'oracledb'];
+    private table: string;
+    private _columnsInfo: TColumnsInfo;
+    private pk: string | undefined;
+
+    constructor(
+        tableName: string,
+        columsInfo: TColumnsInfo,
+        pk: string | undefined
+    ) {
         this.table = tableName;
         this._columnsInfo = columsInfo;
-        this._returningClient = ['pg', 'mssql', 'oracledb'];
         this.pk = pk;
     }
 
-    async list(req, reply) {
+    async list(req: TKARequestList, reply: TKAReply): Promise<TKAListResult> {
         await this._fillPkIfUndefined(req);
         const query = req.server.knex(this.table);
-        // apply where filters to the query
-        this._applyFilters(query, req.query);
-        // got total count for filters
-        const total = await this._count(query);
-        // apply pagination, sorting and other staments to the query
-        this._applyOtherStatments(query, req.query);
-        // apply projection to the query
-        await this._applyProjection(query, req.query);
+        let total = 0;
+        if (req.query) {
+            // apply where filters to the query
+            this._applyFilters(query, req.query);
+            // got total count for filters
+            total = await this._count(query);
+            // apply pagination, sorting and other staments to the query
+            this._applyOtherStatments(query, req.query);
+            // apply projection to the query
+            await this._applyProjection(query, req.query);
+        }
         try {
             const items = await query;
             return this._formatManyResult(total, items);
-        } catch (err) {
+        } catch (err: any) {
             return reply.code(500).send(DefaultController.HTTP_ERROR[500](err));
         }
     }
 
-    async view(req, reply) {
-        const id = req.params.id;
-        await this._fillPkIfUndefined(req);
+    async view(
+        req: TKARequest & { params: TKAParamsId | unknown } & {
+            query: TKAControllerFiltersProjection | unknown;
+        },
+        reply: TKAReply
+    ): Promise<TKACrudRow> {
+        const id = (req.params as TKAParamsId).id;
+        this.pk = await this._fillPkIfUndefined(req);
         const query = req.server.knex(this.table).where(this.pk, id);
         // apply projection to the query
-        await this._applyProjection(query, req.query);
-        let data;
+        await this._applyProjection(
+            query,
+            req.query as TKAControllerFiltersProjection
+        );
+        let data: Array<TKACrudRow>;
         try {
             data = await query;
-        } catch (err) {
+        } catch (err: any) {
             return reply.code(500).send(DefaultController.HTTP_ERROR[500](err));
         }
         if (data.length === 0) {
             return reply.code(404).send(DefaultController.HTTP_ERROR[404]);
         }
-        return data[0];
+        return data[0] as TKACrudRow;
     }
 
-    async create(req, reply) {
+    async create(
+        req: TKARequest & { body: TKACrudRow | unknown } & {
+            query: TKAControllerFiltersProjection | unknown;
+        },
+        reply: TKAReply
+    ): Promise<TKACrudRow> {
         const knex = req.server.knex;
         const client = knex.client.config.client;
-        await this._fillPkIfUndefined(req);
-        const query = knex(this.table).insert(req.body);
-        let data;
+        this.pk = await this._fillPkIfUndefined(req);
+        const query = knex<TKACrudRow>(this.table).insert(
+            req.body as TKACrudRow
+        );
+        let data: Array<TKACrudRow | number | string>;
         if (this._returningClient.includes(client)) {
             const returning = this._filterReturningFields(
                 Object.keys(this._columnsInfo),
-                req.query
+                req.query as TKAControllerFiltersProjection
             );
             query.returning(returning);
         }
         try {
             data = await query;
-        } catch (err) {
+        } catch (err: any) {
             return reply.code(500).send(DefaultController.HTTP_ERROR[500](err));
         }
         // client is mysql or mysql2
         if (!this._returningClient.includes(client)) {
             // doesn't support returning but return last id in data[0]
             // query DB to get the last inserted record
-            const query = knex(this.table).where(this.pk, data[0]);
+            const query = knex<TKACrudRow>(this.table).where(this.pk, data[0]);
             // apply projection to the query
-            await this._applyProjection(query, req.query);
+            await this._applyProjection(
+                query,
+                req.query as TKAControllerFiltersProjection
+            );
             data = await query;
             try {
                 data = await query;
-            } catch (err) {
+            } catch (err: any) {
                 return reply
                     .code(500)
                     .send(DefaultController.HTTP_ERROR[500](err));
             }
         }
-        return data[0];
+        return data[0] as TKACrudRow;
     }
 
-    async update(req, reply) {
-        const id = req.params.id;
-        await this._fillPkIfUndefined(req);
+    async update(
+        req: TKARequest & { params: TKAParamsId | unknown } & {
+            query: TKAControllerFiltersProjection | unknown;
+        },
+        reply: TKAReply
+    ): Promise<TKACrudRow> {
+        const id = (req.params as TKAParamsId).id;
+        this.pk = await this._fillPkIfUndefined(req);
         const knex = req.server.knex;
         const client = knex.client.config.client;
-        let data;
+        let data: Array<TKACrudRow> | number;
         const query = knex(this.table).where(this.pk, id).update(req.body);
         if (this._returningClient.includes(client)) {
             const returning = this._filterReturningFields(
                 Object.keys(this._columnsInfo),
-                req.query
+                req.query as TKAControllerFiltersProjection
             );
             query.returning(returning);
         }
         try {
             data = await query;
-        } catch (err) {
+        } catch (err: any) {
             return reply.code(500).send(DefaultController.HTTP_ERROR[500](err));
         }
         if (data === 0) {
             return reply.code(404).send(DefaultController.HTTP_ERROR[404]);
         }
+        let returning: Array<TKACrudRow>;
         if (!this._returningClient.includes(client)) {
             // doesn't support returning but return last id in data[0]
             // query DB to get the last inserted record
-            const query = knex(this.table).where(this.pk, id);
+            const query = knex<TKACrudRow>(this.table).where(this.pk, id);
             // apply projection to the query
-            await this._applyProjection(query, req.query);
+            await this._applyProjection(
+                query,
+                req.query as TKAControllerFiltersProjection
+            );
             try {
-                data = await query;
-            } catch (err) {
+                returning = await query;
+            } catch (err: any) {
                 return reply
                     .code(500)
                     .send(DefaultController.HTTP_ERROR[500](err));
             }
+        } else {
+            // data is an array of TKACrudRow not a number
+            // convert data to TKACrudRow
+            returning = [data as unknown as TKACrudRow];
         }
-        return data[0];
+        if (returning.length === 0) {
+            return reply.code(404).send(DefaultController.HTTP_ERROR[404]);
+        }
+        return returning[0] as TKACrudRow;
     }
 
-    async delete(req, reply) {
-        const id = req.params.id;
+    async delete(
+        req: TKARequest & { params: TKAParamsId | unknown },
+        reply: TKAReply
+    ): Promise<void> {
+        const id = (req.params as TKAParamsId).id;
         const knex = req.server.knex;
-        await this._fillPkIfUndefined(req);
+        this.pk = await this._fillPkIfUndefined(req);
         try {
             const data = await knex(this.table).del().where(this.pk, id);
             if (data === 0)
                 return reply.code(404).send(DefaultController.HTTP_ERROR[404]);
-        } catch (err) {
+        } catch (err: any) {
             return reply.code(500).send(DefaultController.HTTP_ERROR[500](err));
         }
         reply.code(204).send();
     }
 
-    async _count(knex) {
+    private async _count(knex: Knex.QueryBuilder): Promise<number> {
         knex = knex.clone();
-        const count = await knex.count(`${this.pk} as count`);
-        return count[0].count;
+        const count = await knex.count<Array<{ count: number }>>(
+            `${this.pk} as count`
+        );
+        return count?.[0]?.count ?? 0;
     }
 
-    _formatManyResult(total, items) {
+    private _formatManyResult(total: number, items: Array<any>): TKAListResult {
         return { total: total, items: items };
     }
 
-    async _fillPkIfUndefined(req) {
-        if (this.pk === undefined) {
-            this.pk = await req.server.knexAPI.schemaInspector.primary(
-                this.table
+    private async _fillPkIfUndefined(req: TKARequest): Promise<string> {
+        const pk = await req.server.knexAPI.schemaInspector.primary(this.table);
+        if (pk === undefined || pk === null) {
+            throw new Error(
+                `Table ${this.table} doesn't have a primary key defined`
             );
         }
+        this.pk;
+        return pk;
     }
 
-    _applyOtherStatments(query, filters) {
+    private _applyOtherStatments(
+        query: Knex.QueryBuilder,
+        filters: TKAControllerFiltersPagination & TKAControllerFiltersSort
+    ) {
         /// pagination filters
         if (filters.limit != -1) {
             if (filters.limit === undefined) filters.limit = 50;
@@ -173,12 +245,14 @@ class DefaultController {
         /// sorting filters
         if (filters.sort) {
             // normalize sorting as an array of {column, order}
+            let sorts: string | string[] | { column: string; order: string }[] =
+                [];
             if (typeof filters.sort === 'string') {
-                filters.sort = filters.sort.split(',');
+                sorts = filters.sort.split(',');
             }
             // normalize sorting as an array of {column, order}
             if (Array.isArray(filters.sort)) {
-                filters.sort = filters.sort.map(sort => {
+                sorts = filters.sort.map(sort => {
                     if (sort.startsWith('-')) {
                         return { column: sort.substr(1), order: 'desc' };
                     } else {
@@ -186,32 +260,38 @@ class DefaultController {
                     }
                 });
             }
-            query.orderBy(filters.sort);
+            query.orderBy(sorts);
         }
     }
 
-    async _applyProjection(query, filters) {
+    private async _applyProjection(
+        query: Knex.QueryBuilder,
+        filters: TKAControllerFiltersProjection
+    ) {
         /// projection filters
-        let filterFields = '*';
+        let filterFields = ['*'];
         if (filters.fields) {
             if (!filters.fields.startsWith('-')) {
                 // include mode
                 filterFields = filters.fields.split(',');
             } else {
                 // first character is a minus, remove it and set the mode as exclude
-                filters.fields = filters.fields.substr(1).split(',');
+                const excludedFields = filters.fields.substring(1).split(',');
                 filterFields = Object.keys(await query.clone().columnInfo());
 
                 // take filter.fields and remove from filterFields
                 filterFields = filterFields.filter(
-                    field => !filters.fields.includes(field)
+                    field => !excludedFields.includes(field)
                 );
             }
         }
         query.select(filterFields);
     }
 
-    _filterReturningFields(allFields, filters) {
+    private _filterReturningFields(
+        allFields: string[],
+        filters: TKAControllerFiltersProjection
+    ): string[] {
         // if fields is not defined or = '*', return all fields
         if (!filters.fields || filters.fields === '*') return allFields;
         // if fields is defined, not start with -,
@@ -220,13 +300,16 @@ class DefaultController {
             return filters.fields.split(',');
         } else {
             // first character is a minus, remove it and set the mode as exclude
-            filters.fields = filters.fields.substr(1).split(',');
+            const excludedFields = filters.fields.substring(1).split(',');
             // take filter.fields and remove from allFields
-            return allFields.filter(field => !filters.fields.includes(field));
+            return allFields.filter(field => !excludedFields.includes(field));
         }
     }
 
-    _applyFilters(query, filters) {
+    private _applyFilters(
+        query: Knex.QueryBuilder,
+        filters: TKAControllerFiltersSearch
+    ) {
         /// filtering filters
         if (filters.filter) {
             query.whereRaw(filters.filter);
