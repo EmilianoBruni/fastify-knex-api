@@ -8,7 +8,8 @@ import type {
     TKAAPISchemas,
     TKAVerbs,
     JSONSchemaProps,
-    TColumnsInfo
+    TColumnsInfo,
+    TKACrudOptions
 } from '../types.js';
 import type { Knex } from 'knex';
 import type { SchemaInspector as ISchemaInspector } from 'knex-schema-inspector/dist/types/schema-inspector.js';
@@ -66,6 +67,7 @@ class API {
             this._tables.map(table =>
                 this._buildOptReg(table).then(optReg => {
                     // register routes
+                    console.log(optReg);
                     return this._fastify.register(crudGen, optReg);
                 })
             )
@@ -78,7 +80,7 @@ class API {
      * @param {Object} table - The table object.
      * @returns {Object} - The options for registration routes.
      */
-    async _buildOptReg(table: TTableDefinition) {
+    async _buildOptReg(table: TTableDefinition): Promise<TKACrudOptions> {
         const columnsInfo = await this._knex(table.name).columnInfo();
         const schema = await this._buildSchema(table, columnsInfo);
         return {
@@ -96,7 +98,7 @@ class API {
     async _buildSchema(
         table: TTableDefinition,
         columnsInfo: TColumnsInfo
-    ): Promise<object> {
+    ): Promise<TKAAPISchemas> {
         const schemaTableFields = this._getTableSchema(columnsInfo);
         // register table fields schema in fastify
         const ref_id = `fastify-knex-api/tables/${table.name}`;
@@ -289,13 +291,13 @@ class API {
             default:
                 throw new Error(
                     `Unknown column type ${columnInfo.type} for field ${name}: ` +
-                        JSON.stringify(columnInfo)
+                    JSON.stringify(columnInfo)
                 );
         }
         return prop;
     }
 
-    async _loadSchemaDirPath(table: TTableDefinition, schema: TKAAPISchemas) {
+    async _loadSchemaDirPath(table: TTableDefinition, schema: TKAAPISchemas): Promise<TKAAPISchemas> {
         if (!this._schemaDirPath || typeof this._schemaDirPath !== 'string')
             return schema;
         const schemaPath = path.join(
