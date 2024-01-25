@@ -1,6 +1,8 @@
 // Class to manage CRUD operations
 
+import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import { createError } from '@fastify/error';
+import { TKACrudGenHandlerOptions, TKACrudOptions } from '../types.js';
 
 const MissingControllerError = createError(
     'CRUD_MISSING_CONTROLLER',
@@ -13,7 +15,7 @@ const NotAuthorizedError = createError(
     401
 );
 
-const crud = async (fastify, opts) => {
+const crud = async (fastify: FastifyInstance, opts: TKACrudOptions) => {
     if (!opts.controller) {
         throw new MissingControllerError(opts.prefix || '/');
     }
@@ -31,47 +33,37 @@ const crud = async (fastify, opts) => {
     };
 
     fastify.get(config.list.url, {
-        handler: async (req, reply) => {
-            config.type = 'list';
-            return genHandler(req, reply, config);
-        },
+        handler: async (req, reply) =>
+            genHandler(req, reply, { ...config, type: 'list' }),
         ...config.list
     });
 
     fastify.post(config.create.url, {
-        handler: async (req, reply) => {
-            config.type = 'create';
-            return genHandler(req, reply, config);
-        },
+        handler: async (req, reply) =>
+            genHandler(req, reply, { ...config, type: 'create' }),
         ...config.create
     });
 
     fastify.get(config.view.url, {
-        handler: async (req, reply) => {
-            config.type = 'view';
-            return genHandler(req, reply, config);
-        },
+        handler: async (req, reply) =>
+            genHandler(req, reply, { ...config, type: 'view' }),
         ...config.view
     });
 
     fastify.patch(config.update.url, {
-        handler: async (req, reply) => {
-            config.type = 'update';
-            return genHandler(req, reply, config);
-        },
+        handler: async (req, reply) =>
+            genHandler(req, reply, { ...config, type: 'update' }),
         ...config.update
     });
 
     fastify.delete(config.delete.url, {
-        handler: async (req, reply) => {
-            config.type = 'delete';
-            return genHandler(req, reply, config);
-        },
+        handler: async (req, reply) =>
+            genHandler(req, reply, { ...config, type: 'delete' }),
         ...config.delete
     });
 };
 
-const genHandler = async (req, reply, config) => {
+const genHandler = async (req: FastifyRequest, reply: FastifyReply, config: TKACrudGenHandlerOptions) => {
     let checkAuth = true;
     if (typeof config.checkAuth === 'function') {
         checkAuth = await config.checkAuth(req, reply);
