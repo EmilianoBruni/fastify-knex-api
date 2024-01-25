@@ -32,8 +32,8 @@ class API {
     private _schemaDirPath: IKAApiOptions['schemaDirPath'];
     private _checkAuth: IKAApiOptions['checkAuth'];
     private _prefix: IKAApiOptions['prefix'];
-    private schemaInspector: ISchemaInspector;
 
+    public schemaInspector: ISchemaInspector;
     public isInizialized: Promise<boolean>;
 
     constructor(params: IKAApiOptions) {
@@ -290,13 +290,16 @@ class API {
             default:
                 throw new Error(
                     `Unknown column type ${columnInfo.type} for field ${name}: ` +
-                    JSON.stringify(columnInfo)
+                        JSON.stringify(columnInfo)
                 );
         }
         return prop;
     }
 
-    async _loadSchemaDirPath(table: TTableDefinition, schema: TKAAPISchemas): Promise<TKAAPISchemas> {
+    async _loadSchemaDirPath(
+        table: TTableDefinition,
+        schema: TKAAPISchemas
+    ): Promise<TKAAPISchemas> {
         if (!this._schemaDirPath || typeof this._schemaDirPath !== 'string')
             return schema;
         const schemaPath = path.join(
