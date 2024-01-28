@@ -15,7 +15,7 @@
     "lint:fix": "npm run lint -- --fix",
     "prepublishOnly": "npm run tsc && npm run buildcjs && npm test",
     "test": "tap -j1 --allow-incomplete-coverage \"./test/*.test.?(c)js\"",
-    "test:ci": "npm run test",
+    "test:ci": "npm run prepublishOnly",
     "test:ts": "tsd",
     "tsc": "npm run clean; tsc"
   },
