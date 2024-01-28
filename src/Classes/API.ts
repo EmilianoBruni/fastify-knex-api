@@ -290,7 +290,7 @@ class API {
             default:
                 throw new Error(
                     `Unknown column type ${columnInfo.type} for field ${name}: ` +
-                    JSON.stringify(columnInfo)
+                        JSON.stringify(columnInfo)
                 );
         }
         return prop;

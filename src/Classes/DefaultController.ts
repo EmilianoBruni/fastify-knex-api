@@ -246,8 +246,7 @@ class DefaultController implements TKAController {
         if (filters.sort) {
             // normalize sorting as an array of {column, order}
             let sortsNorm: string[] = [];
-            let sorts: { column: string; order: string }[] =
-                [];
+            let sorts: { column: string; order: string }[] = [];
             if (filters.sort) {
                 sortsNorm = filters.sort.split(',');
                 // normalize sorting as an array of {column, order}
