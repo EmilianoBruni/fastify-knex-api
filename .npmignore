@@ -7,3 +7,7 @@
 .prettierrc.json
 .github
 .husky
+test
+src/*
+@types
+tsconfig.json
