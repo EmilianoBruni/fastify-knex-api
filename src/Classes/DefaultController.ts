@@ -216,7 +216,7 @@ class DefaultController implements TKAController {
                 `Table ${this.table} doesn't have a primary key defined`
             );
         }
-        this.pk;
+        this.pk = pk;
         return pk;
     }
 
@@ -245,22 +245,21 @@ class DefaultController implements TKAController {
         /// sorting filters
         if (filters.sort) {
             // normalize sorting as an array of {column, order}
-            let sorts: string | string[] | { column: string; order: string }[] =
+            let sortsNorm: string[] = [];
+            let sorts: { column: string; order: string }[] =
                 [];
-            if (typeof filters.sort === 'string') {
-                sorts = filters.sort.split(',');
-            }
-            // normalize sorting as an array of {column, order}
-            if (Array.isArray(filters.sort)) {
-                sorts = filters.sort.map(sort => {
+            if (filters.sort) {
+                sortsNorm = filters.sort.split(',');
+                // normalize sorting as an array of {column, order}
+                sorts = sortsNorm.map(sort => {
                     if (sort.startsWith('-')) {
-                        return { column: sort.substr(1), order: 'desc' };
+                        return { column: sort.substring(1), order: 'desc' };
                     } else {
                         return { column: sort, order: 'asc' };
                     }
                 });
+                query.orderBy(sorts);
             }
-            query.orderBy(sorts);
         }
     }
 
