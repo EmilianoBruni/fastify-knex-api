@@ -58,9 +58,6 @@ devDependencies:
   eslint-plugin-promise:
     specifier: ^6.0.0
     version: 6.1.1(eslint@8.56.0)
-  eslint-plugin@latest:
-    specifier: link:typescript-eslint/eslint-plugin@latest
-    version: link:typescript-eslint/eslint-plugin@latest
   mysql2:
     specifier: ^3.7.0
     version: 3.7.0
