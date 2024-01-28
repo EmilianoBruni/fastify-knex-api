@@ -165,7 +165,7 @@ class API {
         const arr1: TKAVerbs[] = ['view', 'create', 'update'];
         arr1.forEach(k => {
             const schema = schemas[k].schema;
-            schema.response = schema.response || {};
+            schema.response ??= {};
             schema.response['200'] = schema.response['200'] || {
                 type: 'object'
             };
@@ -173,11 +173,10 @@ class API {
         });
 
         // list return array of ref_id for response=200
-        schemas.list.schema.response = {
-            200: {
-                total: { type: 'integer', example: '1' },
-                items: { type: 'array', items: { $ref: `${ref_id}#` } }
-            }
+        schemas.list.schema.response ??= {};
+        schemas.list.schema.response[200] = {
+            total: { type: 'integer', example: '1' },
+            items: { type: 'array', items: { $ref: `${ref_id}#` } }
         };
 
         // for create and update, ref_id also for body post
@@ -190,16 +189,17 @@ class API {
         /// add default httpcode
 
         // delete return 204 if success
-        schemas.delete.schema.response = {
-            204: { $ref: 'fastify-knex-api/http-code#/properties/204' }
+        schemas.delete.schema.response ??= {};
+        schemas.delete.schema.response[204] = {
+            $ref: 'fastify-knex-api/http-code#/properties/204'
         };
 
         const arr3: TKAVerbs[] = ['view', 'list', 'create', 'update', 'delete'];
         arr3.forEach(k => {
-            schemas[k].schema.response = {
-                500: {
-                    $ref: 'fastify-knex-api/http-code#/properties/500'
-                }
+            const schema = schemas[k].schema;
+            schema.response ??= {};
+            schema.response[500] = {
+                $ref: 'fastify-knex-api/http-code#/properties/500'
             };
         });
         const arr4: TKAVerbs[] = ['view', 'update', 'delete'];
@@ -290,7 +290,7 @@ class API {
             default:
                 throw new Error(
                     `Unknown column type ${columnInfo.type} for field ${name}: ` +
-                        JSON.stringify(columnInfo)
+                    JSON.stringify(columnInfo)
                 );
         }
         return prop;
