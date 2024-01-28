@@ -5,8 +5,6 @@
     },
     "extends": [
         "eslint:recommended",
-        "plugin:@typescript-eslint/eslint-recommended",
-        "plugin:@typescript-eslint/recommended",
         "prettier"
     ],
     "plugins": ["import", "prettier"],
@@ -15,23 +13,33 @@
         "sourceType": "module"
     },
     "rules": {
-        "prettier/prettier": "error",
-        "import/order": [
-        "error",
-        {
-            "groups": ["type", "builtin", ["sibling", "parent"], "index", "object"],
-            "newlines-between": "never",
-            "alphabetize": {
-                "order": "asc",
-                "caseInsensitive": true
-            }
-        }],
-        "@typescript-eslint/consistent-type-imports": [
-            "error",
-            {
-                "prefer": "type-imports"
-            }
+        "prettier/prettier": "error"
+    },
+    "overrides": [{
+        "files": ["**/*.ts", "**/*.tsx"],
+        "extends": [
+            "plugin:@typescript-eslint/eslint-recommended",
+            "plugin:@typescript-eslint/recommended"
         ],
-        "@typescript-eslint/no-explicit-any": "off"
-    }
+        "rules": {
+            "import/order": [
+                "error",
+                {
+                    "groups": ["type", "builtin", ["sibling", "parent"], "index", "object"],
+                    "newlines-between": "never",
+                    "alphabetize": {
+                        "order": "asc",
+                        "caseInsensitive": true
+                    }
+                }
+            ],
+            "@typescript-eslint/consistent-type-imports": [
+                "error",
+                {
+                    "prefer": "type-imports"
+                }
+            ],
+            "@typescript-eslint/no-explicit-any": "off"
+        }
+    }]
 }
