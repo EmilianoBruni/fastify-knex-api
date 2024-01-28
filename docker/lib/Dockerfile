@@ -22,7 +22,7 @@ USER node
 # update PNPM_HOME for node user (store default in ${PNPM_HOME}/store)
 ENV PNPM_HOME="/home/node/pnpm" 
 # add node_modules executables to PATH
-ENV PATH="/ws/${IDIR}/node_modules/.bin:$PATH"
+ENV PATH="/ws/${IDIR}/node_modules/.bin:${PNPM_HOME}:${PATH}"
 
 # 02a - Install dependencies only when package.json changes
 FROM base AS deps
