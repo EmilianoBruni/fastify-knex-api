@@ -11,11 +11,9 @@
   "scripts": {
     "buildcjs": "rollup ./dist/index.js --file ./dist/index.cjs --format cjs",
     "clean": "rimraf ./dist",
-    "lint": "eslint \"src/**/*.js\" \"test/**/*.?(c)js\" ",
-    "lint:ts": "eslint \"src/**/*.ts\"",
+    "lint": "eslint \"src/**/*.ts\" \"test/**/*.?(c)js\" ",
     "lint:fix": "npm run lint -- --fix",
-    "postpublishOnly": "rimraf ./src/index.cjs",
-    "prepublishOnly": "npm run buildcjs && npm test",
+    "prepublishOnly": "npm run tsc && npm run buildcjs && npm test",
     "test": "tap -j1 --allow-incomplete-coverage \"./test/*.test.?(c)js\"",
     "test:ci": "npm run test",
     "test:ts": "tsd",
