@@ -23,7 +23,7 @@ All notable changes to this project will be documented in this file.
 - bit return binary, not integer
 - set type field return string not array
 
-## [0.1.1] 2024-01-11
+## [0.1.0] 2024-01-11
 
 ### Added
 
