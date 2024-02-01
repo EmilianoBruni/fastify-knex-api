@@ -12,7 +12,7 @@ services:
         volumes:
             - ../:/ws/fastify-knex-api:cached
             # node_modules in un volume temporaneo che non mi sovraccarica il prj reale in debug
-            - fastify-knex-api-lib-modules:/ws/fastify-knex-api/node_modules 
+            - lib-modules:/ws/fastify-knex-api/node_modules 
         environment:
             - CRUD_CLIENT=mysql2
             - CRUD_DB_URI=mysql://root:test@mariadb:3306/test
@@ -36,7 +36,7 @@ services:
             - ../test/seed/maria.sql:/docker-entrypoint-initdb.d/seed.sql
 
 volumes:
-    fastify-knex-api-lib-modules:
+    lib-modules:
 
 networks:
     default:
