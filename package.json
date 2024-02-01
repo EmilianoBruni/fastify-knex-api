@@ -35,7 +35,10 @@
     "mysql",
     "postgresql",
     "sqlite3",
-    "javascript"
+    "javascript",
+    "typescript",
+    "ts",
+    "query"
   ],
   "author": "Emiliano Bruni <info@ebruni.it>",
   "license": "Apache-2.0",
