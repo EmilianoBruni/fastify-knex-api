@@ -4,6 +4,12 @@ _Fastify plugin to expose API for Knex Query Builder_
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.1] 2024-02-06
+
+### Fixed
+
+- Add to published file the declaration for fastify decoration
+
 ## [0.2.0] 2024-01-28
 
 ### Added
