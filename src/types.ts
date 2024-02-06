@@ -1,3 +1,4 @@
+import type API from './Classes/API.js';
 import type {
     FastifyInstance,
     FastifyPluginOptions,
@@ -6,10 +7,12 @@ import type {
 } from 'fastify';
 import type { Knex } from 'knex';
 
-// export type IKA = FastifyInstance & {
-//     knexAPI: API;
-//     knex: Knex;
-// };
+declare module 'fastify' {
+    export interface FastifyInstance {
+        knexAPI: API;
+        knex: Knex;
+    }
+}
 
 export type TKARequest = FastifyRequest;
 export type TKAReply = FastifyReply;
