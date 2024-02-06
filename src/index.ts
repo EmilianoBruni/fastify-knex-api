@@ -31,10 +31,6 @@ const initPlugin: FastifyPluginAsync<IKAPluginOptions> = async (
     fastify.addHook('onClose', async instance => {
         if (instance.knex === knexHandler) {
             instance.knex.destroy();
-            delete instance.knex;
-        }
-        if (instance.knexAPI === api) {
-            delete instance.knexAPI;
         }
     });
 };
