@@ -64,7 +64,7 @@ t.test('Check pagination without filters', async t => {
         t.equal(res.json().items.at(-1).id, 2);
     });
 
-    ['offset', 'skip'].forEach(param => {
+    for await (const param of ['offset', 'skip']) {
         t.test(`Limit the number of items and ${param} some`, async t => {
             const res = await app.inject({
                 method: 'GET',
@@ -77,8 +77,9 @@ t.test('Check pagination without filters', async t => {
             // first record has id == 3
             t.equal(res.json().items[0].id, 3);
         });
-    });
-    [('page', 'window')].forEach(param => {
+    };
+
+    for await (const param of ['page', 'window']) {
         t.test(`Limit the number of items and get first ${param}`, async t => {
             const res = await app.inject({
                 method: 'GET',
@@ -107,7 +108,7 @@ t.test('Check pagination without filters', async t => {
                 t.equal(res.json().items[0].id, 3);
             }
         );
-    });
+    };
 });
 
 t.test('Check pagination with filters', async t => {
