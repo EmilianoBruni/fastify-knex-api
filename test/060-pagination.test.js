@@ -76,6 +76,7 @@ t.test('Check pagination without filters', async t => {
             t.equal(res.json().total, 70);
             // first record has id == 3
             t.equal(res.json().items[0].id, 3);
+            t.end();
         });
     };
 
@@ -91,6 +92,7 @@ t.test('Check pagination without filters', async t => {
             t.equal(res.json().total, 70);
             // first record has id == 1
             t.equal(res.json().items[0].id, 1);
+            t.end();
         });
         t.test(
             `Limit the number of items and use ${param} option to skip some`,
@@ -106,6 +108,7 @@ t.test('Check pagination without filters', async t => {
                 t.equal(res.json().total, 70);
                 // first record has id == 3
                 t.equal(res.json().items[0].id, 3);
+                t.end();
             }
         );
     };
