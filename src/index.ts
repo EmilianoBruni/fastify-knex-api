@@ -41,3 +41,5 @@ const plugin = fp(initPlugin, {
 });
 
 export default plugin;
+
+export type { IKAPluginOptions };
