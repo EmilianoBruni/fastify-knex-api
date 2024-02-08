@@ -666,6 +666,38 @@ This module supports both ESM and CommonJS. If you are using CommonJS, you can i
 const knexAPI = require('knex-fastify-api');
 ```
 
+## Typescript and Autoload
+
+In Typescript and @fastify/autoload environment you can register this plugin by creating a file in plugins folder like this:
+
+```typescript
+import { type FastifyPluginAsync } from 'fastify';
+import knexAPI, {type IKAPluginOptions } from 'fastify-knex-api';
+import fp from 'fastify-plugin';
+
+const plugin: FastifyPluginAsync = async app => {
+    const knexAPIOptions: IKAPluginOptions = {
+        knexConfig: {
+            client: 'YOUR_CLIENT_ADAPTER (mysql, oracle)',
+            connection: 'YOUR_QUERY_STRING',
+        },
+    };
+    app.register(knexAPI, knexAPIOptions);
+    app.after(err => {
+        if (err) throw err;
+    });
+};
+
+
+export default fp(plugin,
+    {
+        name: 'knex-api',
+    }
+);
+
+
+```
+
 ## Bugs / Help / Feature Requests / Contributing
 
 * For feature requests or help, please visit [the discussions page on GitHub](https://github.com/EmilianoBruni/fastify-knex-api/discussions).
