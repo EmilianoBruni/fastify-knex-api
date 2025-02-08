@@ -9,11 +9,13 @@
     "require": "./dist/index.cjs"
   },
   "scripts": {
+    "build": "npm run tsc && npm run buildcjs",
+    "build:watch": "nodemon -e json,ts -w src -x \"tsc\"",
     "buildcjs": "rollup ./dist/index.js --file ./dist/index.cjs --format cjs",
     "clean": "rimraf ./dist",
     "lint": "eslint \"src/**/*.ts\" \"test/**/*.?(c)js\" ",
     "lint:fix": "npm run lint -- --fix",
-    "prepublishOnly": "npm run tsc && npm run buildcjs && npm test",
+    "prepublishOnly": "pnpm build && npm test",
     "test": "tap -j1 --allow-incomplete-coverage \"./test/*.test.?(c)js\"",
     "test:ci": "npm run prepublishOnly",
     "test:ts": "tsd",
@@ -59,6 +61,7 @@
     "eslint-plugin-prettier": "^5.1.0",
     "eslint-plugin-promise": "^6.0.0",
     "mysql2": "^3.7.0",
+    "nodemon": "^3.1.9",
     "prettier": "^3.1.1",
     "rimraf": "^5.0.5",
     "rollup": "^4.9.5",
@@ -75,5 +78,6 @@
     "knex": "^3.1.0",
     "knex-schema-inspector": "^3.1.0"
   },
-  "types": "./dist/index.d.ts"
+  "types": "./dist/index.d.ts",
+  "packageManager": "pnpm@9.14.4+sha512.c8180b3fbe4e4bca02c94234717896b5529740a6cbadf19fa78254270403ea2f27d4e1d46a08a0f56c89b63dc8ebfd3ee53326da720273794e6200fcf0d184ab"
 }
