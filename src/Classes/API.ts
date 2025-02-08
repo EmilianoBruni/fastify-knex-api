@@ -29,6 +29,7 @@ class API {
     private _knex: IKAApiOptions['knex'];
     private _tables: TTablesDefinitionNormalized = [];
     private _schemas: IKAApiOptions['schemas'];
+    private _columnSchema: IKAApiOptions['columnSchema'];
     private _schemaDirPath: IKAApiOptions['schemaDirPath'];
     private _checkAuth: IKAApiOptions['checkAuth'];
     private _prefix: IKAApiOptions['prefix'];
@@ -40,6 +41,7 @@ class API {
         this._fastify = params.fastify;
         this._knex = params.knex;
         this._schemas = params.schemas;
+        this._columnSchema = params.columnSchema;
         this._schemaDirPath = params.schemaDirPath;
         this._checkAuth = params.checkAuth;
 
@@ -98,7 +100,7 @@ class API {
         table: TTableDefinition,
         columnsInfo: TColumnsInfo
     ): Promise<TKAAPISchemas> {
-        const schemaTableFields = this._getTableSchema(columnsInfo);
+        const schemaTableFields = this._getTableSchema(table.name,columnsInfo);
         // register table fields schema in fastify
         const ref_id = `fastify-knex-api/tables/${table.name}`;
         this._fastify.addSchema({
@@ -119,11 +121,11 @@ class API {
         return schema;
     }
 
-    _getTableSchema(columnsInfo: TColumnsInfo) {
-        return this._buildPropsFromColumnsInfo(columnsInfo);
+    _getTableSchema(tableName: string, columnsInfo: TColumnsInfo) {
+        return this._buildPropsFromColumnsInfo(tableName, columnsInfo);
     }
 
-    _buildPropsFromColumnsInfo(columnsInfo: TColumnsInfo) {
+    _buildPropsFromColumnsInfo(tableName: string, columnsInfo: TColumnsInfo) {
         const props: Record<string, JSONSchemaProps> = {};
         for (const k of Object.keys(columnsInfo)) {
             const columnInfo = columnsInfo[k];
@@ -155,6 +157,18 @@ class API {
             // if (columnInfo.unique) {
             //     prop.description += ' (unique)';
             // }
+            if (this._columnSchema) {
+                const customProp = this._columnSchema(
+                    tableName,
+                    k,
+                    prop
+                );
+                // if customProp is null, skip this field
+                if (customProp) {
+                    props[k] = customProp;
+                }
+                continue;
+            }
             props[k] = prop;
         }
         return props;
@@ -175,8 +189,11 @@ class API {
         // list return array of ref_id for response=200
         schemas.list.schema.response ??= {};
         schemas.list.schema.response[200] = {
-            total: { type: 'integer', example: '1' },
-            items: { type: 'array', items: { $ref: `${ref_id}#` } }
+            type: 'object',
+            properties: {
+                total: { type: 'integer', example: '1' },
+                items: { type: 'array', items: { $ref: `${ref_id}#` } }
+            }
         };
 
         // for create and update, ref_id also for body post
