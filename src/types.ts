@@ -39,6 +39,7 @@ export type IKACommonOptions = {
     // schemas is a function (table_name, schema) => schema
     // schema is an structure like DefaultSchema
     schemas?: (tableName: string, schema: TKAAPISchemas) => TKAAPISchemas;
+    columnSchema?: (tableName: string, columnName: string, jsonColumnSchema: JSONSchemaProps) => JSONSchemaProps;
     schemaDirPath?: string;
     checkAuth?: TKACheckAuth | undefined;
 };
