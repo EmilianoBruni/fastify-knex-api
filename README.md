@@ -616,7 +616,7 @@ this is the default generated schema for CRUD operations over this table
 where `fastify-knex-api/tables/authors#` is this auto-generated schema for table
 
 ```javascript
-"$ref": "fastify-knex-api/tables/authors#"
+"$id": "fastify-knex-api/tables/authors#"
 "type": "object",
 "properties": {
   "id": {
