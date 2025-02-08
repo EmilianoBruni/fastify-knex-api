@@ -100,7 +100,7 @@ class API {
         table: TTableDefinition,
         columnsInfo: TColumnsInfo
     ): Promise<TKAAPISchemas> {
-        const schemaTableFields = this._getTableSchema(table.name,columnsInfo);
+        const schemaTableFields = this._getTableSchema(table.name, columnsInfo);
         // register table fields schema in fastify
         const ref_id = `fastify-knex-api/tables/${table.name}`;
         this._fastify.addSchema({
@@ -158,11 +158,7 @@ class API {
             //     prop.description += ' (unique)';
             // }
             if (this._columnSchema) {
-                const customProp = this._columnSchema(
-                    tableName,
-                    k,
-                    prop
-                );
+                const customProp = this._columnSchema(tableName, k, prop);
                 // if customProp is null, skip this field
                 if (customProp) {
                     props[k] = customProp;

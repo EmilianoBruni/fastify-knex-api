@@ -78,7 +78,7 @@ t.test('Check pagination without filters', async t => {
             t.equal(res.json().items[0].id, 3);
             t.end();
         });
-    };
+    }
 
     for await (const param of ['page', 'window']) {
         t.test(`Limit the number of items and get first ${param}`, async t => {
@@ -111,7 +111,7 @@ t.test('Check pagination without filters', async t => {
                 t.end();
             }
         );
-    };
+    }
 });
 
 t.test('Check pagination with filters', async t => {
