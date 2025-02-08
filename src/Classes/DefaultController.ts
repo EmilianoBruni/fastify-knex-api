@@ -31,7 +31,7 @@ class DefaultController implements TKAController {
     }
 
     async list(req: TKARequestList, reply: TKAReply): Promise<TKAListResult> {
-        await this._fillPkIfUndefined(req);
+        this.pk ??= await this._fillPkIfUndefined(req);
         const query = req.server.knex(this.table);
         let total = 0;
         if (req.query) {
@@ -59,7 +59,7 @@ class DefaultController implements TKAController {
         reply: TKAReply
     ): Promise<TKACrudRow> {
         const id = (req.params as TKAParamsId).id;
-        this.pk = await this._fillPkIfUndefined(req);
+        this.pk ??= await this._fillPkIfUndefined(req);
         const query = req.server.knex(this.table).where(this.pk, id);
         // apply projection to the query
         await this._applyProjection(
@@ -86,7 +86,7 @@ class DefaultController implements TKAController {
     ): Promise<TKACrudRow> {
         const knex = req.server.knex;
         const client = knex.client.config.client;
-        this.pk = await this._fillPkIfUndefined(req);
+        this.pk ??= await this._fillPkIfUndefined(req);
         const query = knex<TKACrudRow>(this.table).insert(
             req.body as TKACrudRow
         );
@@ -132,7 +132,7 @@ class DefaultController implements TKAController {
         reply: TKAReply
     ): Promise<TKACrudRow> {
         const id = (req.params as TKAParamsId).id;
-        this.pk = await this._fillPkIfUndefined(req);
+        this.pk ??= await this._fillPkIfUndefined(req);
         const knex = req.server.knex;
         const client = knex.client.config.client;
         let data: Array<TKACrudRow> | number;
@@ -186,7 +186,7 @@ class DefaultController implements TKAController {
     ): Promise<void> {
         const id = (req.params as TKAParamsId).id;
         const knex = req.server.knex;
-        this.pk = await this._fillPkIfUndefined(req);
+        this.pk ??= await this._fillPkIfUndefined(req);
         try {
             const data = await knex(this.table).del().where(this.pk, id);
             if (data === 0)
@@ -216,7 +216,6 @@ class DefaultController implements TKAController {
                 `Table ${this.table} doesn't have a primary key defined`
             );
         }
-        this.pk = pk;
         return pk;
     }
 
