@@ -245,6 +245,7 @@ class API {
                 prop.type = 'string';
                 prop.format = 'binary';
                 break;
+            case 'uniqueidentifier':
             case 'uuid':
                 prop.type = 'string';
                 prop.format = 'uuid';
