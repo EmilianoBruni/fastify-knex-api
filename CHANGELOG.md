@@ -4,6 +4,23 @@ _Fastify plugin to expose API for Knex Query Builder_
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] 2025-02-08
+
+### Added
+
+- Add support for 'uniqueidentifier' column type
+- Add columnSchema option for custom column schema handling
+
+### Changed
+
+- Updated to Fastify 5.x
+
+### Fixed
+
+- Solved a bug while manual setting primari key if a primary key has not been found
+- Minor Fix in documentation
+
+
 ## [0.2.2] 2024-02-08
 
 ### Fixed
