@@ -88,6 +88,32 @@ If `checkAuth` doesn't set an error code, a default is set.
 }
 ```
 
+### .columnSchema: function
+
+Optional function to call to alter [default validation and serialization schema](#example-of-an-auto-generated-validation-and-serializazion-schema).
+
+`.columnSchema` has this signature
+
+```javascript
+.columnSchema = (table_name, column_name, jsonColumnSchema) => {
+  ...
+  return jsonColumnSchema;
+}
+```
+
+where table_name is the table name, column_name is the column_name and jsonColumnSchema is a column ajv schema like this
+
+```json
+{ type: 'integer' }
+
+{ type: 'string', maxLength: 30 }
+
+{ type: 'string', format: 'date-time' }
+```
+Whatever return is used as the ajv schema validator for column_name.
+
+If return undefined, column is skipped.
+
 ### .knexConfig
 
 Knex configuration options like
@@ -122,7 +148,7 @@ An array of tables to expose or an object of tables to expose with their primary
 ```
 Default is to autodiscover and expose all tables and, on request, to autodiscover their primary keys if not manually set.
 
-#### .schemas: function
+### .schemas: function
 
 Optional function to call to alter [default validation and serialization schema](#example-of-an-auto-generated-validation-and-serializazion-schema).
 
@@ -141,7 +167,7 @@ where table_name is the table name and schema is the generated schema.
 
 If `.schemaDirPath` is defined, it's called after `.schemaDirPath`.
 
-#### .schemaDirPath: function
+### .schemaDirPath: function
 
 Directory where it's possible to define schemas for validation and serialization. 
 
