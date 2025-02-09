@@ -1,5 +1,8 @@
 // this test try to use this library as a commonjs module
 
+// disable eslint rule for this file
+/* eslint-disable */
+
 const { test } = require('tap');
 const scriptPath = '../dist/index.cjs';
 const scriptFullPath = require('path').join(__dirname, scriptPath);
