@@ -19,7 +19,7 @@
     "test": "tap -j1 --allow-incomplete-coverage \"./test/*.test.?(c)js\"",
     "test:ci": "npm run prepublishOnly",
     "test:ts": "tsd",
-    "tsc": "npm run clean; tsc"
+    "tsc": "tsc"
   },
   "repository": {
     "type": "git",
@@ -49,8 +49,8 @@
   },
   "homepage": "https://github.com/EmilianoBruni/fastify-knex-api#readme",
   "devDependencies": {
-    "@fastify/swagger": "^8.15.0",
-    "@fastify/swagger-ui": "^2.1.0",
+    "@fastify/swagger": "^9.4.2",
+    "@fastify/swagger-ui": "^5.2.1",
     "@types/node": "^22.13.1",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
@@ -66,7 +66,7 @@
     "prettier": "^3.4.2",
     "rimraf": "^5.0.10",
     "rollup": "^4.34.6",
-    "tap": "^18.8.0",
+    "tap": "^21.0.1",
     "tsd": "^0.30.7",
     "typescript": "^5.7.3",
     "typescript-eslint": "0.0.1-alpha.0"
@@ -74,7 +74,7 @@
   "dependencies": {
     "@fastify/error": "^3.4.1",
     "fastify": "^5.2.1",
-    "fastify-plugin": "^4.5.1",
+    "fastify-plugin": "^5.0.1",
     "knex": "^3.1.0",
     "knex-schema-inspector": "^3.1.0"
   },
