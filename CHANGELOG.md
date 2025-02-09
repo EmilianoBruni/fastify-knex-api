@@ -4,6 +4,12 @@ _Fastify plugin to expose API for Knex Query Builder_
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.1] 2025-02-09
+
+### Added
+
+- It's now possible to select which CRUD verbs to expose
+
 ## [0.3.0] 2025-02-08
 
 ### Added
