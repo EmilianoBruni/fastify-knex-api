@@ -47,7 +47,10 @@ export type IKACommonOptions = {
     ) => JSONSchemaProps | undefined;
     schemaDirPath?: string;
     checkAuth?: TKACheckAuth | undefined;
-    verbs?: (tableName: string, verbs: TKAVerbs[]|undefined) => TKAVerbs[]|undefined;
+    verbs?: (
+        tableName: string,
+        verbs: TKAVerbs[] | undefined
+    ) => TKAVerbs[] | undefined;
 };
 
 export type IKAOptions = {

@@ -361,8 +361,8 @@ class API {
         }
     }
 
-    async _getVerbs(tableName: string): Promise<TKAVerbs[]|undefined> {
-        let verbs: TKAVerbs[]|undefined = undefined;
+    async _getVerbs(tableName: string): Promise<TKAVerbs[] | undefined> {
+        let verbs: TKAVerbs[] | undefined = undefined;
         // if exists verbs in tables manual definition, use it
         const table = this._tables.find(t => t.name === tableName);
         if (table && table.verbs) verbs = table.verbs;
