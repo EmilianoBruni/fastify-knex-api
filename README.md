@@ -1,6 +1,11 @@
-# fastify-knex-api
+# fastify-knex-api - A Fastify plugin to expose API for Knex
 
-Fastify plugin to expose API for Knex Query Builder
+[![npm package](https://img.shields.io/npm/v/fastify-knex-api.svg)](http://npmjs.org/package/fastify-knex-api)
+[![Build workflow](https://github.com/EmilianoBruni/fastify-knex-api/actions/workflows/build.yml/badge.svg)](https://github.com/EmilianoBruni/fastify-knex-api/actions/workflows/build.yml)
+[![Coverage Status](https://coveralls.io/repos/github/EmilianoBruni/badge.svg?branch=master)](https://coveralls.io/github/EmilianoBruni/fastify-knex-api?branch=master)
+![Last Commit](https://img.shields.io/github/last-commit/EmilianoBruni/fastify-knex-api)
+![Dependencies](https://img.shields.io/librariesio/github/EmilianoBruni/fastify-knex-api)
+![Downloads](https://img.shields.io/npm/dt/fastify-knex-api)
 
 If you are using [Fastify](https://github.com/fastify/fastify) as your server and [Knex](https://knexjs.org/) as your ODM, **fastify-knex-api** is the easiest solution to run API server for your models. 
 
