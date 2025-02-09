@@ -25,6 +25,7 @@ export type TKAParamsId = { id: string };
 export type TTableDefinition = {
     name: string;
     pk?: string | undefined;
+    verbs?: TKAVerbs[];
 };
 
 export type TTablesDefinition = Array<string | TTableDefinition>;
@@ -46,6 +47,7 @@ export type IKACommonOptions = {
     ) => JSONSchemaProps | undefined;
     schemaDirPath?: string;
     checkAuth?: TKACheckAuth | undefined;
+    verbs?: (tableName: string, verbs: TKAVerbs[]|undefined) => TKAVerbs[]|undefined;
 };
 
 export type IKAOptions = {
@@ -200,6 +202,7 @@ export type TKACrudOptions = {
     controller: TKAController;
     prefix?: string;
     checkAuth?: TKACheckAuth | undefined;
+    verbs?: TKAVerbs[] | undefined;
 } & TKAAPISchemas;
 
 export type TKACrudGenHandlerOptions = {

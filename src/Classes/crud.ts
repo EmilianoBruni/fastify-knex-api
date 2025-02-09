@@ -39,35 +39,45 @@ const crud: FastifyPluginAsync<TKACrudOptions> = async (
         ...routeOpts
     };
 
-    fastify.get(config.list.url, {
-        handler: async (req, reply) =>
-            genHandler(req, reply, { ...config, type: 'list' }),
-        ...config.list
-    });
+    if (!opts.verbs || opts.verbs.includes('list')) {
+        fastify.get(config.list.url, {
+            handler: async (req, reply) =>
+                genHandler(req, reply, { ...config, type: 'list' }),
+            ...config.list
+        });
+    }
 
-    fastify.post(config.create.url, {
-        handler: async (req, reply) =>
-            genHandler(req, reply, { ...config, type: 'create' }),
-        ...config.create
-    });
+    if (!opts.verbs || opts.verbs.includes('create')) {
+        fastify.post(config.create.url, {
+            handler: async (req, reply) =>
+                genHandler(req, reply, { ...config, type: 'create' }),
+            ...config.create
+        });
+    }
 
-    fastify.get(config.view.url, {
-        handler: async (req, reply) =>
-            genHandler(req, reply, { ...config, type: 'view' }),
-        ...config.view
-    });
+    if (!opts.verbs || opts.verbs.includes('view')) {
+        fastify.get(config.view.url, {
+            handler: async (req, reply) =>
+                genHandler(req, reply, { ...config, type: 'view' }),
+            ...config.view
+        });
+    }
 
-    fastify.patch(config.update.url, {
-        handler: async (req, reply) =>
-            genHandler(req, reply, { ...config, type: 'update' }),
-        ...config.update
-    });
+    if (!opts.verbs || opts.verbs.includes('update')) {
+        fastify.patch(config.update.url, {
+            handler: async (req, reply) =>
+                genHandler(req, reply, { ...config, type: 'update' }),
+            ...config.update
+        });
+    }
 
-    fastify.delete(config.delete.url, {
-        handler: async (req, reply) =>
-            genHandler(req, reply, { ...config, type: 'delete' }),
-        ...config.delete
-    });
+    if (!opts.verbs || opts.verbs.includes('delete')) {
+        fastify.delete(config.delete.url, {
+            handler: async (req, reply) =>
+                genHandler(req, reply, { ...config, type: 'delete' }),
+            ...config.delete
+        });
+    }
 };
 
 const genHandler = async (

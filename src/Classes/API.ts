@@ -33,6 +33,7 @@ class API {
     private _schemaDirPath: IKAApiOptions['schemaDirPath'];
     private _checkAuth: IKAApiOptions['checkAuth'];
     private _prefix: IKAApiOptions['prefix'];
+    private _verbs: IKAApiOptions['verbs'];
 
     public schemaInspector: ISchemaInspector;
     public isInizialized: Promise<boolean>;
@@ -44,6 +45,7 @@ class API {
         this._columnSchema = params.columnSchema;
         this._schemaDirPath = params.schemaDirPath;
         this._checkAuth = params.checkAuth;
+        this._verbs = params.verbs;
 
         this._prefix = params.prefix || '/api';
 
@@ -84,6 +86,7 @@ class API {
     async _buildOptReg(table: TTableDefinition): Promise<TKACrudOptions> {
         const columnsInfo = await this._knex(table.name).columnInfo();
         const schema = await this._buildSchema(table, columnsInfo);
+        const verbs = await this._getVerbs(table.name);
         return {
             prefix: `${this._prefix}/${table.name}`,
             controller: new DefaultController(
@@ -91,6 +94,7 @@ class API {
                 columnsInfo,
                 table.pk
             ),
+            verbs,
             ...schema,
             checkAuth: this._checkAuth
         };
@@ -355,6 +359,19 @@ class API {
                 'tables must be an array of string or an array of object'
             );
         }
+    }
+
+    async _getVerbs(tableName: string): Promise<TKAVerbs[]|undefined> {
+        let verbs: TKAVerbs[]|undefined = undefined;
+        // if exists verbs in tables manual definition, use it
+        const table = this._tables.find(t => t.name === tableName);
+        if (table && table.verbs) verbs = table.verbs;
+
+        // if exists verbs in options, use it
+        if (this._verbs && typeof this._verbs === 'function') {
+            verbs = this._verbs(tableName, verbs);
+        }
+        return verbs;
     }
 
     async _getDBTables() {
