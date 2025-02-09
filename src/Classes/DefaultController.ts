@@ -47,7 +47,8 @@ class DefaultController implements TKAController {
         try {
             const items = await query;
             return this._formatManyResult(total, items);
-        } catch (err: any) {
+        } catch (e: unknown) {
+            const err = e as string;
             return reply.code(500).send(DefaultController.HTTP_ERROR[500](err));
         }
     }
@@ -69,7 +70,8 @@ class DefaultController implements TKAController {
         let data: Array<TKACrudRow>;
         try {
             data = await query;
-        } catch (err: any) {
+        } catch (e: unknown) {
+            const err = e as string;
             return reply.code(500).send(DefaultController.HTTP_ERROR[500](err));
         }
         if (data.length === 0) {
@@ -100,7 +102,8 @@ class DefaultController implements TKAController {
         }
         try {
             data = await query;
-        } catch (err: any) {
+        } catch (e: unknown) {
+            const err = e as string;
             return reply.code(500).send(DefaultController.HTTP_ERROR[500](err));
         }
         // client is mysql or mysql2
@@ -116,7 +119,8 @@ class DefaultController implements TKAController {
             data = await query;
             try {
                 data = await query;
-            } catch (err: any) {
+            } catch (e: unknown) {
+                const err = e as string;
                 return reply
                     .code(500)
                     .send(DefaultController.HTTP_ERROR[500](err));
@@ -146,7 +150,8 @@ class DefaultController implements TKAController {
         }
         try {
             data = await query;
-        } catch (err: any) {
+        } catch (e: unknown) {
+            const err = e as string;
             return reply.code(500).send(DefaultController.HTTP_ERROR[500](err));
         }
         if (data === 0) {
@@ -164,7 +169,8 @@ class DefaultController implements TKAController {
             );
             try {
                 returning = await query;
-            } catch (err: any) {
+            } catch (e: unknown) {
+                const err = e as string;
                 return reply
                     .code(500)
                     .send(DefaultController.HTTP_ERROR[500](err));
@@ -191,7 +197,8 @@ class DefaultController implements TKAController {
             const data = await knex(this.table).del().where(this.pk, id);
             if (data === 0)
                 return reply.code(404).send(DefaultController.HTTP_ERROR[404]);
-        } catch (err: any) {
+        } catch (e: unknown) {
+            const err = e as string;
             return reply.code(500).send(DefaultController.HTTP_ERROR[500](err));
         }
         reply.code(204).send();
@@ -205,7 +212,10 @@ class DefaultController implements TKAController {
         return count?.[0]?.count ?? 0;
     }
 
-    private _formatManyResult(total: number, items: Array<any>): TKAListResult {
+    private _formatManyResult(
+        total: number,
+        items: Array<object>
+    ): TKAListResult {
         return { total: total, items: items };
     }
 
