@@ -22,7 +22,7 @@ services:
         deploy:
             resources:
                 limits:
-                    cpus: 2
+                    cpus: "2"
     mariadb:
         image: mariadb
         restart: always
