@@ -26,8 +26,7 @@ const firstRecordPosts = {
 const newRecordAuthors = {
     first_name: 'Emiliano',
     last_name: 'Bruni',
-    email: 'info@ebruni.it',
-    added: '2011-10-09 10:34:11'
+    email: 'info@ebruni.it'
 };
 
 let lastId = 0;
