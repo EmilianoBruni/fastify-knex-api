@@ -331,8 +331,11 @@ class API {
             if (typeof customSchema === 'function') {
                 schema = customSchema(schema);
             }
-        } catch (e: { message: string }) {
-            throw new Error(`Error loading schema ${schemaPath}: ${e.message}`);
+        } catch (e: unknown) {
+            const err = e as { message: string };
+            throw new Error(
+                `Error loading schema ${schemaPath}: ${err.message}`
+            );
         }
         return schema;
     }
