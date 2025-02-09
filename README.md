@@ -134,7 +134,7 @@ Path prefix. Default is `/api/`.
 
 ### .tables: Array of string || Array of Object
 
-An array of tables to expose or an object of tables to expose with their primary key
+An array of tables to expose or an object of tables to expose with their primary key and optional verbs.
 
 ```javascript
 [ 'authors', 'posts']
@@ -142,11 +142,15 @@ An array of tables to expose or an object of tables to expose with their primary
 // or
 
 [  
-    {name: 'authors', pk: 'id' },
-    {name: 'posts',   pk: 'post_id' }
+    {name: 'authors', pk: 'id', verbs: ['list', 'view'] },
+    {name: 'posts',   pk: 'post_id', verbs: ['list', 'view', 'create', 'update', 'delete'] }
 ]
 ```
-Default is to autodiscover and expose all tables and, on request, to autodiscover their primary keys if not manually set.
+If `verbs` is not specified, all verbs are enabled for the table.
+
+If `verbs` is set to an empty array`[]`, all verbs are disabled for the table.
+
+Default is to autodiscover and expose all tables and, on request, to autodiscover their primary keys if not manually set. 
 
 ### .schemas: function
 
@@ -185,6 +189,39 @@ This function should have this signature:
 where schema is the generated schema. 
 
 If `.schemas` is defined, it's called before `.schemas`.
+
+### .verbs: function
+
+Optional function to customize the HTTP verbs (methods) available for each table. This function receives the table name and verbs from tables manual configs, and should return an array of verbs to enable for that table.
+
+```javascript
+.verbs = async (tableName, verbs) => {
+  if (tableName === 'authors') {
+    return ['list', 'view']; // Enable only 'list' and 'view' for 'authors' table
+  }
+  return verbs; // Return default verbs for other tables
+}
+```
+
+If the function returns `undefined`, all default verbs are enabled. If it returns an empty array, all verbs are disabled for that table.
+
+### Example usage
+
+```javascript
+const fastify = Fastify();
+fastify.register(knexAPI, {
+  knexConfig: {
+    client: 'YOUR_CLIENT_ADAPTER (mysql, oracle)',
+    connection: 'YOUR_QUERY_STRING',
+  },
+  verbs: async (tableName, verbs) => {
+    if (tableName === 'authors') {
+      return ['list', 'view'];
+    }
+    return verbs;
+  }
+});
+```
 
 ## API schema
 
