@@ -8,7 +8,7 @@ import type {
 import type { Knex } from 'knex';
 
 declare module 'fastify' {
-    export interface FastifyInstance {
+    interface FastifyInstance {
         knexAPI: API;
         knex: Knex;
     }
@@ -43,7 +43,7 @@ export type IKACommonOptions = {
         tableName: string,
         columnName: string,
         jsonColumnSchema: JSONSchemaProps
-    ) => JSONSchemaProps;
+    ) => JSONSchemaProps | undefined;
     schemaDirPath?: string;
     checkAuth?: TKACheckAuth | undefined;
 };
