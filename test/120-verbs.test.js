@@ -118,7 +118,6 @@ t.test('Return undefined to enable all verbs', async t => {
             }
         ],
         verbs: async (tableName, verbs) => {
-            console.log('verbs', tableName, verbs);
             return;
         }
     });
