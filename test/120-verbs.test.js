@@ -117,7 +117,7 @@ t.test('Return undefined to enable all verbs', async t => {
                 verbs: ['list']
             }
         ],
-        verbs: async (tableName, verbs) => {
+        verbs: async () => {
             return;
         }
     });
