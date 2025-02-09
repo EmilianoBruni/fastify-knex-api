@@ -26,7 +26,7 @@ t.test('Swagger generation from API schema', async t => {
     await server.ready();
 
     t.test('Doc page available', async t => {
-        const response = await server.inject({ url: '/doc/static/index.html' });
+        const response = await server.inject({ url: '/doc/' });
         t.equal(response.statusCode, 200);
     });
     t.test('JSON schema available', async t => {
