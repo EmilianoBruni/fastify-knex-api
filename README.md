@@ -74,7 +74,7 @@ If not set, all crud routes are allowed.
 
 If return `true`, user is allowed to perform action.
 
-If return `false`, user is not allowed to perform action. In this case you should return a 401 custom error code as this
+If return `false` or `undefined`, user is not allowed to perform action. In this case you should return a 401 custom error code as this
 
 ```javascript
  checkAuth: async(req, reply) => {
@@ -109,11 +109,11 @@ Optional function to call to alter [default validation and serialization schema]
 where table_name is the table name, column_name is the column_name and jsonColumnSchema is a column ajv schema like this
 
 ```json
-{ type: 'integer' }
+{ "type": "integer" }
 
-{ type: 'string', maxLength: 30 }
+{ "type": "string", "maxLength": 30 }
 
-{ type: 'string', format: 'date-time' }
+{ "type": "string", "format": "date-time" }
 ```
 Whatever return is used as the ajv schema validator for column_name.
 
