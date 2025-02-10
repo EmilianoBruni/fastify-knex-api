@@ -4,7 +4,7 @@ import t from 'tap';
 
 t.test('Unitialized Knex config', async t => {
     t.rejects(
-        createServer(t, { knexConfig: 'error' }), 
+        createServer(t, { knexConfig: 'error' }),
         'knexConfig is required'
     );
 });
