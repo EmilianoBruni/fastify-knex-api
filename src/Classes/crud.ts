@@ -85,7 +85,7 @@ const genHandler = async (
     reply: TKAReply,
     config: TKACrudGenHandlerOptions
 ) => {
-    let checkAuth = true;
+    let checkAuth: boolean | undefined = true;
     if (typeof config.checkAuth === 'function') {
         checkAuth = await config.checkAuth(req, reply);
     }
