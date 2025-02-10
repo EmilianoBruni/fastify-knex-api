@@ -31,7 +31,7 @@ export type TTableDefinition = {
 export type TTablesDefinition = Array<string | TTableDefinition>;
 export type TTablesDefinitionNormalized = Array<TTableDefinition>;
 
-export type TKACheckAuth = (req: TKARequest, res: TKAReply) => boolean;
+export type TKACheckAuth = (req: TKARequest, res: TKAReply) => Promise<boolean>;
 
 export type IKACommonOptions = {
     prefix?: string;
