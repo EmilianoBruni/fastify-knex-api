@@ -1,7 +1,7 @@
 import knexAPI from '../src/index.js';
 import fastify from 'fastify';
 import { FastifyInstance } from 'fastify';
-import type { TAP } from 'tap';
+import type { Test } from 'tap';
 import type { IKAOptions as IKAPluginOptions } from '../src/types.js';
 
 declare let process: {
@@ -13,7 +13,7 @@ declare let process: {
 };
 
 export async function createServer(
-    t: TAP,
+    t: Test,
     pluginConfig: Partial<IKAPluginOptions> = {}
 ) {
     const app = initServer(t);
@@ -22,7 +22,7 @@ export async function createServer(
     return app;
 }
 
-export function initServer(t: TAP) {
+export function initServer(t: Test) {
     const app = fastify();
     t.after(app.close.bind(app));
     return app;
@@ -43,7 +43,7 @@ export function registerKnexAPI(
     app.register(knexAPI, pC);
 }
 
-export function checkEnv(t: TAP) {
+export function checkEnv(t: Test) {
     if (!process.env.CRUD_CLIENT || !process.env.CRUD_DB_URI) {
         t.skip(() => 'CRUD_CLIENT or CRUD_DB_URI env variable not set');
         t.end();
