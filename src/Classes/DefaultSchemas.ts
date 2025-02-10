@@ -15,7 +15,7 @@ const defaultSchemas = (modelName: string): TKAAPISchemas => {
                         }
                     }
                 },
-                query: {
+                querystring: {
                     $ref: 'fastify-knex-api/query#/properties/fields'
                 }
             }
@@ -24,7 +24,7 @@ const defaultSchemas = (modelName: string): TKAAPISchemas => {
             schema: {
                 summary: 'List ' + modelName,
                 tags: [modelName],
-                query: {
+                querystring: {
                     $ref: 'fastify-knex-api/query#/properties/list'
                 }
             }
@@ -33,7 +33,7 @@ const defaultSchemas = (modelName: string): TKAAPISchemas => {
             schema: {
                 summary: 'Create a new ' + modelName,
                 tags: [modelName],
-                query: {
+                querystring: {
                     type: 'object',
                     $ref: 'fastify-knex-api/query#/properties/fields'
                 }
@@ -52,7 +52,7 @@ const defaultSchemas = (modelName: string): TKAAPISchemas => {
                         }
                     }
                 },
-                query: {
+                querystring: {
                     $ref: 'fastify-knex-api/query#/properties/fields'
                 }
             }
