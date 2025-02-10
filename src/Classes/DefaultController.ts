@@ -214,7 +214,7 @@ class DefaultController implements TKAController {
 
     private _formatManyResult(
         total: number,
-        items: Array<object>
+        items: Array<Record<string, unknown>>
     ): TKAListResult {
         return { total: total, items: items };
     }
