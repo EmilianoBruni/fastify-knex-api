@@ -13,7 +13,8 @@ export default [
     {
         rules: {
             'prettier/prettier': 'warn',
-            'no-console': 'warn'
+            'no-console': 'warn',
+            '@typescript-eslint/ban-ts-comment': 'warn'
         }
     }
 ];
