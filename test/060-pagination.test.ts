@@ -123,7 +123,7 @@ t.test('Check pagination with filters', async t => {
             url: '/api/authors',
             query: {
                 filter: 'id <= 5',
-                limit: 2
+                limit: '2'
             }
         });
 
@@ -140,8 +140,8 @@ t.test('Check pagination with filters', async t => {
             url: '/api/authors',
             query: {
                 filter: 'id <= 5',
-                limit: 2,
-                offset: 2
+                limit: '2',
+                offset: '2'
             }
         });
 
@@ -158,8 +158,8 @@ t.test('Check pagination with filters', async t => {
             url: '/api/authors',
             query: {
                 filter: 'id <= 5',
-                limit: 2,
-                page: 1
+                limit: '2',
+                page: '1'
             }
         });
 
@@ -176,8 +176,8 @@ t.test('Check pagination with filters', async t => {
             url: '/api/authors',
             query: {
                 filter: 'id <= 5',
-                limit: 2,
-                page: 2
+                limit: '2',
+                page: '2'
             }
         });
 

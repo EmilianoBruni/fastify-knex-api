@@ -66,7 +66,7 @@ t.test('Check verbs in manual table configuration', async t => {
 
 t.test('Check verbs in verbs callback', async t => {
     const app = await createServer(t, {
-        verbs: async (tableName, verbs) => {
+        verbs: (tableName, verbs) => {
             if (tableName === 'authors') {
                 return ['list'];
             }
@@ -117,8 +117,8 @@ t.test('Return undefined to enable all verbs', async t => {
                 verbs: ['list']
             }
         ],
-        verbs: async () => {
-            return;
+        verbs: () => {
+            return undefined;
         }
     });
 
@@ -144,7 +144,7 @@ t.test('Return empty array to disable all verbs', async t => {
                 verbs: ['list']
             }
         ],
-        verbs: async () => {
+        verbs: () => {
             return [];
         }
     });

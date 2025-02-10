@@ -11,7 +11,7 @@ const errNotAuthorized = createError('CUST_NOT_AUTHORIZED', 'Go away', 401);
 
 t.test('Test auth', async t => {
     const server = await createServer(t, {
-        checkAuth: async (req, reply) => {
+        checkAuth: async (_, reply) => {
             if (!isAuthed && isDefined) {
                 reply.send(new errNotAuthorized());
                 return false;
@@ -19,6 +19,7 @@ t.test('Test auth', async t => {
                 return true;
             }
             // if !isAuthed and !isDefined do nothing
+            return undefined;
         }
     });
 

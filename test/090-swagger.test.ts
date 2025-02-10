@@ -17,11 +17,10 @@ t.test('Swagger generation from API schema', async t => {
         }
     });
     server.register(swagger_ui, {
-        title: 'Test swagger',
         routePrefix: '/doc'
     });
 
-    registerKnexAPI(server, {}, ['swagger-ui']);
+    registerKnexAPI(server, {});
 
     await server.ready();
 

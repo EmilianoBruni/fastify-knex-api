@@ -193,7 +193,7 @@ t.test('Projection single record', async t => {
 
 t.test('Projection on create', async t => {
     const server = await createServer(t);
-    let id;
+    let id: string;
     const rec = {
         first_name: 'John',
         last_name: 'Doe',
