@@ -192,7 +192,10 @@ class API {
             type: 'object',
             properties: {
                 total: { type: 'integer', example: '1' },
-                items: { type: 'array', items: { $ref: `${ref_id}#` } }
+                items: {
+                    type: 'array',
+                    items: { type: 'object', $ref: `${ref_id}#` }
+                }
             }
         };
 
@@ -208,6 +211,7 @@ class API {
         // delete return 204 if success
         schemas.delete.schema.response ??= {};
         schemas.delete.schema.response[204] = {
+            type: 'object',
             $ref: 'fastify-knex-api/http-code#/properties/204'
         };
 
@@ -216,6 +220,7 @@ class API {
             const schema = schemas[k].schema;
             schema.response ??= {};
             schema.response[500] = {
+                type: 'object',
                 $ref: 'fastify-knex-api/http-code#/properties/500'
             };
         });
@@ -223,6 +228,7 @@ class API {
         arr4.forEach(k => {
             const response = (schemas[k].schema.response ??= {});
             response['404'] = {
+                type: 'object',
                 $ref: 'fastify-knex-api/http-code#/properties/404'
             };
         });
