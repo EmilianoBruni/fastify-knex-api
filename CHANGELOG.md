@@ -4,6 +4,16 @@ _Fastify plugin to expose API for Knex Query Builder_
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.2] 2025-02-10
+
+### Changed
+
+- Tests in typescript
+
+### Fixed
+
+- checkAuth func which is async
+
 ## [0.3.1] 2025-02-09
 
 ### Added
