@@ -5,6 +5,7 @@ import type {
     FastifyReply,
     FastifyRequest
 } from 'fastify';
+import { FastifySchema } from 'fastify/types/schema.js';
 import type { Knex } from 'knex';
 
 declare module 'fastify' {
@@ -31,7 +32,10 @@ export type TTableDefinition = {
 export type TTablesDefinition = Array<string | TTableDefinition>;
 export type TTablesDefinitionNormalized = Array<TTableDefinition>;
 
-export type TKACheckAuth = (req: TKARequest, res: TKAReply) => Promise<boolean>;
+export type TKACheckAuth = (
+    req: TKARequest,
+    res: TKAReply
+) => Promise<boolean | undefined>;
 
 export type IKACommonOptions = {
     prefix?: string;
@@ -67,26 +71,21 @@ export type IKAApiOptions = IKACommonOptions & {
 
 export type TColumnsInfo = Record<string | number | symbol, Knex.ColumnInfo>;
 
-/// DefaultSchemas
+type TKASchemaResponse = {
+    200?: JSONSchemaProps;
+    204?: JSONSchemaProps;
+    302?: JSONSchemaProps;
+    400?: JSONSchemaProps;
+    401?: JSONSchemaProps;
+    404?: JSONSchemaProps;
+    500?: JSONSchemaProps;
+};
 
-export type TKASchema = {
-    summary: string;
-    tags: Array<string>;
-    params?: {
-        type: 'object';
-        properties: Record<string, JSONSchemaProps>;
-    };
-    query?: any;
-    body?: any;
-    response?: {
-        200?: any;
-        204?: any;
-        302?: any;
-        400?: any;
-        401?: any;
-        404?: any;
-        500?: any;
-    };
+/// DefaultSchemas
+export type TKASchema = FastifySchema & {
+    summary?: string;
+    response?: TKASchemaResponse;
+    tags?: Array<string>;
 };
 
 export type TKAVerbs = 'view' | 'list' | 'create' | 'update' | 'delete';
@@ -103,6 +102,15 @@ export type JSONType =
     | 'null'
     | 'object';
 
+type AnyType =
+    | string
+    | number
+    | boolean
+    | object
+    | undefined
+    | Array<string | number | boolean | object | null | undefined>
+    | null;
+
 export type JSONSchemaProps = {
     type: JSONType;
     properties?: Record<string, JSONSchemaProps>;
@@ -111,7 +119,7 @@ export type JSONSchemaProps = {
     description?: string;
     required?: Array<string>;
     enum?: Array<string>;
-    default?: any;
+    default?: AnyType;
     additionalProperties?: boolean;
     oneOf?: Array<JSONSchemaProps>;
     anyOf?: Array<JSONSchemaProps>;
@@ -131,13 +139,13 @@ export type JSONSchemaProps = {
     maxItems?: number;
     uniqueItems?: boolean;
     contains?: JSONSchemaProps;
-    examples?: Array<any>;
-    const?: any;
+    examples?: AnyType;
+    const?: AnyType;
     readOnly?: boolean;
     writeOnly?: boolean;
     discriminator?: string;
-    xml?: any;
-    externalDocs?: any;
+    xml?: AnyType;
+    externalDocs?: AnyType;
     deprecated?: boolean;
     if?: JSONSchemaProps;
     then?: JSONSchemaProps;
@@ -145,18 +153,18 @@ export type JSONSchemaProps = {
     contentEncoding?: string;
     contentMediaType?: string;
     contentSchema?: JSONSchemaProps;
-    [key: string]: any;
-    example?: string | number | boolean | object | Array<any> | null;
+    [key: string]: AnyType;
+    example?: AnyType;
 };
 
 // DefaultController
 
 export interface TKAController {
     list: (req: TKARequest, res: TKAReply) => Promise<TKAListResult>;
-    view: (req: TKARequest, res: TKAReply) => Promise<any>;
-    create: (req: TKARequest, res: TKAReply) => Promise<any>;
-    update: (req: TKARequest, res: TKAReply) => Promise<any>;
-    delete: (req: TKARequest, res: TKAReply) => Promise<any>;
+    view: (req: TKARequest, res: TKAReply) => Promise<object>;
+    create: (req: TKARequest, res: TKAReply) => Promise<object>;
+    update: (req: TKARequest, res: TKAReply) => Promise<object>;
+    delete: (req: TKARequest, res: TKAReply) => Promise<void>;
     //[key: string]: (req: TKARequest, reply: TKAReply) => Promise<any>;
 }
 
@@ -190,7 +198,11 @@ export type TKAControllerFiltersList = TKAControllerFiltersPagination &
 export type TKACrudVerbOptions = {
     url: string;
     schema?: TKASchema;
-    handler?: any;
+    handler?: (
+        req: TKARequest,
+        reply: TKAReply,
+        config: TKACrudGenHandlerOptions
+    ) => TKAController;
 };
 
 export type TKACrudVerbs = {
@@ -213,8 +225,7 @@ export type TKACrudGenHandlerOptions = {
 } & TKACrudOptions;
 
 // rappresent a generic row of a database
-
-export type TKACrudRow = Record<string, any>;
+export type TKACrudRow = Record<string, unknown>;
 export type TKAListResult = {
     total: number;
     items: Array<TKACrudRow>;
