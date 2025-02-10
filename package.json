@@ -13,10 +13,10 @@
     "build:watch": "nodemon -e json,ts -w src -x \"tsc\"",
     "buildcjs": "rollup ./dist/index.js --file ./dist/index.cjs --format cjs",
     "clean": "rimraf ./dist, rimraf .tap",
-    "lint": "eslint \"src/**/*.ts\" \"test/**/*.?(c)js\" ",
+    "lint": "eslint \"src/**/*.[jt]s?(x)\" \"test/**/*.?(c)[jt]s\"",
     "lint:fix": "npm run lint -- --fix",
     "prepublishOnly": "npm run build && npm test",
-    "test": "tap -j1 --allow-incomplete-coverage \"./test/*.test.?(c)js\"",
+    "test": "tap -j1 --allow-incomplete-coverage \"./test/**/*.test.?(c)[tj]s\"",
     "test:ci": "npm run prepublishOnly",
     "test:ts": "tsd",
     "tsc": "tsc"
