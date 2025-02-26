@@ -19,6 +19,8 @@ class DefaultController implements TKAController {
     private table: string;
     private _columnsInfo: TColumnsInfo;
     private pk: string | undefined;
+    // for MSSQL DB with triggers
+    private includeTriggerModifications = false;
 
     constructor(
         tableName: string,
@@ -94,16 +96,28 @@ class DefaultController implements TKAController {
         );
         let data: Array<TKACrudRow | number | string>;
         if (this._returningClient.includes(client)) {
+            const opt: {includeTriggerModifications?: boolean} = {};
+            if (this.includeTriggerModifications) {
+                // for MSSQL DB with triggers
+                opt.includeTriggerModifications = true;
+            }
             const returning = this._filterReturningFields(
                 Object.keys(this._columnsInfo),
                 req.query as TKAControllerFiltersProjection
             );
-            query.returning(returning);
+            query.returning(returning, opt);
         }
         try {
             data = await query;
         } catch (e: unknown) {
             const err = e as string;
+            // for MSSQL DB with triggers
+            if (err.includes('the DML statement cannot have any enabled triggers')) {
+                // enabled includeTriggerModifications
+                this.includeTriggerModifications = true;
+                // try again
+                return this.create(req, reply);
+            }
             return reply.code(500).send(DefaultController.HTTP_ERROR[500](err));
         }
         // client is mysql or mysql2
@@ -146,12 +160,23 @@ class DefaultController implements TKAController {
                 Object.keys(this._columnsInfo),
                 req.query as TKAControllerFiltersProjection
             );
-            query.returning(returning);
+            const opt: {includeTriggerModifications?: boolean} = {};
+            if (this.includeTriggerModifications) {
+                opt.includeTriggerModifications = true;
+            }
+            query.returning(returning,opt);
         }
         try {
             data = await query;
         } catch (e: unknown) {
             const err = e as string;
+            // for MSSQL DB with triggers
+            if (err.includes('the DML statement cannot have any enabled triggers')) {
+                // enabled includeTriggerModifications
+                this.includeTriggerModifications = true;
+                // try again
+                return this.update(req, reply);
+            }
             return reply.code(500).send(DefaultController.HTTP_ERROR[500](err));
         }
         if (data === 0) {
