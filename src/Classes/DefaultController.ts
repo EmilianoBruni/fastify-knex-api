@@ -110,15 +110,15 @@ class DefaultController implements TKAController {
         try {
             data = await query;
         } catch (e: unknown) {
-            const err = e as string;
+            const err = e as Object;
             // for MSSQL DB with triggers
-            if (err.includes('the DML statement cannot have any enabled triggers')) {
+            if (err.toString().includes('the DML statement cannot have any enabled triggers')) {
                 // enabled includeTriggerModifications
                 this.includeTriggerModifications = true;
                 // try again
                 return this.create(req, reply);
             }
-            return reply.code(500).send(DefaultController.HTTP_ERROR[500](err));
+            return reply.code(500).send(DefaultController.HTTP_ERROR[500](err.toString()));
         }
         // client is mysql or mysql2
         if (!this._returningClient.includes(client)) {
@@ -134,10 +134,10 @@ class DefaultController implements TKAController {
             try {
                 data = await query;
             } catch (e: unknown) {
-                const err = e as string;
+                const err = e as Object;
                 return reply
                     .code(500)
-                    .send(DefaultController.HTTP_ERROR[500](err));
+                    .send(DefaultController.HTTP_ERROR[500](err.toString()));
             }
         }
         return data[0] as TKACrudRow;
@@ -169,15 +169,15 @@ class DefaultController implements TKAController {
         try {
             data = await query;
         } catch (e: unknown) {
-            const err = e as string;
+            const err = e as Object;
             // for MSSQL DB with triggers
-            if (err.includes('the DML statement cannot have any enabled triggers')) {
+            if (err.toString().includes('the DML statement cannot have any enabled triggers')) {
                 // enabled includeTriggerModifications
                 this.includeTriggerModifications = true;
                 // try again
                 return this.update(req, reply);
             }
-            return reply.code(500).send(DefaultController.HTTP_ERROR[500](err));
+            return reply.code(500).send(DefaultController.HTTP_ERROR[500](err.toString()));
         }
         if (data === 0) {
             return reply.code(404).send(DefaultController.HTTP_ERROR[404]);
