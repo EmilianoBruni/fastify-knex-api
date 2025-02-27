@@ -41,6 +41,26 @@ And if your database has `authors` and `posts` tables the result routes will be 
             └── :id (GET, HEAD, PATCH, DELETE)
 ```
 
+- [Installation](#installation)
+- [Initialization and parameters](#initialization)
+- [API schema](#api-schema)
+  - [List](#list)
+  - [View](#view)
+  - [Create](#create)
+  - [Update](#update)
+  - [Delete](#delete)
+- [Options for list method](#options-for-list-method)
+  - [Pagination](#pagination)
+  - [Sorting](#sorting)
+  - [Filtering](#filtering)
+  - [Projection](#projection)
+- [Validation and Serialization](#validation-and-serialization)
+- [CommonJS Support](#commonjs)
+- [Typescript and Autoload](#typescript-and-autoload)
+- [Bugs/Help/Feature Requests/Contributing](#bugs--help--feature-requests--contributing)
+
+
+
 ## Installation
 
 ```bash
@@ -366,6 +386,14 @@ PATCH /api/authors/1?fields=id,first_name
 ```
 
 return only selected fields
+
+### Delete
+
+```javascript
+DELETE /api/authors/1
+```
+
+Delete a record in `authors`. Return 204 code.
 
 ## Options for list method
 
