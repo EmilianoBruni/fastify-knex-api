@@ -4,6 +4,17 @@ _Fastify plugin to expose API for Knex Query Builder_
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.3] 2025-02-27
+
+### Added
+
+- Support (automatic) for includeTriggerModifications in MSSQL
+
+### Fixed
+
+- Remove redundant assignment in create
+- Wrong return record in update if client support returning record
+
 ## [0.3.2] 2025-02-10
 
 ### Changed
