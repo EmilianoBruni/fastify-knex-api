@@ -96,7 +96,7 @@ class DefaultController implements TKAController {
         );
         let data: Array<TKACrudRow | number | string>;
         if (this._returningClient.includes(client)) {
-            const opt: {includeTriggerModifications?: boolean} = {};
+            const opt: { includeTriggerModifications?: boolean } = {};
             if (this.includeTriggerModifications) {
                 // for MSSQL DB with triggers
                 opt.includeTriggerModifications = true;
@@ -110,15 +110,23 @@ class DefaultController implements TKAController {
         try {
             data = await query;
         } catch (e: unknown) {
-            const err = e as Object;
+            const err = e as object;
             // for MSSQL DB with triggers
-            if (err.toString().includes('the DML statement cannot have any enabled triggers')) {
+            if (
+                err
+                    .toString()
+                    .includes(
+                        'the DML statement cannot have any enabled triggers'
+                    )
+            ) {
                 // enabled includeTriggerModifications
                 this.includeTriggerModifications = true;
                 // try again
                 return this.create(req, reply);
             }
-            return reply.code(500).send(DefaultController.HTTP_ERROR[500](err.toString()));
+            return reply
+                .code(500)
+                .send(DefaultController.HTTP_ERROR[500](err.toString()));
         }
         // client is mysql or mysql2
         if (!this._returningClient.includes(client)) {
@@ -133,7 +141,7 @@ class DefaultController implements TKAController {
             try {
                 data = await query;
             } catch (e: unknown) {
-                const err = e as Object;
+                const err = e as object;
                 return reply
                     .code(500)
                     .send(DefaultController.HTTP_ERROR[500](err.toString()));
@@ -159,32 +167,39 @@ class DefaultController implements TKAController {
                 Object.keys(this._columnsInfo),
                 req.query as TKAControllerFiltersProjection
             );
-            const opt: {includeTriggerModifications?: boolean} = {};
+            const opt: { includeTriggerModifications?: boolean } = {};
             if (this.includeTriggerModifications) {
                 opt.includeTriggerModifications = true;
             }
-            query.returning(returning,opt);
+            query.returning(returning, opt);
         }
         try {
             data = await query;
         } catch (e: unknown) {
-            const err = e as Object;
+            const err = e as object;
             // for MSSQL DB with triggers
-            if (err.toString().includes('the DML statement cannot have any enabled triggers')) {
+            if (
+                err
+                    .toString()
+                    .includes(
+                        'the DML statement cannot have any enabled triggers'
+                    )
+            ) {
                 // enabled includeTriggerModifications
                 this.includeTriggerModifications = true;
                 // try again
                 return this.update(req, reply);
             }
-            return reply.code(500).send(DefaultController.HTTP_ERROR[500](err.toString()));
+            return reply
+                .code(500)
+                .send(DefaultController.HTTP_ERROR[500](err.toString()));
         }
         if (data === 0) {
             return reply.code(404).send(DefaultController.HTTP_ERROR[404]);
         }
         let returning: Array<TKACrudRow>;
         if (!this._returningClient.includes(client)) {
-            // doesn't support returning but return last id in data[0]
-            // query DB to get the last inserted record
+            // doesn't support returning. query DB to get the updated record by id
             const query = knex<TKACrudRow>(this.table).where(this.pk, id);
             // apply projection to the query
             await this._applyProjection(
@@ -200,14 +215,12 @@ class DefaultController implements TKAController {
                     .send(DefaultController.HTTP_ERROR[500](err));
             }
         } else {
-            // data is an array of TKACrudRow not a number
-            // convert data to TKACrudRow
-            returning = [data as unknown as TKACrudRow];
+            returning = data as unknown as Array<TKACrudRow>;
         }
-        if (returning.length === 0) {
+        if (returning.length === 0 || !returning[0]) {
             return reply.code(404).send(DefaultController.HTTP_ERROR[404]);
         }
-        return returning[0] as TKACrudRow;
+        return returning[0];
     }
 
     async delete(
