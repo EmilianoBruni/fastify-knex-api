@@ -4,7 +4,7 @@
 [![Build workflow](https://github.com/EmilianoBruni/fastify-knex-api/actions/workflows/build.yml/badge.svg)](https://github.com/EmilianoBruni/fastify-knex-api/actions/workflows/build.yml)
 [![Coverage Status](https://coveralls.io/repos/github/EmilianoBruni/badge.svg?branch=master)](https://coveralls.io/github/EmilianoBruni/fastify-knex-api?branch=master)
 ![Last Commit](https://img.shields.io/github/last-commit/EmilianoBruni/fastify-knex-api)
-![Dependencies](https://img.shields.io/librariesio/github/EmilianoBruni/fastify-knex-api)
+[![Dependencies](https://img.shields.io/librariesio/github/EmilianoBruni/fastify-knex-api)](https://libraries.io/npm/fastify-knex-api)
 ![Downloads](https://img.shields.io/npm/dt/fastify-knex-api)
 
 If you are using [Fastify](https://github.com/fastify/fastify) as your server and [Knex](https://knexjs.org/) as your ODM, **fastify-knex-api** is the easiest solution to run API server for your models. 
@@ -57,9 +57,8 @@ And if your database has `authors` and `posts` tables the result routes will be 
 - [Validation and Serialization](#validation-and-serialization)
 - [CommonJS Support](#commonjs)
 - [Typescript and Autoload](#typescript-and-autoload)
+- [FAQ](#frequently-asked-questions-faq)
 - [Bugs/Help/Feature Requests/Contributing](#bugs--help--feature-requests--contributing)
-
-
 
 ## Installation
 
@@ -790,9 +789,22 @@ export default fp(plugin,
         name: 'knex-api',
     }
 );
+```
 
+## Frequently asked questions (FAQ)
+
+### Support for includeTriggerModifications in MSSQL
+
+For MSSQL, triggers on tables can interrupt returning a valid value from the standard insert/update/delete statements. Knex solves this add `includeTriggerModifications` option in these methods.
+
+Fastify-knex-api detects error for this problem and automatically add this option in insert and update statements. Delete return nothing else a 204 code so it doesn't require any adjustment.
+
+Unfortunately knex [has a problem](https://github.com/knex/knex/issues/6182) in this case. If the table contains timestamp columns, the query modified by the `includeTriggerModifications` parameter also produces an error:
 
 ```
+Cannot insert an explicit value into a timestamp column. Use INSERT with a column list to exclude the timestamp column, or insert a DEFAULT into the timestamp column.
+```
+As a temporary workaround, you can use the [fields](#projection) parameter to get a subset of the table fields that don't contain timestamp columns 
 
 ## Bugs / Help / Feature Requests / Contributing
 
