@@ -130,7 +130,6 @@ class DefaultController implements TKAController {
                 query,
                 req.query as TKAControllerFiltersProjection
             );
-            data = await query;
             try {
                 data = await query;
             } catch (e: unknown) {
