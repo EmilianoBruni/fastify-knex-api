@@ -4,6 +4,9 @@ on: [push, pull_request, workflow_dispatch] # disabled for debug
 jobs:
   coveralls:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20, 22]
     services:
       mariadb:
         image: mariadb
@@ -13,19 +16,28 @@ jobs:
         ports:
           - 3306:3306
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-node@v1
+      - name: Git checkout
+        uses: actions/checkout@v3
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
         with:
-          node-version: 18
-      - name: npm install
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
         run: npm install
+
       - name: get container id
         id: vars
         run: DID=$(docker ps --format "{{.ID}}") && echo "DID=${DID}" >> "$GITHUB_OUTPUT"
+
       - name: copy db test script
         run: docker cp  test/seed/maria.sql ${{steps.vars.outputs.DID}}:/tmp
+
       - name: create db test
         run: docker exec ${{steps.vars.outputs.DID}} /bin/bash -c 'mariadb -uroot -ptest test < /tmp/maria.sql'
+
       - name: npm run test:ci
         run: npm run test:ci
         env:
