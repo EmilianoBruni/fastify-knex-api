@@ -58,24 +58,23 @@
     "eslint": "^9.20.0",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.2.3",
+    "fastify": "^5.2.1",
     "globals": "^15.14.0",
     "mysql2": "^3.12.0",
     "nodemon": "^3.1.9",
     "prettier": "^3.5.0",
     "rimraf": "^6.0.1",
     "rollup": "^4.34.6",
-    "tap": "^21.0.1",
+    "tap": "^21.1.0",
     "tsd": "^0.31.2",
     "typescript": "^5.7.3",
     "typescript-eslint": "8.23.0"
   },
   "dependencies": {
     "@fastify/error": "^4.0.0",
-    "fastify": "^5.2.1",
     "fastify-plugin": "^5.0.1",
     "knex": "^3.1.0",
     "knex-schema-inspector": "^3.1.0"
   },
-  "types": "./dist/index.d.ts",
-  "packageManager": "pnpm@9.14.4+sha512.c8180b3fbe4e4bca02c94234717896b5529740a6cbadf19fa78254270403ea2f27d4e1d46a08a0f56c89b63dc8ebfd3ee53326da720273794e6200fcf0d184ab"
+  "types": "./dist/index.d.ts"
 }
