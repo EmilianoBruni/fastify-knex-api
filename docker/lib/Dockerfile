@@ -17,7 +17,7 @@ ENV NODE_ENV=${BMODE}
 WORKDIR /ws/${IDIR}
 # Install dependencies based on the preferred package manager
 COPY --chown=node:node package.json .npmrc* pnpm-lock.yaml* ./
-RUN --mount=type=cache,id=fastify-knex_pnpm-store,uid=1001,gid=1001,target=/home/node/pnpm/store [ -e pnpm-lock.yaml ] && pnpm install --frozen-lockfile || pnpm install
+RUN --mount=type=cache,id=fastify-knex_pnpm-store,uid=1000,gid=1000,target=/home/node/pnpm/store [ -e pnpm-lock.yaml ] && pnpm install --frozen-lockfile || pnpm install
 
 # 03a - Rebuild the source code only when needed
 FROM base AS builder
@@ -34,7 +34,7 @@ COPY --chown=node:node --from=deps ws/${IDIR}/node_modules ./node_modules
 FROM base AS runner
 ARG IDIR
 ARG BMODE
-ENV NODE_ENV=\${BMODE} APP=${APP} SERVICE=${SERVICE}
+ENV NODE_ENV=\${BMODE}
 WORKDIR /ws/${IDIR}
 
 LABEL org.opencontainers.image.authors="Bruni Emiliano <info@ebruni.it>"
