@@ -11,3 +11,5 @@ test
 src/*
 @types
 tsconfig.json
+eslint.config.js
+.env
