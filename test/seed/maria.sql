@@ -167,3 +167,53 @@ CREATE TABLE `all_other_types` (
 
 INSERT INTO `all_other_types` (`id`, `fld01`, `fld02`, `fld03`, `fld04`) VALUES (1, '192.168.0.10', '2001:db8::ff00:42:8329', '[{"_id":"659566b88fa74fa916479f75","index":0,"guid":"ea725f9f-c257-4001-85a1-b297c7d82556"},{"_id":"659566b8dcd2a4a0f288d66b","index":1,"guid":"eec29ab8-df9f-43dd-89cc-0064c7dd646d"}]','123e4567-e89b-12d3-a456-426655440000');
 INSERT INTO `all_other_types` (`id`, `fld01`, `fld02`, `fld03`, `fld04`) VALUES (2, 0xA0000012, x'20010DB8000000000000FF0000428329','[{"_id":"659566b88fa74fa916479f75","index":0,"guid":"ea725f9f-c257-4001-85a1-b297c7d82556"},{"_id":"659566b8dcd2a4a0f288d66b","index":1,"guid":"eec29ab8-df9f-43dd-89cc-0064c7dd646d"}]',x'fffffffffffffffffffffffffffffffe');
+
+#
+# TABLE STRUCTURE FOR: authors_note
+#
+
+DROP TABLE IF EXISTS `authors_note`;
+
+CREATE TABLE `authors_note` (
+  `author_id` int(11) NOT NULL,
+  `row` int(11) NOT NULL,
+  `note` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`author_id`, `row`),
+  CONSTRAINT `author_rows_fk_authors`
+    FOREIGN KEY (`author_id`) REFERENCES `authors`(`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+
+-- Example seed data (first two authors with two rows each)
+INSERT INTO `authors_note` (`author_id`, `row`, `note`) VALUES
+(1, 1, 'Note1 for author1'),
+(1, 2, 'Note2 for author1'),
+(2, 1, 'Note1 for author2'),
+(2, 2, 'Note2 for author2');
+
+#
+# TABLE STRUCTURE FOR: authors_address
+#
+
+DROP TABLE IF EXISTS `authors_address`;
+
+CREATE TABLE `authors_address` (
+  `author_id` int(11) NOT NULL,
+  `address_key` varchar(255) NOT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`author_id`, `address_key`),
+  CONSTRAINT `author_addresses_fk_authors`
+    FOREIGN KEY (`author_id`) REFERENCES `authors`(`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+
+-- Example seed data (first two authors with two rows each)
+INSERT INTO `authors_address` (`author_id`, `address_key`, `address`) VALUES
+(1, 'home', '123 Main St, Anytown, USA'),
+(1, 'work', '456 Corporate Blvd, Business City, USA'),
+(2, 'home', '789 Elm St, Othertown, USA'),
+(2, 'work', '101 Business Rd, Work City, USA');
