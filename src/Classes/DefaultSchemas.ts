@@ -6,15 +6,6 @@ const defaultSchemas = (modelName: string): TKAAPISchemas => {
             schema: {
                 summary: 'Get details of single ' + modelName,
                 tags: [modelName],
-                params: {
-                    type: 'object',
-                    properties: {
-                        id: {
-                            type: 'string',
-                            description: 'Unique identifier of ' + modelName
-                        }
-                    }
-                },
                 querystring: {
                     $ref: 'fastify-knex-api/query#/properties/fields'
                 }
@@ -43,15 +34,6 @@ const defaultSchemas = (modelName: string): TKAAPISchemas => {
             schema: {
                 summary: 'Update existing ' + modelName,
                 tags: [modelName],
-                params: {
-                    type: 'object',
-                    properties: {
-                        id: {
-                            type: 'string',
-                            description: 'Unique identifier of ' + modelName
-                        }
-                    }
-                },
                 querystring: {
                     $ref: 'fastify-knex-api/query#/properties/fields'
                 }
@@ -60,16 +42,7 @@ const defaultSchemas = (modelName: string): TKAAPISchemas => {
         delete: {
             schema: {
                 summary: 'Delete existing ' + modelName,
-                tags: [modelName],
-                params: {
-                    type: 'object',
-                    properties: {
-                        id: {
-                            type: 'string',
-                            description: 'Unique identifier of ' + modelName
-                        }
-                    }
-                }
+                tags: [modelName]
             }
         }
     };
