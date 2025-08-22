@@ -67,6 +67,7 @@
     "rollup": "^4.40.1",
     "tap": "^21.1.0",
     "tsd": "^0.32.0",
+    "tsx": "^4.20.4",
     "typescript": "^5.8.3",
     "typescript-eslint": "8.31.0"
   },
@@ -74,7 +75,7 @@
     "@fastify/error": "^4.1.0",
     "fastify-plugin": "^5.0.1",
     "knex": "^3.1.0",
-    "knex-schema-inspector": "^3.1.0"
+    "knex-schema-inspector": "github:EmilianoBruni/knex-schema-inspector"
   },
   "types": "./dist/index.d.ts"
 }
