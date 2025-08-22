@@ -9,7 +9,9 @@ import type {
     TKAVerbs,
     JSONSchemaProps,
     TColumnsInfo,
-    TKACrudOptions
+    TKACrudOptions,
+    TKAInternalPks,
+    TTableDefinitionNormalized
 } from '../types.js';
 import type { Knex } from 'knex';
 import type { SchemaInspector as ISchemaInspector } from 'knex-schema-inspector/dist/types/schema-inspector.js';
@@ -62,7 +64,7 @@ class API {
 
     async initialize(tables: TTablesDefinition): Promise<boolean> {
         // normalize tables
-        this._tables = this._normalizeTables(tables);
+        this._tables = await this._normalizeTables(tables);
         // register default http code
         this._fastify.addSchema(defaultHttpCode);
         this._fastify.addSchema(defaultQueries);
@@ -83,7 +85,9 @@ class API {
      * @param {Object} table - The table object.
      * @returns {Object} - The options for registration routes.
      */
-    async _buildOptReg(table: TTableDefinition): Promise<TKACrudOptions> {
+    async _buildOptReg(
+        table: TTableDefinitionNormalized
+    ): Promise<TKACrudOptions> {
         const columnsInfo = await this._knex(table.name).columnInfo();
         const schema = await this._buildSchema(table, columnsInfo);
         const verbs = await this._getVerbs(table.name);
@@ -92,8 +96,9 @@ class API {
             controller: new DefaultController(
                 table.name,
                 columnsInfo,
-                table.pk
+                table.pk as TKAInternalPks
             ),
+            pks: table.pk as TKAInternalPks,
             verbs,
             ...schema,
             checkAuth: this._checkAuth
@@ -101,7 +106,7 @@ class API {
     }
 
     async _buildSchema(
-        table: TTableDefinition,
+        table: TTableDefinitionNormalized,
         columnsInfo: TColumnsInfo
     ): Promise<TKAAPISchemas> {
         const schemaTableFields = this._getTableSchema(table.name, columnsInfo);
@@ -114,6 +119,24 @@ class API {
         });
         // get default schemas valid for every table
         let schema = defaultSchemas(table.name);
+        // add verb.schema.params based on pk
+        (Object.keys(schema) as TKAVerbs[]).forEach(verb => {
+            // not required for list and create
+            if (verb === 'list' || verb === 'create') return;
+            if (!schema[verb].schema.params) {
+                schema[verb].schema.params = {
+                    type: 'object',
+                    properties: {}
+                };
+            }
+            const params = schema[verb].schema.params;
+            for (const pk of table.pk) {
+                params.properties[pk] = {
+                    type: 'string',
+                    description: `Primary key ${pk} of ${table.name}`
+                };
+            }
+        });
         // add response to schemas
         this._appendResponseToSchemas(schema, ref_id);
         // load and apply custom schemas in schemaDirPath
@@ -346,23 +369,29 @@ class API {
         return schema;
     }
 
-    _normalizeTables(
+    async _normalizeTables(
         tables: IKAApiOptions['tables']
-    ): TTablesDefinitionNormalized {
+    ): Promise<TTablesDefinitionNormalized> {
         // return array of objects {name, pk}
         if (Array.isArray(tables)) {
-            return tables.map(table => {
-                if (typeof table === 'string') {
-                    return { name: table, pk: undefined };
-                }
-                // throw error if not exists name
-                if (!table.name) {
-                    throw new Error('Table name not specified');
-                }
-                // if not exists, set pk to undefined
-                if (!table.pk) table.pk = undefined;
-                return table;
-            });
+            return await Promise.all(
+                tables.map(async table => {
+                    if (typeof table === 'string') {
+                        table = { name: table, pk: undefined };
+                    }
+                    // throw error if not exists name
+                    if (!table.name) {
+                        throw new Error('Table name not specified');
+                    }
+                    // if pk not exists, discover via schemaInspector
+                    if (!table.pk) table.pk = await this._getPks(table);
+                    // convert table.pk as array
+                    if (typeof table.pk === 'string') {
+                        table.pk = [table.pk];
+                    }
+                    return table as TTableDefinitionNormalized;
+                })
+            );
         } else {
             throw new Error(
                 'tables must be an array of string or an array of object'
@@ -385,6 +414,16 @@ class API {
 
     async _getDBTables() {
         return await this.schemaInspector.tables();
+    }
+
+    async _getPks(table: TTableDefinition): Promise<string | string[]> {
+        const pk = await this.schemaInspector.primary(table.name);
+        if (pk === undefined || pk === null) {
+            throw new Error(
+                `Table ${table.name} doesn't have a primary key defined`
+            );
+        }
+        return pk;
     }
 }
 

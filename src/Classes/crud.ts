@@ -27,12 +27,19 @@ const crud: FastifyPluginAsync<TKACrudOptions> = async (
         throw new MissingControllerError(opts.prefix || '/');
     }
 
+    const buildUrlWithParams = () => {
+        const ret: string[] = [];
+        opts.pks.forEach(pk => ret.push(`/:${pk}`));
+        return ret.join('');
+    };
+
+    // TODO: must be dynamic based on pks
     const routeOpts = {
         list: { url: '/', ...opts.list },
         create: { url: '/', ...opts.create },
-        view: { url: '/:id', ...opts.view },
-        update: { url: '/:id', ...opts.update },
-        delete: { url: '/:id', ...opts.delete }
+        view: { url: buildUrlWithParams(), ...opts.view },
+        update: { url: buildUrlWithParams(), ...opts.update },
+        delete: { url: buildUrlWithParams(), ...opts.delete }
     };
     const config = {
         ...opts,

@@ -21,16 +21,23 @@ export type TKAReply = FastifyReply;
 export type TKARequestList = TKARequest & {
     query: TKAControllerFiltersList | unknown;
 };
-export type TKAParamsId = { id: string };
+export type TKAParamsIds = Record<string, string>;
+
+export type TKAPks = string | string[] | undefined;
+export type TKAInternalPks = string[];
 
 export type TTableDefinition = {
     name: string;
-    pk?: string | undefined;
+    pk?: TKAPks;
     verbs?: TKAVerbs[];
 };
 
+export type TTableDefinitionNormalized = TTableDefinition & {
+    pk: TKAInternalPks;
+};
+
 export type TTablesDefinition = Array<string | TTableDefinition>;
-export type TTablesDefinitionNormalized = Array<TTableDefinition>;
+export type TTablesDefinitionNormalized = Array<TTableDefinitionNormalized>;
 
 export type TKACheckAuth = (
     req: TKARequest,
@@ -86,6 +93,10 @@ export type TKASchema = FastifySchema & {
     summary?: string;
     response?: TKASchemaResponse;
     tags?: Array<string>;
+    params?: {
+        type: string;
+        properties: Record<string, JSONSchemaProps>;
+    };
 };
 
 export type TKAVerbs = 'view' | 'list' | 'create' | 'update' | 'delete';
@@ -218,6 +229,7 @@ export type TKACrudOptions = {
     prefix?: string;
     checkAuth?: TKACheckAuth | undefined;
     verbs?: TKAVerbs[] | undefined;
+    pks: TKAInternalPks;
 } & TKAAPISchemas;
 
 export type TKACrudGenHandlerOptions = {

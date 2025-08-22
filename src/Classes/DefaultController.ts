@@ -6,10 +6,11 @@ import type {
     TKAControllerFiltersSort,
     TKACrudRow,
     TKAListResult,
-    TKAParamsId,
+    TKAParamsIds,
     TKAReply,
     TKARequest,
-    TKARequestList
+    TKARequestList,
+    TKAInternalPks
 } from '../types.js';
 import type { TKAController } from '../types.js';
 import type { Knex } from 'knex';
@@ -18,14 +19,14 @@ class DefaultController implements TKAController {
     private _returningClient = ['pg', 'mssql', 'oracledb'];
     private table: string;
     private _columnsInfo: TColumnsInfo;
-    private pk: string | undefined;
+    private pk: TKAInternalPks;
     // for MSSQL DB with triggers
     private includeTriggerModifications = false;
 
     constructor(
         tableName: string,
         columsInfo: TColumnsInfo,
-        pk: string | undefined
+        pk: TKAInternalPks
     ) {
         this.table = tableName;
         this._columnsInfo = columsInfo;
@@ -33,7 +34,6 @@ class DefaultController implements TKAController {
     }
 
     async list(req: TKARequestList, reply: TKAReply): Promise<TKAListResult> {
-        this.pk ??= await this._fillPkIfUndefined(req);
         const query = req.server.knex(this.table);
         let total = 0;
         if (req.query) {
@@ -56,14 +56,15 @@ class DefaultController implements TKAController {
     }
 
     async view(
-        req: TKARequest & { params: TKAParamsId | unknown } & {
+        req: TKARequest & { params: TKAParamsIds | unknown } & {
             query: TKAControllerFiltersProjection | unknown;
         },
         reply: TKAReply
     ): Promise<TKACrudRow> {
-        const id = (req.params as TKAParamsId).id;
-        this.pk ??= await this._fillPkIfUndefined(req);
-        const query = req.server.knex(this.table).where(this.pk, id);
+        const params = req.params as TKAParamsIds;
+        const query = req.server.knex(this.table);
+
+        this.pk.map(pkName => query.where(pkName, params[pkName]));
         // apply projection to the query
         await this._applyProjection(
             query,
@@ -90,7 +91,6 @@ class DefaultController implements TKAController {
     ): Promise<TKACrudRow> {
         const knex = req.server.knex;
         const client = knex.client.config.client;
-        this.pk ??= await this._fillPkIfUndefined(req);
         const query = knex<TKACrudRow>(this.table).insert(
             req.body as TKACrudRow
         );
@@ -132,7 +132,8 @@ class DefaultController implements TKAController {
         if (!this._returningClient.includes(client)) {
             // doesn't support returning but return last id in data[0]
             // query DB to get the last inserted record
-            const query = knex<TKACrudRow>(this.table).where(this.pk, data[0]);
+            const query = knex<TKACrudRow>(this.table);
+            this.pk.map((value, idx) => query.where(value, data[idx]));
             // apply projection to the query
             await this._applyProjection(
                 query,
@@ -151,17 +152,20 @@ class DefaultController implements TKAController {
     }
 
     async update(
-        req: TKARequest & { params: TKAParamsId | unknown } & {
+        req: TKARequest & { params: TKAParamsIds | unknown } & {
             query: TKAControllerFiltersProjection | unknown;
         },
         reply: TKAReply
     ): Promise<TKACrudRow> {
-        const id = (req.params as TKAParamsId).id;
-        this.pk ??= await this._fillPkIfUndefined(req);
         const knex = req.server.knex;
         const client = knex.client.config.client;
         let data: Array<TKACrudRow> | number;
-        const query = knex(this.table).where(this.pk, id).update(req.body);
+        const params = req.params as TKAParamsIds;
+        const query = req.server.knex(this.table);
+
+        this.pk.map(pkName => query.where(pkName, params[pkName]));
+        query.update(req.body);
+
         if (this._returningClient.includes(client)) {
             const returning = this._filterReturningFields(
                 Object.keys(this._columnsInfo),
@@ -194,13 +198,14 @@ class DefaultController implements TKAController {
                 .code(500)
                 .send(DefaultController.HTTP_ERROR[500](err.toString()));
         }
-        if (data === 0) {
+        if (typeof data === 'number' && data === 0) {
             return reply.code(404).send(DefaultController.HTTP_ERROR[404]);
         }
         let returning: Array<TKACrudRow>;
         if (!this._returningClient.includes(client)) {
             // doesn't support returning. query DB to get the updated record by id
-            const query = knex<TKACrudRow>(this.table).where(this.pk, id);
+            const query = knex<TKACrudRow>(this.table);
+            this.pk.map(pkName => query.where(pkName, params[pkName]));
             // apply projection to the query
             await this._applyProjection(
                 query,
@@ -224,14 +229,15 @@ class DefaultController implements TKAController {
     }
 
     async delete(
-        req: TKARequest & { params: TKAParamsId | unknown },
+        req: TKARequest & { params: TKAParamsIds | unknown },
         reply: TKAReply
     ): Promise<void> {
-        const id = (req.params as TKAParamsId).id;
-        const knex = req.server.knex;
-        this.pk ??= await this._fillPkIfUndefined(req);
+        const params = req.params as TKAParamsIds;
+        const query = req.server.knex(this.table).del();
+
+        this.pk.map(pkName => query.where(pkName, params[pkName]));
         try {
-            const data = await knex(this.table).del().where(this.pk, id);
+            const data = await query;
             if (data === 0)
                 return reply.code(404).send(DefaultController.HTTP_ERROR[404]);
         } catch (e: unknown) {
@@ -244,7 +250,7 @@ class DefaultController implements TKAController {
     private async _count(knex: Knex.QueryBuilder): Promise<number> {
         knex = knex.clone();
         const count = await knex.count<Array<{ count: number }>>(
-            `${this.pk} as count`
+            `${this.pk[0]} as count`
         );
         return count?.[0]?.count ?? 0;
     }
@@ -254,16 +260,6 @@ class DefaultController implements TKAController {
         items: Array<Record<string, unknown>>
     ): TKAListResult {
         return { total: total, items: items };
-    }
-
-    private async _fillPkIfUndefined(req: TKARequest): Promise<string> {
-        const pk = await req.server.knexAPI.schemaInspector.primary(this.table);
-        if (pk === undefined || pk === null) {
-            throw new Error(
-                `Table ${this.table} doesn't have a primary key defined`
-            );
-        }
-        return pk;
     }
 
     private _applyOtherStatments(
