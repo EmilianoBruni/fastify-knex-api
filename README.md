@@ -28,17 +28,33 @@ fastify.register(knexAPI, { // plugin registration
 await fastify.ready();      // waiting for plugins registration
 await fastify.listen(8080); // running the server
 ```
-And if your database has `authors` and `posts` tables the result routes will be something like this
+And if your database has these tables:
+
+- `authors` with `id` as primary key
+- `posts` with `post_id` as primary key
+- `authors_note` with `author_id` and `row` as combined primary keys
+- `authors_address` with `author_id` and `address_key` as combined primary keys
+
+the result routes will be something like this
 
 ```
-/
-└── api/
-    ├── authors (GET, HEAD, POST)
-    │   └── / (GET, HEAD, POST)
-    │       └── :id (GET, HEAD, PATCH, DELETE)
-    └── posts (GET, HEAD, POST)
-        └── / (GET, HEAD, POST)
-            └── :id (GET, HEAD, PATCH, DELETE)
+/api/
+  └── authors (GET, HEAD, POST)
+  │     └── / (GET, HEAD, POST)
+  │         └── :id (GET, HEAD, PATCH, DELETE)
+  └── posts (GET, HEAD, POST)
+  │     └── / (GET, HEAD, POST)
+  │         └── :post_id (GET, HEAD, PATCH, DELETE)
+  ├── authors_note (GET, HEAD, POST)
+  │      └── / (GET, HEAD, POST)
+  │          └── :author_id
+  │              └── /
+  │                  └── :row (GET, HEAD, PATCH, DELETE)
+  └── authors_address (GET, HEAD, POST)
+         └── / (GET, HEAD, POST)
+             └── :author_id
+                 └── /
+                     └── :address_key (GET, HEAD, PATCH, DELETE)
 ```
 
 - [Installation](#installation)
@@ -166,10 +182,13 @@ An array of tables to expose or an object of tables to expose with their primary
 // or
 
 [  
-    {name: 'authors', pk: 'id', verbs: ['list', 'view'] },
-    {name: 'posts',   pk: 'post_id', verbs: ['list', 'view', 'create', 'update', 'delete'] }
+  { name: 'authors', pk: 'id', verbs: ['list', 'view'] },
+  { name: 'posts',   pk: [ 'post_id' ], verbs: ['list', 'view', 'create', 'update', 'delete'] },
+  { name: 'authors_note', pk: [ 'author_id', 'row' ] }
 ]
 ```
+If there is only one primary key it can be specified as string or as an array with the single key. If table has multiple combined primary keys it must be specified as an array.
+
 If `verbs` is not specified, all verbs are enabled for the table.
 
 If `verbs` is set to an empty array`[]`, all verbs are disabled for the table.
@@ -523,9 +542,9 @@ where `schema.create` are validation and/or serialization schema for related res
 |-----------------|-----|------|
 | schema.list            | /   | GET  |
 | schema.create          | /   | POST |
-| schema.view            | /id | GET  |
-| schema.update          | /id | PATCH|
-| schema.delete          | /id | DELETE|
+| schema.view            | /pk | GET  |
+| schema.update          | /pk | PATCH|
+| schema.delete          | /pk | DELETE|
 
 If you omit one of these, the [default](#example-of-a-generated-validation-and-serializazion-schema) is used.
 
@@ -629,7 +648,7 @@ this is the default generated schema for CRUD operations over this table
         "$ref": "fastify-knex-api/query#/properties/fields"
       },
       "response": {
-        "200": {
+        "201": {
           "type": "object",
           "$ref": "fastify-knex-api/tables/authors#"
         },
