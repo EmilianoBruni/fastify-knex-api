@@ -149,8 +149,14 @@ class DefaultController implements TKAController {
                     .send(DefaultController.HTTP_ERROR[500](err.toString()));
             }
         }
-        reply.code(201);
-        return data[0] as TKACrudRow;
+        const createdRec = data[0] as TKACrudRow;
+        const cUrl = req.url.endsWith('/') ? req.url.slice(0, -1) : req.url;
+        reply.code(201).headers({
+            Location:
+                `${cUrl}/` +
+                this.pk.map((value: string) => createdRec[value]).join('/')
+        });
+        return createdRec;
     }
 
     async update(

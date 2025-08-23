@@ -330,6 +330,11 @@ async function st_POST_authors_note(t: Test, app: FastifyInstance) {
     t.ok(typeof res.json() === 'object', 'Expected response to be object');
     t.ok(res.json().created_at, 'Expected created_at to be defined');
     t.match(res.json(), authors_note_newrec, 'Expected item to match');
+    t.equal(
+        res.headers['location'],
+        `/api/authors_note/${res.json().author_id}/${res.json().row}`,
+        'location header match'
+    );
 }
 
 async function st_POST_authors_address(t: Test, app: FastifyInstance) {
@@ -343,6 +348,11 @@ async function st_POST_authors_address(t: Test, app: FastifyInstance) {
     t.ok(typeof res.json() === 'object', 'Expected response to be object');
     t.ok(res.json().created_at, 'Expected created_at to be defined');
     t.match(res.json(), authors_address_newrec, 'Expected item to match');
+    t.equal(
+        res.headers['location'],
+        `/api/authors_address/${res.json().author_id}/${res.json().address_key}`,
+        'location header match'
+    );
 }
 
 async function st_PATCH_authors_note(t: Test, app: FastifyInstance) {

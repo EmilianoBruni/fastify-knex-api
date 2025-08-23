@@ -120,6 +120,11 @@ t.test('Autodiscovery tables info', async t => {
         }).then(res => {
             t.equal(res.statusCode, 201);
             lastId = res.json().id;
+            t.equal(
+                res.headers['location'],
+                `/api/authors/${lastId}`,
+                'location header match'
+            );
             // check lastId is a number
             t.ok(typeof lastId === 'number');
             t.end();
