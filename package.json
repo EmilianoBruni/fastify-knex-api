@@ -12,7 +12,7 @@
     "build": "npm run tsc && npm run buildcjs",
     "build:watch": "nodemon -e json,ts -w src -x \"tsc\"",
     "buildcjs": "rollup ./dist/index.js --file ./dist/index.cjs --format cjs",
-    "clean": "rimraf ./dist, rimraf .tap",
+    "clean": "rimraf ./dist .tap",
     "lint": "eslint \"src/**/*.[jt]s?(x)\" \"test/**/*.?(c)[jt]s\"",
     "lint:fix": "npm run lint -- --fix",
     "prepublishOnly": "npm run build && npm test",
