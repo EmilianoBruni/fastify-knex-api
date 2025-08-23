@@ -4,6 +4,17 @@ _Fastify plugin to expose API for Knex Query Builder_
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.0] 2025-08-23
+
+### Added
+
+- Support for combined (multiple primary) keys
+
+### Fixed
+
+- According to crud specifications, changed response status codes to 201 for create (POST) operations. This is a (partial) ***break compatibility***
+- According to crud specifications, included Location header in response for created records
+
 ## [0.3.4] 2025-04-28
 
 ### Changed
