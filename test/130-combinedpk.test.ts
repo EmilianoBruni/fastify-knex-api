@@ -325,7 +325,7 @@ async function st_POST_authors_note(t: Test, app: FastifyInstance) {
         url: '/api/authors_note',
         payload: authors_note_newrec
     });
-    t.equal(res.statusCode, 200, 'Expected status code 200');
+    t.equal(res.statusCode, 201, 'Expected status code match');
     t.ok(res.json(), 'Expected JSON response');
     t.ok(typeof res.json() === 'object', 'Expected response to be object');
     t.ok(res.json().created_at, 'Expected created_at to be defined');
@@ -338,7 +338,7 @@ async function st_POST_authors_address(t: Test, app: FastifyInstance) {
         url: '/api/authors_address',
         payload: authors_address_newrec
     });
-    t.equal(res.statusCode, 200, 'Expected status code 200');
+    t.equal(res.statusCode, 201, 'Expected status code match');
     t.ok(res.json(), 'Expected JSON response');
     t.ok(typeof res.json() === 'object', 'Expected response to be object');
     t.ok(res.json().created_at, 'Expected created_at to be defined');

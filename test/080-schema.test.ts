@@ -226,7 +226,7 @@ t.test('Alter schema for specific tables', async t => {
         url: '/api/authors/',
         body: rec
     });
-    t.equal(res2.statusCode, 200);
+    t.equal(res2.statusCode, 201, 'Status code match');
     t.ok(res2.json().id);
     // remove author
     const id = res2.json().id;
@@ -278,7 +278,7 @@ t.test('Checking schemaDirPath', async t => {
             url: '/api/authors/',
             body: rec
         });
-        t.equal(res2.statusCode, 200);
+        t.equal(res2.statusCode, 201, 'Status code match');
         t.ok(res2.json().id);
         // remove author
         const id = res2.json().id;

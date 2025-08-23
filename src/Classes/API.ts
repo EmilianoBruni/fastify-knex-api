@@ -198,8 +198,8 @@ class API {
     }
 
     _appendResponseToSchemas(schemas: TKAAPISchemas, ref_id: string) {
-        // view, create, update return ref_id for response=200
-        const arr1: TKAVerbs[] = ['view', 'create', 'update'];
+        // view, update return ref_id for response=200
+        const arr1: TKAVerbs[] = ['view', 'update'];
         arr1.forEach(k => {
             const schema = schemas[k].schema;
             schema.response ??= {};
@@ -208,6 +208,14 @@ class API {
             };
             schema.response['200'].$ref = `${ref_id}#`;
         });
+
+        const schema = schemas['create'].schema;
+        schema.response = {
+            201: {
+                type: 'object',
+                $ref: `${ref_id}#`
+            }
+        };
 
         // list return array of ref_id for response=200
         schemas.list.schema.response ??= {};

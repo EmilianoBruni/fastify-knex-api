@@ -118,7 +118,7 @@ t.test('Autodiscovery tables info', async t => {
             url: '/api/authors/',
             payload: newRecordAuthors
         }).then(res => {
-            t.equal(res.statusCode, 200);
+            t.equal(res.statusCode, 201);
             lastId = res.json().id;
             // check lastId is a number
             t.ok(typeof lastId === 'number');

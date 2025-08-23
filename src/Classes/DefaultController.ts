@@ -149,6 +149,7 @@ class DefaultController implements TKAController {
                     .send(DefaultController.HTTP_ERROR[500](err.toString()));
             }
         }
+        reply.code(201);
         return data[0] as TKACrudRow;
     }
 

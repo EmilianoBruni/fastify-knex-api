@@ -80,6 +80,7 @@ export type TColumnsInfo = Record<string | number | symbol, Knex.ColumnInfo>;
 
 type TKASchemaResponse = {
     200?: JSONSchemaProps;
+    201?: JSONSchemaProps;
     204?: JSONSchemaProps;
     302?: JSONSchemaProps;
     400?: JSONSchemaProps;

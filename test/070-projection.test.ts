@@ -214,7 +214,7 @@ t.test('Projection on create', async t => {
             body: rec
         });
 
-        t.equal(res.statusCode, 200, 'Status code is 200');
+        t.equal(res.statusCode, 201, 'Status code match');
         t.hasOwnPropsOnly(
             res.json(),
             ['id'],
@@ -230,7 +230,7 @@ t.test('Projection on create', async t => {
             body: rec
         });
 
-        t.equal(res.statusCode, 200, 'Status code is 200');
+        t.equal(res.statusCode, 201, 'Status code match');
         t.hasOwnPropsOnly(
             res.json(),
             ['id', 'first_name', 'last_name'],
@@ -246,7 +246,7 @@ t.test('Projection on create', async t => {
             body: rec
         });
 
-        t.equal(res.statusCode, 200, 'Status code is 200');
+        t.equal(res.statusCode, 201, 'Status code match');
         t.hasOwnPropsOnly(
             res.json(),
             ['id', 'first_name', 'last_name', 'email', 'active', 'added'],
@@ -262,7 +262,7 @@ t.test('Projection on create', async t => {
             body: rec
         });
 
-        t.equal(res.statusCode, 200, 'Status code is 200');
+        t.equal(res.statusCode, 201, 'Status code match');
         t.hasOwnPropsOnly(
             res.json(),
             ['id', 'first_name', 'last_name', 'active', 'added'],
@@ -278,7 +278,7 @@ t.test('Projection on create', async t => {
             body: rec
         });
 
-        t.equal(res.statusCode, 200, 'Status code is 200');
+        t.equal(res.statusCode, 201, 'Status code match');
         t.hasOwnPropsOnly(
             res.json(),
             ['id', 'first_name', 'last_name'],
