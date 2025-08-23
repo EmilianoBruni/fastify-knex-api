@@ -91,9 +91,8 @@ class DefaultController implements TKAController {
     ): Promise<TKACrudRow> {
         const knex = req.server.knex;
         const client = knex.client.config.client;
-        const query = knex<TKACrudRow>(this.table).insert(
-            req.body as TKACrudRow
-        );
+        const params = req.body as TKACrudRow;
+        const query = knex<TKACrudRow>(this.table).insert(params);
         let data: Array<TKACrudRow | number | string>;
         if (this._returningClient.includes(client)) {
             const opt: { includeTriggerModifications?: boolean } = {};
@@ -133,7 +132,9 @@ class DefaultController implements TKAController {
             // doesn't support returning but return last id in data[0]
             // query DB to get the last inserted record
             const query = knex<TKACrudRow>(this.table);
-            this.pk.map((value, idx) => query.where(value, data[idx]));
+            this.pk.map((value, idx) =>
+                query.where(value, params[value] || data[idx])
+            );
             // apply projection to the query
             await this._applyProjection(
                 query,
