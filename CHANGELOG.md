@@ -4,6 +4,16 @@ _Fastify plugin to expose API for Knex Query Builder_
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.1] 2026-01-30
+
+### Changed
+
+- Updated to latest packages. Fastify is 5.7.2.
+
+### Fixed
+
+- Add pnpm configuration for built patched knex-schema-inspector.
+
 ## [0.4.0] 2025-08-23
 
 ### Added
@@ -12,7 +22,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
-- According to crud specifications, changed response status codes to 201 for create (POST) operations. This is a (partial) ***break compatibility***
+- According to crud specifications, changed response status codes to 201 for create (POST) operations. This is a (partial) **_break compatibility_**
 - According to crud specifications, included Location header in response for created records
 
 ## [0.3.4] 2025-04-28
@@ -68,7 +78,6 @@ All notable changes to this project will be documented in this file.
 - Solved a bug while manual setting primari key if a primary key has not been found
 - Minor Fix in documentation
 
-
 ## [0.2.2] 2024-02-08
 
 ### Fixed
@@ -105,4 +114,3 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - First public release
-

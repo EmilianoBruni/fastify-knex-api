@@ -1,6 +1,6 @@
 {
   "name": "fastify-knex-api",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Fastify plugin to expose API for Knex Query Builder",
   "main": "src/index.js",
   "type": "module",
