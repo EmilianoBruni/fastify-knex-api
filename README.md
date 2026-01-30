@@ -7,27 +7,31 @@
 [![Dependencies](https://img.shields.io/librariesio/github/EmilianoBruni/fastify-knex-api)](https://libraries.io/npm/fastify-knex-api)
 ![Downloads](https://img.shields.io/npm/dt/fastify-knex-api)
 
-If you are using [Fastify](https://github.com/fastify/fastify) as your server and [Knex](https://knexjs.org/) as your ODM, **fastify-knex-api** is the easiest solution to run API server for your models. 
+If you are using [Fastify](https://github.com/fastify/fastify) as your server and [Knex](https://knexjs.org/) as your ODM, **fastify-knex-api** is the easiest solution to run API server for your models.
 
 **fastify-knex-api** generates REST routes with refs subroutes like `/api/authors` and `/api/authors/AUTHOR_ID` autodiscovered all tables and primary keys or permit to select which tables to expose.
 
 ### As simple as:
+
 ```javascript
 import knexAPI from 'fastify-knex-api';
 import Fastify from 'fastify';
 
 const fastify = Fastify();
 
-fastify.register(knexAPI, { // plugin registration
-    knexConfig: {           // See: initialization parameters
+fastify.register(knexAPI, {
+    // plugin registration
+    knexConfig: {
+        // See: initialization parameters
         client: 'YOUR_CLIENT_ADAPTER (mysql, oracle)',
-        connection: 'YOUR_QUERY_STRING',
+        connection: 'YOUR_QUERY_STRING'
     }
 });
 
-await fastify.ready();      // waiting for plugins registration
+await fastify.ready(); // waiting for plugins registration
 await fastify.listen(8080); // running the server
 ```
+
 And if your database has these tables:
 
 - `authors` with `id` as primary key
@@ -60,16 +64,16 @@ the result routes will be something like this
 - [Installation](#installation)
 - [Initialization and parameters](#initialization)
 - [API schema](#api-schema)
-  - [List](#list)
-  - [View](#view)
-  - [Create](#create)
-  - [Update](#update)
-  - [Delete](#delete)
+    - [List](#list)
+    - [View](#view)
+    - [Create](#create)
+    - [Update](#update)
+    - [Delete](#delete)
 - [Options for list method](#options-for-list-method)
-  - [Pagination](#pagination)
-  - [Sorting](#sorting)
-  - [Filtering](#filtering)
-  - [Projection](#projection)
+    - [Pagination](#pagination)
+    - [Sorting](#sorting)
+    - [Filtering](#filtering)
+    - [Projection](#projection)
 - [Validation and Serialization](#validation-and-serialization)
 - [CommonJS Support](#commonjs)
 - [Typescript and Autoload](#typescript-and-autoload)
@@ -81,6 +85,15 @@ the result routes will be something like this
 ```bash
 npm i fastify-knex-api -s
 ```
+
+### Compatibility
+
+| Plugin version   | Fastify version   |
+| ---------------- | ----------------- |
+| `^0.4.1`         | `>=5.6.x`         |
+| `^0.4.0`         | `>=5.5.x < 5.6.x` |
+| `^0.3.x`         | `>=5.0.x <5.5.x`  |
+| `>=0.1.x <0.3.x` | `^4.x`            |
 
 ## Initialization
 
@@ -95,10 +108,9 @@ with following options:
 
 #### .checkAuth : function
 
-Function to run before any API request to check authorization permissions in. 
+Function to run before any API request to check authorization permissions in.
 
 If not set, all crud routes are allowed.
-
 
 ```javascript
   checkAuth: async (req, reply) => {
@@ -112,19 +124,19 @@ If return `true`, user is allowed to perform action.
 If return `false` or `undefined`, user is not allowed to perform action. In this case you should return a 401 custom error code as this
 
 ```javascript
- checkAuth: async(req, reply) => {
-  reply.status(401);
- } // all crud routes are denied
+checkAuth: async (req, reply) => {
+    reply.status(401);
+}; // all crud routes are denied
 ```
 
 If `checkAuth` doesn't set an error code, a default is set.
 
 ```json
 {
-  "statusCode": 401,
-  "code": "CRUD_NOT_AUTHORIZED",
-  "error": "Unauthorized",
-  "message": "Not authorized to perform CRUD operation"
+    "statusCode": 401,
+    "code": "CRUD_NOT_AUTHORIZED",
+    "error": "Unauthorized",
+    "message": "Not authorized to perform CRUD operation"
 }
 ```
 
@@ -150,6 +162,7 @@ where table_name is the table name, column_name is the column_name and jsonColum
 
 { "type": "string", "format": "date-time" }
 ```
+
 Whatever return is used as the ajv schema validator for column_name.
 
 If return undefined, column is skipped.
@@ -159,14 +172,13 @@ If return undefined, column is skipped.
 Knex configuration options like
 
 ```javascript
-{  
+{
     client: 'YOUR_CLIENT_ADAPTER (mysql, oracle)',
     connection: 'YOUR_QUERY_STRING',
 }
 ```
 
 See Knex [documentation](https://knexjs.org/guide/#configuration-options) for other parameters.
-
 
 ### .prefix : string (default: '/api/')
 
@@ -177,29 +189,32 @@ Path prefix. Default is `/api/`.
 An array of tables to expose or an object of tables to expose with their primary key and optional verbs.
 
 ```javascript
-[ 'authors', 'posts']
+['authors', 'posts'][
+    // or
 
-// or
-
-[  
-  { name: 'authors', pk: 'id', verbs: ['list', 'view'] },
-  { name: 'posts',   pk: [ 'post_id' ], verbs: ['list', 'view', 'create', 'update', 'delete'] },
-  { name: 'authors_note', pk: [ 'author_id', 'row' ] }
-]
+    ({ name: 'authors', pk: 'id', verbs: ['list', 'view'] },
+    {
+        name: 'posts',
+        pk: ['post_id'],
+        verbs: ['list', 'view', 'create', 'update', 'delete']
+    },
+    { name: 'authors_note', pk: ['author_id', 'row'] })
+];
 ```
+
 If there is only one primary key it can be specified as string or as an array with the single key. If table has multiple combined primary keys it must be specified as an array.
 
 If `verbs` is not specified, all verbs are enabled for the table.
 
 If `verbs` is set to an empty array`[]`, all verbs are disabled for the table.
 
-Default is to autodiscover and expose all tables and, on request, to autodiscover their primary keys if not manually set. 
+Default is to autodiscover and expose all tables and, on request, to autodiscover their primary keys if not manually set.
 
 ### .schemas: function
 
 Optional function to call to alter [default validation and serialization schema](#example-of-an-auto-generated-validation-and-serializazion-schema).
 
-See [here](#schemas-function) for some example. 
+See [here](#schemas-function) for some example.
 
 `.schemas` has this signature
 
@@ -210,13 +225,13 @@ See [here](#schemas-function) for some example.
 }
 ```
 
-where table_name is the table name and schema is the generated schema. 
+where table_name is the table name and schema is the generated schema.
 
 If `.schemaDirPath` is defined, it's called after `.schemaDirPath`.
 
 ### .schemaDirPath: function
 
-Directory where it's possible to define schemas for validation and serialization. 
+Directory where it's possible to define schemas for validation and serialization.
 
 If exists, module `.schemaDirPath/${table_name}.schema.js` is loaded and the default export function has called.
 
@@ -229,7 +244,7 @@ This function should have this signature:
 }
 ```
 
-where schema is the generated schema. 
+where schema is the generated schema.
 
 If `.schemas` is defined, it's called before `.schemas`.
 
@@ -253,16 +268,16 @@ If the function returns `undefined`, all default verbs are enabled. If it return
 ```javascript
 const fastify = Fastify();
 fastify.register(knexAPI, {
-  knexConfig: {
-    client: 'YOUR_CLIENT_ADAPTER (mysql, oracle)',
-    connection: 'YOUR_QUERY_STRING',
-  },
-  verbs: async (tableName, verbs) => {
-    if (tableName === 'authors') {
-      return ['list', 'view'];
+    knexConfig: {
+        client: 'YOUR_CLIENT_ADAPTER (mysql, oracle)',
+        connection: 'YOUR_QUERY_STRING'
+    },
+    verbs: async (tableName, verbs) => {
+        if (tableName === 'authors') {
+            return ['list', 'view'];
+        }
+        return verbs;
     }
-    return verbs;
-  }
 });
 ```
 
@@ -271,7 +286,7 @@ fastify.register(knexAPI, {
 ### List
 
 ```javascript
-GET /api/authors
+GET / api / authors;
 ```
 
 List records in authors table. Return a structure like this
@@ -303,17 +318,16 @@ List records in authors table. Return a structure like this
 
 where
 
-* `total` is the count of record in the table based on [filters](#filtering) (where)
-* `items` are records based on filters (where) and [pagination](#pagination) (skip, page, limit, ...)
+- `total` is the count of record in the table based on [filters](#filtering) (where)
+- `items` are records based on filters (where) and [pagination](#pagination) (skip, page, limit, ...)
 
 ### View
 
 ```javascript
-GET /api/authors/1
+GET / api / authors / 1;
 ```
 
 Return a single record with the primary key as parameter.
-
 
 ```javascript
 {
@@ -344,16 +358,17 @@ return
 ### Create
 
 ```javascript
-POST /api/authors/
-{
-  first_name: 'Michael',
-  last_name: 'Messina',
-  email: 'monia89@example.org',
-}
+POST /
+    api /
+    authors /
+    {
+        first_name: 'Michael',
+        last_name: 'Messina',
+        email: 'monia89@example.org'
+    };
 ```
 
 Create a new record in `authors`. Return saved record.
-
 
 ```javascript
 {
@@ -385,7 +400,6 @@ PATCH /api/authors/1
 
 Update a record in `authors`. Return updated record
 
-
 ```javascript
 {
   id: 1,
@@ -408,7 +422,7 @@ return only selected fields
 ### Delete
 
 ```javascript
-DELETE /api/authors/1
+DELETE / api / authors / 1;
 ```
 
 Delete a record in `authors`. Return 204 code.
@@ -429,16 +443,16 @@ Options to limit and eventually skip some records
 /api/authors?limit=5&page=2 // page of 5 items. We get page 2 (6 to 10)
 ```
 
-|         | Option Name | Default Value |
-| ------- | ----------- | ------------- |
-| Offset  | offset      | 0             |
-| Offset  | skip        | 0             |
-| Limit   | limit       | 50            |
-| Page    | page        | 1             |
-| Page    | window      | 1             |    
+|        | Option Name | Default Value |
+| ------ | ----------- | ------------- |
+| Offset | offset      | 0             |
+| Offset | skip        | 0             |
+| Limit  | limit       | 50            |
+| Page   | page        | 1             |
+| Page   | window      | 1             |
 
-* offset and skip are aliases
-* window and page are aliases
+- offset and skip are aliases
+- window and page are aliases
 
 To get all records force limit=-1
 
@@ -452,41 +466,41 @@ Separate fields by `,` to allow multiple sorting. So `-first_name,last_name` for
 /api/authors?sort=-first_name,last_name
 ```
 
-|         | Option Name | Default Value |
-| ------- | ----------- | ------------- |
-| Sort    | sort        | null          |
+|      | Option Name | Default Value |
+| ---- | ----------- | ------------- |
+| Sort | sort        | null          |
 
 ### Filtering
 
-Raw filtering is available via filter query option. 
+Raw filtering is available via filter query option.
 
 ```javascript
 /api/posts?filter=author_id%3D1
 ```
 
-will return all posts for `author_id` with id equals to 1. 
+will return all posts for `author_id` with id equals to 1.
 
 Filter must be obviously url encoded and so `%3D` here is urlencoded '=' symbol, so actual option value is `author_id=1`.
 
 We can use some http(s) library to simplify URL encoding. For [axios](https://www.npmjs.com/package//axios), at an example, we can write
 
 ```javascript
-const res = await axios.get('/api/posts', { 
-    params: { 
+const res = await axios.get('/api/posts', {
+    params: {
         filter: 'author_id=1'
-    } 
+    }
 });
 ```
 
-|         | Option Name | Default Value |
-| ------- | ----------- | ------------- |
-| Filter  | filter      | null          |
+|        | Option Name | Default Value |
+| ------ | ----------- | ------------- |
+| Filter | filter      | null          |
 
 The filter parameter has passed as is to knex [`whereRaw`](https://knexjs.org/guide/query-builder.html#whereraw)
 
 ### Projection
 
-Return only fields that matches the parameter. If first character is `-` 
+Return only fields that matches the parameter. If first character is `-`
 will return everything except fields in the parameter.
 
 ```javascript
@@ -494,9 +508,9 @@ will return everything except fields in the parameter.
 /api/authors?fields=-id,first_name // return everything except id and first_name
 ```
 
-|          | Option Name | Default Value |
-| -------- | ----------- | ------------- |
-|Projection| fields      | *             |
+|            | Option Name | Default Value |
+| ---------- | ----------- | ------------- |
+| Projection | fields      | \*            |
 
 ## Validation and Serialization
 
@@ -504,26 +518,26 @@ Generated API support standard fastify validation and serialization via `.schema
 
 If you are not confidable with fastify validation and serialization logics, see [documentation](https://www.fastify.io/docs/latest/Reference/Validation-and-Serialization/).
 
-If you don't set `.schemas`, it's automatic generated See [later](#example-of-a-generated-validation-and-serializazion-schema) for an example of a generated schema. 
+If you don't set `.schemas`, it's automatic generated See [later](#example-of-a-generated-validation-and-serializazion-schema) for an example of a generated schema.
 
 If you set `.schemas` as a function, it received the name of table and its generated schema. What it's returned, it will be used as schema for the table.
 
 You can disable serialization and validation at all returning `undefined`
 
 ```javascript
-schemas: () => {}
+schemas: () => {};
 ```
 
-You can disable it for a single table 
+You can disable it for a single table
 
 ```javascript
-schemas: (tn, schema) => tn === 'authors' ? undefined : schema;
+schemas: (tn, schema) => (tn === 'authors' ? undefined : schema);
 ```
 
 You can add or update default schema by change it inside schemas(tn,schema) and return the changed schema.
 
 ```javascript
-fastify.register(knexAPI, { 
+fastify.register(knexAPI, {
     knexConfig: {...},
     schemas: (tn, schema) => {
       if (tn === 'authors') {
@@ -538,13 +552,13 @@ fastify.register(knexAPI, {
 
 where `schema.create` are validation and/or serialization schema for related restful http verbs where:
 
-| validation name | URL | VERB |
-|-----------------|-----|------|
-| schema.list            | /   | GET  |
-| schema.create          | /   | POST |
-| schema.view            | /pk | GET  |
-| schema.update          | /pk | PATCH|
-| schema.delete          | /pk | DELETE|
+| validation name | URL | VERB   |
+| --------------- | --- | ------ |
+| schema.list     | /   | GET    |
+| schema.create   | /   | POST   |
+| schema.view     | /pk | GET    |
+| schema.update   | /pk | PATCH  |
+| schema.delete   | /pk | DELETE |
 
 If you omit one of these, the [default](#example-of-a-generated-validation-and-serializazion-schema) is used.
 
@@ -757,16 +771,17 @@ where `fastify-knex-api/tables/authors#` is this auto-generated schema for table
   }
 }
 ```
-while 
 
-* `fastify-knex-api/http-code#/properties/204`
-* `fastify-knex-api/http-code#/properties/404`
-* `fastify-knex-api/http-code#/properties/500` 
+while
 
-are schemas for delete response and errors and 
+- `fastify-knex-api/http-code#/properties/204`
+- `fastify-knex-api/http-code#/properties/404`
+- `fastify-knex-api/http-code#/properties/500`
 
-* `fastify-knex-api/query#/properties/list`
-* `fastify-knex-api/query#/properties/field` 
+are schemas for delete response and errors and
+
+- `fastify-knex-api/query#/properties/list`
+- `fastify-knex-api/query#/properties/field`
 
 are schemas for list method query string and for projection returning query string.
 
@@ -786,15 +801,15 @@ In Typescript and @fastify/autoload environment you can register this plugin by 
 
 ```typescript
 import { type FastifyPluginAsync } from 'fastify';
-import knexAPI, {type IKAPluginOptions } from 'fastify-knex-api';
+import knexAPI, { type IKAPluginOptions } from 'fastify-knex-api';
 import fp from 'fastify-plugin';
 
 const plugin: FastifyPluginAsync = async app => {
     const knexAPIOptions: IKAPluginOptions = {
         knexConfig: {
             client: 'YOUR_CLIENT_ADAPTER (mysql, oracle)',
-            connection: 'YOUR_QUERY_STRING',
-        },
+            connection: 'YOUR_QUERY_STRING'
+        }
     };
     app.register(knexAPI, knexAPIOptions);
     app.after(err => {
@@ -802,12 +817,9 @@ const plugin: FastifyPluginAsync = async app => {
     });
 };
 
-
-export default fp(plugin,
-    {
-        name: 'knex-api',
-    }
-);
+export default fp(plugin, {
+    name: 'knex-api'
+});
 ```
 
 ## Frequently asked questions (FAQ)
@@ -823,15 +835,16 @@ Unfortunately knex [has a problem](https://github.com/knex/knex/issues/6182) in 
 ```
 Cannot insert an explicit value into a timestamp column. Use INSERT with a column list to exclude the timestamp column, or insert a DEFAULT into the timestamp column.
 ```
-As a temporary workaround, you can use the [fields](#projection) parameter to get a subset of the table fields that don't contain timestamp columns 
+
+As a temporary workaround, you can use the [fields](#projection) parameter to get a subset of the table fields that don't contain timestamp columns
 
 ## Bugs / Help / Feature Requests / Contributing
 
-* For feature requests or help, please visit [the discussions page on GitHub](https://github.com/EmilianoBruni/fastify-knex-api/discussions).
+- For feature requests or help, please visit [the discussions page on GitHub](https://github.com/EmilianoBruni/fastify-knex-api/discussions).
 
-* For bug reports, please file an issue on [the issues page on GitHub](https://github.com/EmilianoBruni/fastify-knex-api/issues).
+- For bug reports, please file an issue on [the issues page on GitHub](https://github.com/EmilianoBruni/fastify-knex-api/issues).
 
-* Contributions welcome! Please open a [pull request on GitHub](https://github.com/EmilianoBruni/fastify-knex-api/pulls) with your changes. You can run them by me first on [the discussions page](https://github.com/EmilianoBruni/fastify-knex-api/discussions) if you'd like. Please add tests for any changes.
+- Contributions welcome! Please open a [pull request on GitHub](https://github.com/EmilianoBruni/fastify-knex-api/pulls) with your changes. You can run them by me first on [the discussions page](https://github.com/EmilianoBruni/fastify-knex-api/discussions) if you'd like. Please add tests for any changes.
 
 ## License
 
