@@ -77,5 +77,10 @@
     "knex": "^3.1.0",
     "knex-schema-inspector": "github:EmilianoBruni/knex-schema-inspector"
   },
-  "types": "./dist/index.d.ts"
+  "types": "./dist/index.d.ts",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "knex-schema-inspector"
+    ]
+  }
 }
