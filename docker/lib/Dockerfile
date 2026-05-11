@@ -16,7 +16,7 @@ ARG BMODE
 ENV NODE_ENV=${BMODE}
 WORKDIR /ws/${IDIR}
 # Install dependencies based on the preferred package manager
-COPY --chown=node:node package.json .npmrc* pnpm-lock.yaml* ./
+COPY --chown=node:node package.json .npmrc* pnpm-* ./
 RUN --mount=type=cache,id=fastify-knex_pnpm-store,uid=1000,gid=1000,target=/home/node/pnpm/store [ -e pnpm-lock.yaml ] && pnpm install --frozen-lockfile || pnpm install
 
 # 03a - Rebuild the source code only when needed
