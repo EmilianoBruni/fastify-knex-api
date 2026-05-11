@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file.
 
 ## [0.4.1] 2026-05-11
 
+### Changed
+
+- Updated to latest packages. Fastify is 5.7.2.
+
 ### Fixed
 
 - Switch from knex-schema-inspector to knex-schema-inspector-mk to avoid building package
