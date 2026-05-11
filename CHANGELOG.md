@@ -4,15 +4,17 @@ _Fastify plugin to expose API for Knex Query Builder_
 
 All notable changes to this project will be documented in this file.
 
-## [0.4.1] 2026-05-11
-
-### Changed
-
-- Updated to latest packages. Fastify is 5.7.2.
+## [0.4.2] 2026-01-18
 
 ### Fixed
 
 - Switch from knex-schema-inspector to knex-schema-inspector-mk to avoid building package
+
+## [0.4.1] 2026-01-18
+
+### Changed
+
+- Updated to latest packages. Fastify is 5.7.2.
 
 ## [0.4.0] 2025-08-23
 
