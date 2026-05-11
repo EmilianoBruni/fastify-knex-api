@@ -1,81 +1,81 @@
 {
-  "name": "fastify-knex-api",
-  "version": "0.4.0",
-  "description": "Fastify plugin to expose API for Knex Query Builder",
-  "main": "src/index.js",
-  "type": "module",
-  "exports": {
-    "import": "./dist/index.js",
-    "require": "./dist/index.cjs"
-  },
-  "scripts": {
-    "build": "npm run tsc && npm run buildcjs",
-    "build:watch": "nodemon -e json,ts -w src -x \"tsc\"",
-    "buildcjs": "rollup ./dist/index.js --file ./dist/index.cjs --format cjs",
-    "clean": "rimraf ./dist .tap",
-    "lint": "eslint \"src/**/*.[jt]s?(x)\" \"test/**/*.?(c)[jt]s\"",
-    "lint:fix": "npm run lint -- --fix",
-    "prepublishOnly": "npm run build && npm test",
-    "test": "tap -j1 --allow-incomplete-coverage \"./test/**/*.test.?(c)[tj]s\"",
-    "test:ci": "npm run prepublishOnly",
-    "test:ts": "tsd",
-    "tsc": "tsc"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/EmilianoBruni/fastify-knex-api.git"
-  },
-  "keywords": [
-    "nodejs",
-    "fastify",
-    "knex",
-    "knexjs",
-    "crud",
-    "api",
-    "sql",
-    "schema",
-    "mysql",
-    "postgresql",
-    "sqlite3",
-    "javascript",
-    "typescript",
-    "ts",
-    "query"
-  ],
-  "author": "Emiliano Bruni <info@ebruni.it>",
-  "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/EmilianoBruni/fastify-knex-api/issues"
-  },
-  "homepage": "https://github.com/EmilianoBruni/fastify-knex-api#readme",
-  "devDependencies": {
-    "@eslint/js": "^9.34.0",
-    "@fastify/swagger": "^9.5.1",
-    "@fastify/swagger-ui": "^5.2.3",
-    "@types/node": "^24.3.0",
-    "@typescript-eslint/eslint-plugin": "^8.40.0",
-    "@typescript-eslint/parser": "^8.40.0",
-    "eslint": "^9.34.0",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-prettier": "^5.5.4",
-    "fastify": "^5.5.0",
-    "globals": "^16.3.0",
-    "mysql2": "^3.14.3",
-    "nodemon": "^3.1.10",
-    "prettier": "^3.6.2",
-    "rimraf": "^6.0.1",
-    "rollup": "^4.48.0",
-    "tap": "^21.1.0",
-    "tsd": "^0.33.0",
-    "tsx": "^4.20.4",
-    "typescript": "^5.9.2",
-    "typescript-eslint": "8.40.0"
-  },
-  "dependencies": {
-    "@fastify/error": "^4.2.0",
-    "fastify-plugin": "^5.0.1",
-    "knex": "^3.1.0",
-    "knex-schema-inspector": "github:EmilianoBruni/knex-schema-inspector"
-  },
-  "types": "./dist/index.d.ts"
+    "name": "fastify-knex-api",
+    "version": "0.4.0",
+    "description": "Fastify plugin to expose API for Knex Query Builder",
+    "main": "src/index.js",
+    "type": "module",
+    "exports": {
+        "import": "./dist/index.js",
+        "require": "./dist/index.cjs"
+    },
+    "scripts": {
+        "build": "npm run tsc && npm run buildcjs",
+        "build:watch": "nodemon -e json,ts -w src -x \"tsc\"",
+        "buildcjs": "rollup ./dist/index.js --file ./dist/index.cjs --format cjs",
+        "clean": "rimraf ./dist .tap",
+        "lint": "eslint \"src/**/*.[jt]s?(x)\" \"test/**/*.?(c)[jt]s\"",
+        "lint:fix": "npm run lint -- --fix",
+        "prepublishOnly": "npm run build && npm test",
+        "test": "tap -j1 --allow-incomplete-coverage \"./test/**/*.test.?(c)[tj]s\"",
+        "test:ci": "npm run prepublishOnly",
+        "test:ts": "tsd",
+        "tsc": "tsc"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/EmilianoBruni/fastify-knex-api.git"
+    },
+    "keywords": [
+        "nodejs",
+        "fastify",
+        "knex",
+        "knexjs",
+        "crud",
+        "api",
+        "sql",
+        "schema",
+        "mysql",
+        "postgresql",
+        "sqlite3",
+        "javascript",
+        "typescript",
+        "ts",
+        "query"
+    ],
+    "author": "Emiliano Bruni <info@ebruni.it>",
+    "license": "Apache-2.0",
+    "bugs": {
+        "url": "https://github.com/EmilianoBruni/fastify-knex-api/issues"
+    },
+    "homepage": "https://github.com/EmilianoBruni/fastify-knex-api#readme",
+    "devDependencies": {
+        "@eslint/js": "^9.34.0",
+        "@fastify/swagger": "^9.5.1",
+        "@fastify/swagger-ui": "^5.2.3",
+        "@types/node": "^24.3.0",
+        "@typescript-eslint/eslint-plugin": "^8.40.0",
+        "@typescript-eslint/parser": "^8.40.0",
+        "eslint": "^9.34.0",
+        "eslint-config-prettier": "^10.1.8",
+        "eslint-plugin-prettier": "^5.5.4",
+        "fastify": "^5.5.0",
+        "globals": "^16.3.0",
+        "mysql2": "^3.14.3",
+        "nodemon": "^3.1.10",
+        "prettier": "^3.6.2",
+        "rimraf": "^6.0.1",
+        "rollup": "^4.48.0",
+        "tap": "^21.1.0",
+        "tsd": "^0.33.0",
+        "tsx": "^4.20.4",
+        "typescript": "^5.9.2",
+        "typescript-eslint": "8.40.0"
+    },
+    "dependencies": {
+        "@fastify/error": "^4.2.0",
+        "fastify-plugin": "^5.0.1",
+        "knex": "^3.1.0",
+        "knex-schema-inspector-mk": "^3.1.2"
+    },
+    "types": "./dist/index.d.ts"
 }

@@ -14,7 +14,6 @@ import type {
     TTableDefinitionNormalized
 } from '../types.js';
 import type { Knex } from 'knex';
-import type { SchemaInspector as ISchemaInspector } from 'knex-schema-inspector/dist/types/schema-inspector.js';
 import { existsSync, statSync } from 'fs';
 import path from 'path';
 import crudGen from './crud.js';
@@ -24,7 +23,7 @@ import {
     defaultHttpCode,
     defaultQueries
 } from './DefaultSchemas.js';
-import { SchemaInspector } from 'knex-schema-inspector';
+import { SchemaInspector } from 'knex-schema-inspector-mk';
 
 class API {
     private _fastify: IKAApiOptions['fastify'];
@@ -37,7 +36,7 @@ class API {
     private _prefix: IKAApiOptions['prefix'];
     private _verbs: IKAApiOptions['verbs'];
 
-    public schemaInspector: ISchemaInspector;
+    public schemaInspector: ReturnType<typeof SchemaInspector>;
     public isInizialized: Promise<boolean>;
 
     constructor(params: IKAApiOptions) {
