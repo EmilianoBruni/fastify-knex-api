@@ -279,6 +279,7 @@ class API {
             case 'smallinteger':
             case 'smallint':
             case 'tinyint':
+            case 'mediumint':
             case 'mediuminteger':
             case 'unsignedinteger':
             case 'unsignedbiginteger':
