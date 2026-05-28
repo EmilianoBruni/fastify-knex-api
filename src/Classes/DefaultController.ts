@@ -132,9 +132,19 @@ class DefaultController implements TKAController {
             // doesn't support returning but return last id in data[0]
             // query DB to get the last inserted record
             const query = knex<TKACrudRow>(this.table);
-            this.pk.map((value, idx) =>
-                query.where(value, params[value] || data[idx])
-            );
+            for (const [idx, value] of this.pk.entries()) {
+                const pkValue = params[value] ?? data[idx];
+                if (pkValue === undefined || typeof pkValue === 'object') {
+                    return reply
+                        .code(500)
+                        .send(
+                            DefaultController.HTTP_ERROR[500](
+                                'Unable to resolve primary key after insert'
+                            )
+                        );
+                }
+                query.where(value, pkValue as Knex.Value);
+            }
             // apply projection to the query
             await this._applyProjection(
                 query,
