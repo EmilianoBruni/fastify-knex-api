@@ -315,8 +315,11 @@ class API {
             case 'char':
             case 'varchar':
             case 'tinytext':
-            case 'json':
                 prop.type = 'string';
+                break;
+            case 'json':
+                prop.type = 'object';
+                prop.additionalProperties = true;
                 break;
             case 'datetime':
             case 'datetimetz':
