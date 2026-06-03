@@ -331,7 +331,7 @@ class API {
                 break;
             case 'date':
                 prop.type = 'string';
-                prop.format = 'iso-date';
+                prop.format = 'date';
                 break;
             case 'time':
                 prop.type = 'string';
