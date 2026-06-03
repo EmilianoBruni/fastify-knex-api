@@ -4,6 +4,12 @@ _Fastify plugin to expose API for Knex Query Builder_
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.4] 2026-06-03
+
+### Fixed
+
+- fix: update date formats to ISO standards in schema. (Fix [#1](https://github.com/EmilianoBruni/fastify-knex-api/issues/1))
+
 ## [0.4.3] 2026-05-28
 
 ### Changed
@@ -13,7 +19,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - JSON type handling in schema
-- Add support for mediumint (Fix [this](https://github.com/EmilianoBruni/fastify-knex-api/issues/2))
+- Add support for mediumint (Fix [#2](https://github.com/EmilianoBruni/fastify-knex-api/issues/2))
 
 ## [0.4.2] 2026-05-11
 
