@@ -327,15 +327,15 @@ class API {
             case 'timestamp':
             case 'timestamptz':
                 prop.type = 'string';
-                prop.format = 'date-time';
+                prop.format = 'iso-date-time';
                 break;
             case 'date':
                 prop.type = 'string';
-                prop.format = 'date';
+                prop.format = 'iso-date';
                 break;
             case 'time':
                 prop.type = 'string';
-                prop.format = 'time';
+                prop.format = 'iso-time';
                 break;
             case 'inet4':
                 prop.type = 'string';
